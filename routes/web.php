@@ -4,9 +4,21 @@ use App\Http\Controllers\Admin\DishController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\User\SearchController;
+use PhpParser\Node\Expr\FuncCall;
+
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/login', function () {
+    return redirect()->route('admin.login');
+})->name('login');
+
+Route::prefix('user')->name('user.')->group(function(){
+
+    Route::get('search', [SearchController::class, 'search'])->name('search');
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -17,6 +29,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     //Once the admin has logged in, they can acsess these pages
     Route::middleware('auth:admin')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('generate', [DashboardController::class, 'generate'])->name('generate');
 
         Route::get('dishes', [DishController::class, 'index'])->name('dishes.index');
 
@@ -27,5 +40,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('dishes/{id}', [DishController::class, 'update'])->name('dishes.update');
         
         Route::delete('dishes/{id}', [DishController::class, 'destroy'])->name('dishes.destroy');
+
     });
 });
