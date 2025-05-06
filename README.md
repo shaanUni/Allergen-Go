@@ -1,6 +1,6 @@
 # 🧪 AllergenGo
 
-AllergenGo is a Laravel-based application designed to manage and track allergens in products. This setup guide is tailored for running the project using **Laravel Herd on Windows**.
+AllergenGo is a Laravel-based application designed to help people with allergies find suitable foods for them at restaurants. This setup guide is tailored for running the project using **Laravel Herd on Windows**.
 
 ---
 
