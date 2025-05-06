@@ -19,6 +19,8 @@ Route::get('/login', function () {
 Route::prefix('user')->name('user.')->group(function(){
 
     Route::get('search', [SearchController::class, 'search'])->name('search');
+    Route::post('searchCode', [SearchController::class, 'searchCode'])->name('searchCode');
+
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {
