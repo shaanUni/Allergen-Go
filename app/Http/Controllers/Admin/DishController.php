@@ -16,7 +16,7 @@ class DishController extends Controller
 
     public function __construct()
     {
-        //We have a file which the whole codebase uses to acsess allergens. This is the single source of truth (dramatic aahhhh...).
+        //We have a file which the whole codebase uses to acsess allergens. This is the single source of truth for whole app/site, which will refer here.
         $this->allergens = config('allergens');
     }
     public function index()

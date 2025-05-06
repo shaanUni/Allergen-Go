@@ -2,6 +2,13 @@
 
 @section('content')
     <h2>Admin Login</h2>
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        @foreach ($errors->all() as $error)
+            <div>{{ $error }}</div>
+        @endforeach
+    </div>
+    @endif
 
     <form method="POST" action="{{ route('admin.login') }}">
         @csrf
