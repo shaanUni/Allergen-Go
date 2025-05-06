@@ -40,3 +40,7 @@ CREATE DATABASE allergen_go;
  Once that is done, run the below to populate your DB with the correct tables:
 
  php artisan:migrate
+
+ App should work on this url, ow whatever is in your env APP URL (ensure this matches herd):
+
+ http://a-go.test/admin/login
