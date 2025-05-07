@@ -31,6 +31,11 @@ class SearchController extends Controller
         );
     }
 
+    public function qrCode($code)
+    {
+        return view('user.userqrcode', ['code' => $code, 'allergens' => $this->allergens]);
+    }
+
     public function searchCode(Request $request)
     {
         //Validate code entered by user
@@ -45,12 +50,39 @@ class SearchController extends Controller
         //store validated code in restaurantCode
         $restaurantCode = $validated['restaurant_code'];
 
+        //Compare user allergies with restaurant dishes allergens
+        $filteredAllergens = $this->filterAllergens($userAllergies, $restaurantCode);
+
+        //If the restaurant code was invalid, redirect
+        if (!$filteredAllergens) {
+            return redirect()->route('user.search')->with('failure', 'Code invalid. try again.');
+        }
+
+        $edibleDishes = $filteredAllergens['dishes'];
+        $dishesWithRemoveables = $filteredAllergens['removeables'];
+        $restaurant = $filteredAllergens['restaurant'];
+
+
+        //return to the view with the dish and restaurant
+        return view(
+            'user.list',
+            [
+                'dishes' => $edibleDishes,
+                'removeables' => $dishesWithRemoveables,
+                'restaurant' => $restaurant,
+            ],
+        );
+    }
+
+    //Main function that compares user allergies with dish allergens
+    public function filterAllergens($userAllergies, $restaurantCode)
+    {
         //Here we find the admin (restaurant) where the restaurant_code matches ours, and we eager load it with all of the dishes
         $restaurant = Admin::with('dishes')->where('restaurant_code', $restaurantCode)->first();
 
         //if the search found no matches
         if ($restaurant == null) {
-            return redirect()->route('user.search')->with('failure', 'Code invalid. try again.');
+            return false;
         }
 
         //Get the dishes that where eager loaded
@@ -91,7 +123,7 @@ class SearchController extends Controller
                         $i++;
                         continue;
                     }
-                    
+
                     $dishesWithRemoveables[] = $dish;
                     $continueBool = true;
 
@@ -125,14 +157,10 @@ class SearchController extends Controller
             }
         }
 
-        //return to the view with the dish and restaurant
-        return view(
-            'user.list',
-            [
-                'dishes' => $edibleDishes,
-                'removeables' => $dishesWithRemoveables,
-                'restaurant' => $restaurant,
-            ],
-        );
+        return [
+            'dishes' => $edibleDishes,
+            'removeables' => $dishesWithRemoveables,
+            'restaurant' => $restaurant,
+        ];
     }
 }

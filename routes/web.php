@@ -20,6 +20,7 @@ Route::prefix('user')->name('user.')->group(function(){
 
     Route::get('search', [SearchController::class, 'search'])->name('search');
     Route::post('searchCode', [SearchController::class, 'searchCode'])->name('searchCode');
+    Route::get('qr/{code}', [SearchController::class, 'qrCode'])->name('qr');
 
 });
 
@@ -32,6 +33,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('auth:admin')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('generate', [DashboardController::class, 'generate'])->name('generate');
+        Route::get('qrcode', [DashboardController::class, 'qrCode'])->name('qrcode');
+
 
         Route::get('dishes', [DishController::class, 'index'])->name('dishes.index');
 

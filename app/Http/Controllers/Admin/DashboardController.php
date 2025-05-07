@@ -7,6 +7,10 @@ use App\Models\Admin;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\URL;
+
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
 
 class DashboardController extends Controller
 {
@@ -33,7 +37,7 @@ class DashboardController extends Controller
             do {
                 $randomCode = Str::random(16);
                 //The check for uniqueness
-            } while (Admin::where('restaurant_code', $randomCode )->exists());
+            } while (Admin::where('restaurant_code', $randomCode)->exists());
 
 
             //New variable instance of the code so we can save
@@ -46,6 +50,19 @@ class DashboardController extends Controller
 
         return redirect()->route('admin.dashboard')->with('success', 'New code Generated.');
     }
+
+
+    public function qrCode()
+    {
+        // get exsisting, unique restaurant code
+        $restaurantCode = $this->getRestaurantCode();
+
+        //URL for qr code
+        $url = url('/user/qr/' . $restaurantCode);
+
+        return view('admin.qrcode', compact('url', 'restaurantCode'));
+    }
+
 
     private function getRestaurantCode()
     {
