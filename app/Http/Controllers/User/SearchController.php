@@ -58,14 +58,12 @@ class SearchController extends Controller
 
         //This will contain dishes the user can eat
         $edibleDishes = [];
-
         $dishesWithRemoveables = [];
-
-        
-        $continueBool = false;
 
         //Needed to check for duplicates in removeable array
         $existingIds = [];
+
+        $continueBool = false;
 
         //This is where the fun begins - Anakin Skywalker
         foreach ($dishes as $dish) {
@@ -86,41 +84,44 @@ class SearchController extends Controller
                 //If the allergen is not removeable, then it should remain in the filtered array which will be compared with the users allergens
                 if ($removeable == false) {
                     $filteredDishAllergens[] = $dishAllergens[$i];
-                //If it is removeable and the removeable allergen is in the users allergies
-                } else if($removeable == true && in_array($dishAllergens[$i], $userAllergies)){
+                    //If it is removeable and the removeable allergen is in the users allergies
+                } else if ($removeable == true && in_array($dishAllergens[$i], $userAllergies)) {
                     //If the dish has already been added to the array, skip the rest of the iteration
                     if (in_array($dish->id, $existingIds)) {
+                        $i++;
                         continue;
                     }
-                
+                    
                     $dishesWithRemoveables[] = $dish;
                     $continueBool = true;
 
                     //We now know this dish has been added to the removeables array
                     $existingIds[] = $dish->id;
 
-                    break;
-                } 
+                }
 
-                if(!empty(array_intersect($filteredDishAllergens, $userAllergies))){
-                    $dishesWithRemoveables = [];
+                //Even if there is 1 removeable allergen, there may be another non removeable one that the user is allergic to.  
+                if (!empty(array_intersect($filteredDishAllergens, $userAllergies)) && $continueBool == true) { //In the non removeable array, is there any allergens the user can't have
+                    //if so, splice the last element added from the removeable array
+                    $lastItem = array_pop($dishesWithRemoveables);
                     $continueBool = false;
                 }
+
                 $i++;
             }
 
             //This tells us the dish had a removeable dish that the user was allergic to, so no need to finish the loop on this iteration, as removeable dishes have their own array
-            if($continueBool == true){
+            if ($continueBool == true) {
                 $continueBool = false;
                 continue;
             }
-            
+
             //Array intersect will return an array of values that are common in both arrays
             $commonAllergens = array_intersect($filteredDishAllergens, $userAllergies);
 
             //If the array is empty, this means the dish does not have any allergens the user is allergic to
             if (empty($commonAllergens)) {
-                $edibleDishes[] = $dish;
+                $edibleDishes[] = $dish; // edibleDishes += dish
             }
         }
 
