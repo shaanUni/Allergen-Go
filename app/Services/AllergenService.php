@@ -36,6 +36,25 @@ class AllergenService
         return $allergenString;
     }
 
+    public static function userSerialize($userAllergiesArray)
+    {
+        // Allergens, and wether it is removable will go in here
+        $removableData = [];
+        $allergenString = ",";
+
+        //we will convert and store allergens as a string, e.g. "*eggs,nuts,*milk,", which will be parsed
+        foreach ($userAllergiesArray as $allergen) {
+            //add the allergen itself
+            $allergenString .= $allergen;
+
+            // so parser knows this block if info is over
+            $allergenString .= ",";
+        }
+
+        return $allergenString;
+    }
+
+
     //To parse an allergen string, and turn back into arrays
     public static function parse($allergenString)
     {

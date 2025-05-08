@@ -30,7 +30,7 @@ class DashboardController extends Controller
         // get exsisting code
         $restaurantCode = $this->getRestaurantCode();
 
-        //Double check it is null
+        //Double check it is null, (double check because the front end only shows the button if it is null, so this is an extra precaution)
         if ($restaurantCode == null) {
 
             //Keep generating a random string, until it is unique and not found elswhere in the DB
