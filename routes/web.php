@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DishController;
+use App\Http\Controllers\Admin\StatsPageController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -34,6 +35,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('generate', [DashboardController::class, 'generate'])->name('generate');
         Route::get('qrcode', [DashboardController::class, 'qrCode'])->name('qrcode');
+
+        Route::get('stats', [StatsPageController::class, 'index'])->name('stats');
+        Route::post('search', [StatsPageController::class, 'search'])->name('search');
 
 
         Route::get('dishes', [DishController::class, 'index'])->name('dishes.index');

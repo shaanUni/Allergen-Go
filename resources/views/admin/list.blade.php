@@ -1,4 +1,4 @@
-@extends('user.layout')
+@extends('admin.layout')
 
 @section('content')
 @include('components.list')

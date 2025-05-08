@@ -4,6 +4,10 @@
     <h1>Welcome to the Admin Dashboard</h1>
     <p>This is your secure area.</p>
     <a href="{{ route('admin.dishes.index') }}">Dishes</a>
+    <a href="{{ route('admin.qrcode') }}">QR code</a>
+    <a href="{{ route('admin.stats') }}">Stats</a>
+
+
 
     @if ($restaurant_code == null)
     <p>You need to generate a new code for users to use the app.</p>

@@ -23,4 +23,8 @@ class Admin extends Authenticatable
     public function dishes(){
         return $this->hasMany(Dishes::class);
     }
+
+    public function allergenCount(){
+        return $this->hasMany(AllergenCount::class);
+    }
 }

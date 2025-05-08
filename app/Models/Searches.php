@@ -15,7 +15,7 @@ class Searches extends Model
 {
     //
     protected $fillable = [
-        'admin_id', 'user_allergy_string', 
+        'admin_id', 'user_allergy_string', 'failure' 
     ];
 
     //Each record of a search will have the restaurant it belongs to
