@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
+use App\Models\Searches;
 use App\Services\AllergenService;
 
 use Illuminate\Http\Request;
@@ -156,6 +157,18 @@ class SearchController extends Controller
                 $edibleDishes[] = $dish; // edibleDishes += dish
             }
         }
+        
+        //Restaurant ID for Searches table
+        $restaurantID = Admin::where('restaurant_code', $restaurantCode)->first()->id;
+        
+        //Convert User allergies array into a string
+        $userAllergiesString = AllergenService::userSerialize($userAllergies);
+
+        //Save this search in table
+        Searches::create([
+            'admin_id' => $restaurantID,
+            'user_allergy_string' => $userAllergiesString,
+        ]);
 
         return [
             'dishes' => $edibleDishes,
