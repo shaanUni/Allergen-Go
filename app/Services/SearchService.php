@@ -27,7 +27,7 @@ class SearchService
         $restaurantCode = $validated['restaurant_code'];
 
         //Compare user allergies with restaurant dishes allergens
-        $filteredAllergens = self::filterAllergens($userAllergies, $restaurantCode);
+        $filteredAllergens = self::filterAllergens($userAllergies, $restaurantCode, $whoami);
 
         //If the restaurant code was invalid, redirect
         if (!$filteredAllergens && $whoami == "user") {
@@ -48,7 +48,7 @@ class SearchService
     }
 
     //Main function that compares user allergies with dish allergens
-    public static function filterAllergens($userAllergies, $restaurantCode)
+    public static function filterAllergens($userAllergies, $restaurantCode, $whoami)
     {
         //Here we find the admin (restaurant) where the restaurant_code matches ours, and we eager load it with all of the dishes
         $restaurant = Admin::with('dishes')->where('restaurant_code', $restaurantCode)->first();
@@ -130,40 +130,42 @@ class SearchService
             }
         }
 
-        //Restaurant ID for Searches table
-        $restaurantID = Admin::where('restaurant_code', $restaurantCode)->first()->id;
+        //We only want to do all of the logging stuff if it is a user doing the search, not the client themselves
+        if ($whoami == "user") {
+            //Restaurant ID for Searches table
+            $restaurantID = Admin::where('restaurant_code', $restaurantCode)->first()->id;
 
+            //The allergen count table stores each allergen for a restaurant, and how many users have had that allergy, or more accurateley, how many searches have contained that allergy
+            foreach ($userAllergies as $allergy) {
+                //First or new will first check to see if it exsits, if not, create a new row
+                $allergenCount = AllergenCount::firstOrNew([
+                    'admin_id' => $restaurantID,
+                    'allergen' => $allergy,
+                ]);
 
-        //The allergen count table stores each allergen for a restaurant, and how many users have had that allergy, or more accurateley, how many searches have contained that allergy
-        foreach ($userAllergies as $allergy) {
-            //First or new will first check to see if it exsits, if not, create a new row
-            $allergenCount = AllergenCount::firstOrNew([
+                //Incremennt count
+                $allergenCount->count = $allergenCount->count + 1;
+                $allergenCount->save();
+            }
+
+            //Convert User allergies array into a string
+            $userAllergiesString = AllergenService::userSerialize($userAllergies);
+
+            //Boolean that will go into the DB, to give the status on the search: true => dishes were returned, false => no dishes were returned, the user could not eat any food.
+            $searchFailureStatus = false;
+
+            //If there are no dishes in the edible dishes, or the removeables, the user can have nothing from this restaurant.
+            if (count($edibleDishes) == 0 && count($dishesWithRemoveables) == 0) {
+                $searchFailureStatus = true;
+            }
+
+            //Save this search in table
+            Searches::create([
                 'admin_id' => $restaurantID,
-                'allergen' => $allergy,
+                'user_allergy_string' => $userAllergiesString,
+                'failure' => $searchFailureStatus,
             ]);
-
-            //Incremennt count
-            $allergenCount->count = $allergenCount->count + 1;
-            $allergenCount->save();
         }
-
-        //Convert User allergies array into a string
-        $userAllergiesString = AllergenService::userSerialize($userAllergies);
-
-        //Boolean that will go into the DB, to give the status on the search: true => dishes were returned, false => no dishes were returned, the user could not eat any food.
-        $searchFailureStatus = false;
-
-        //If there are no dishes in the edible dishes, or the removeables, the user can have nothing from this restaurant.
-        if (count($edibleDishes) == 0 && count($dishesWithRemoveables) == 0) {
-            $searchFailureStatus = true;
-        }
-
-        //Save this search in table
-        Searches::create([
-            'admin_id' => $restaurantID,
-            'user_allergy_string' => $userAllergiesString,
-            'failure' => $searchFailureStatus,
-        ]);
 
         return [
             'dishes' => $edibleDishes,

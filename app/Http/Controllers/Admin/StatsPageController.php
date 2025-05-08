@@ -41,8 +41,11 @@ class StatsPageController extends Controller
             ->orderBy('count', 'desc')
             ->get();
 
+        //Get the restaurant code for the form
         $restaurant = Admin::find(Auth::guard('admin')->id());
         $restaurantCode = $restaurant->restaurant_code; 
+        
+        //List of allergens for the form
         $allergens = config('allergens');
         
         return view(
