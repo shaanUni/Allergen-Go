@@ -1,0 +1,36 @@
+$font-primary: 'Inter', sans-serif;
+$primary-color: white;
+$geen-nav: #40945c;
+
+.list-info {
+    padding-top: 10px;
+    padding-left: 10px;
+}
+
+$list-bg: #c2ebca;
+$list-border: #ffffff;
+$list-radius: 2rem; // adjust for more or less rounding
+$list-padding: 1rem; // space inside the box
+$list-gap: 1rem; // vertical gap between cards
+
+.list-box {
+    position: relative;
+    left: 10px;
+    width: 95%;
+    background-color: $list-bg;
+    border: 1px solid $list-border; // width + style + color
+    border-radius: $list-radius; // fixed radius in rem (or px)
+    padding: $list-padding;
+    margin-bottom: $list-gap;
+    box-sizing: border-box;
+    text-align: right;
+}
+
+.removeable{
+   // background-color: rgba(251, 93, 93, 0.857);
+   background-color: rgba(255, 6, 6, 0.365);
+}
+
+.removeable-info{
+    padding: 20px;
+}
