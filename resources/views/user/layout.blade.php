@@ -7,9 +7,12 @@
     <meta name="author" content="">
     <meta name="csrf_token" content="{{ csrf_token() }}"/>
     <title>User Area</title>
-    @vite(['resources/js/app.js'])
+    @vite(['resources/js/user.js'])
 </head>
 <body>
+    <nav>
+        <li>as</li>
+    </nav>
     <div class="container py-4">
         @yield('content')
     </div>

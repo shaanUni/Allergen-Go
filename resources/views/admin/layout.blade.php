@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <meta name="csrf_token" content="{{ csrf_token() }}"/>
     <title>Admin Area</title>
-    @vite(['resources/js/app.js'])
+    @vite(['resources/js/admin.js'])
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light px-4">
