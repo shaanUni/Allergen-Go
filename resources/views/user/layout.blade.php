@@ -10,11 +10,15 @@
     @vite(['resources/js/user.js'])
 </head>
 <body>
-    <nav>
-        <li>as</li>
-    </nav>
+    <div class="nav-div">
+        <nav>
+            <li class="logo">AllergenGo</li>
+        </nav>
+    </div>
+    
     <div class="container py-4">
         @yield('content')
     </div>
+
 </body>
 </html>

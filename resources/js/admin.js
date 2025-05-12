@@ -1,2 +1,2 @@
 // admin.js
-import '../scss/admin.scss';
+import '../scss/admin/admin.scss';
