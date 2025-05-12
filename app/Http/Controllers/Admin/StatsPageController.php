@@ -70,7 +70,6 @@ class StatsPageController extends Controller
         $dishesWithRemoveables = $filteredAllergens['removeables'];
         $restaurant = $filteredAllergens['restaurant'];
 
-
         //return to the view with the dish and restaurant
         return view(
             'admin.list',
