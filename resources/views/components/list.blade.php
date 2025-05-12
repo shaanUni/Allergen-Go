@@ -9,14 +9,17 @@
     <br>
     <div class="list-box">
         <div class="list-text">
+            @php
+                $allergens = \App\Services\AllergenService::parse($dish->allergen_string)['allergens'];
+            @endphp
+            
+
             {{ $dish->dish_name }}
             <br>
 
             <p>{{ Str::limit($dish->description, 25, '...') }}</p>
             <br>
-            @php
-                $allergens = \App\Services\AllergenService::parse($dish->allergen_string)['allergens'];
-            @endphp
+
             @foreach(array_slice($allergens, 0, 4) as $allergen)
                 {{ $allergen }}@if($loop->last).. @else , @endif
 
@@ -24,6 +27,10 @@
 
 
             <br>
+            <form method="POST" action="{{ route('user.individual', ['id' => $dish->id, 'state' => 1]) }}">
+                @csrf
+                <button type="submit">Submit</button>
+            </form>
         </div>
     </div>
 @endforeach
@@ -47,9 +54,10 @@
         $combined = \App\Services\AllergenService::parse($dish->allergen_string)['combined'];
         $allergens = \App\Services\AllergenService::parse($dish->allergen_string)['allergens'];
     @endphp
+
     <div class="list-box removeable">
         <div class="list-text">
-
+          
             {{ $dish->dish_name }}
             <br>
             {{ $dish->description }}
@@ -68,6 +76,10 @@
 
             Warning this is a removeable one...
             <br>
+            <form method="POST" action="{{ route('user.individual', ['id' => $dish->id, 'state' => 0]) }}">
+                @csrf
+                <button type="submit">View</button>
+            </form>
         </div>
     </div>
 
