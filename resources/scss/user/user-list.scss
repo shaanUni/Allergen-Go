@@ -1,37 +1,133 @@
 $font-primary: 'Inter', sans-serif;
 $primary-color: white;
-$geen-nav: #40945c;
+$green-nav: #40945c;
+
+$list-bg: #f4fff6;
+$list-border: #d0e7d6;
+$list-radius: 1.5rem;
+$list-padding: 1.25rem;
+$list-gap: 1.25rem;
+
+.list-main {
+  font-family: $font-primary;
+  background-color: #f8f8f8;
+  color: #222;
+  padding: 20px;
+}
 
 .list-info {
-    padding-top: 10px;
-    padding-left: 10px;
-}
+  margin-bottom: 1.5rem;
 
-$list-bg: #c2ebca;
-$list-border: #ffffff;
-$list-radius: 2rem; // adjust for more or less rounding
-$list-padding: 1rem; // space inside the box
-$list-gap: 1rem; // vertical gap between cards
+  h2 {
+    font-size: 1.6rem;
+    margin-bottom: 0.25rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    color: #555;
+  }
+
+  span {
+    font-weight: 600;
+    color: #222;
+  }
+}
 
 .list-box {
-    position: relative;
-    left: 10px;
-    width: 95%;
-    background-color: $list-bg;
-    border: 1px solid $list-border; // width + style + color
-    border-radius: $list-radius; // fixed radius in rem (or px)
-    padding: $list-padding;
-    margin-bottom: $list-gap;
-    box-sizing: border-box;
-    text-align: right;
+  background-color: $list-bg;
+  border: 1px solid $list-border;
+  border-radius: $list-radius;
+  padding: $list-padding;
+  margin-bottom: $list-gap;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-.removeable{
-   // background-color: rgba(251, 93, 93, 0.857);
-   background-color: rgba(255, 6, 6, 0.365);
+.removeable {
+  background-color: rgba(255, 232, 232, 0.8);
+  border-left: 6px solid #f87171;
 }
 
-.removeable-info{
-    padding: 20px;
+.list-text {
+  text-align: left;
+
+  .dish-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+  }
+
+  .dish-description {
+    font-size: 0.95rem;
+    color: #444;
+    margin-bottom: 0.5rem;
+  }
+
+  .dish-allergens {
+    font-size: 0.9rem;
+    color: #333;
+    margin-bottom: 0.75rem;
+    padding-left: 20px;
+    li {
+      margin-bottom: 0.25rem;
+    }
+
+    .removeable-tag {
+      font-size: 0.8rem;
+      color: #d14343;
+      margin-left: 5px;
+    }
+  }
+
+  .removeable-warning {
+    background-color: #fff3f3;
+    border-left: 4px solid #ff6b6b;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    color: #b91c1c;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+  }
+
+
+  .action-button {
+    padding: 0.5rem 1.25rem;
+    border: none;
+    background-color: $green-nav;
+    color: white;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &.alert {
+      background-color: #e63946;
+    }
+
+    &:hover {
+      background-color: darken($green-nav, 10%);
+    }
+
+    &.alert:hover {
+      background-color: darken(#e63946, 10%);
+    }
+  }
 }
 
+.removeable-info {
+  background-color: #fff6e6;
+  border-left: 5px solid #ff9800;
+  padding: 1rem;
+  margin: 2rem 0;
+  border-radius: 1rem;
+
+  h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 0.95rem;
+    color: #444;
+  }
+}

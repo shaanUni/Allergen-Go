@@ -1,35 +1,28 @@
+<div class="list-main">
 <div class="list-info">
-    <h2>List of edible Allergens:</h2>
-    <h3>Restaurant you are at: {{ $restaurant->name }}</h3>
+    <h2>List of Edible Dishes</h2>
+    <h3>Restaurant: <span>{{ $restaurant->name }}</span></h3>
 </div>
-<br>
 
 @foreach ($dishes as $dish)
+    @php
+        $allergens = \App\Services\AllergenService::parse($dish->allergen_string)['allergens'];
+    @endphp
 
-    <br>
     <div class="list-box">
         <div class="list-text">
-            @php
-                $allergens = \App\Services\AllergenService::parse($dish->allergen_string)['allergens'];
-            @endphp
-            
+            <h4 class="dish-name">{{ $dish->dish_name }}</h4>
+            <p class="dish-description">{{ Str::limit($dish->description, 25, '...') }}</p>
 
-            {{ $dish->dish_name }}
-            <br>
+            <p class="dish-allergens">
+                @foreach(array_slice($allergens, 0, 4) as $allergen)
+                    {{ $allergen }}@if(!$loop->last), @else... @endif
+                @endforeach
+            </p>
 
-            <p>{{ Str::limit($dish->description, 25, '...') }}</p>
-            <br>
-
-            @foreach(array_slice($allergens, 0, 4) as $allergen)
-                {{ $allergen }}@if($loop->last).. @else , @endif
-
-            @endforeach
-
-
-            <br>
             <form method="POST" action="{{ route('user.individual', ['id' => $dish->id, 'state' => 1]) }}">
                 @csrf
-                <button type="submit">Submit</button>
+                <button type="submit" class="action-button">View Dish</button>
             </form>
         </div>
     </div>
@@ -37,19 +30,15 @@
 
 @if (count($removeables) > 0)
     <div class="removeable-info">
-        <h3>Please read before selecting any dishes Below:</h3>
-        <br>
-        <p>The dishes below contains allergens that you are allergic to. However, the chef has marked them as removeable,
-            meaning they can prepare the dish for you without that allergen. If you do select one of these dishes, Please
-            clearly communicate with the chef/waiter it must be removed.
+        <h3>⚠️ Attention:</h3>
+        <p>
+            The dishes below contain allergens you're allergic to, but the chef has marked them as removable.
+            If you choose one, please tell the waiter to remove those allergens during preparation.
         </p>
     </div>
 @endif
 
 @foreach ($removeables as $dish)
-    <br>
-
-
     @php
         $combined = \App\Services\AllergenService::parse($dish->allergen_string)['combined'];
         $allergens = \App\Services\AllergenService::parse($dish->allergen_string)['allergens'];
@@ -57,30 +46,28 @@
 
     <div class="list-box removeable">
         <div class="list-text">
-          
-            {{ $dish->dish_name }}
-            <br>
-            {{ $dish->description }}
-            <br>
+            <h4 class="dish-name">{{ $dish->dish_name }}</h4>
+            <p class="dish-description">{{ $dish->description }}</p>
 
-            @foreach($allergens as $allergen)
-                @if($combined[$allergen])
-                    {{$allergen}} Removeable
-                @else
-                    {{$allergen}}
-                @endif
-                <br>
-            @endforeach
+            <ul class="dish-allergens">
+                @foreach($allergens as $allergen)
+                    <li class="removeable-allergen">
+                        {{ $allergen }}
+                        @if($combined[$allergen])
+                            <span class="removeable-tag">(Removeable)</span>
+                        @endif
+                    </li>
+                @endforeach
+            </ul>
 
-            <br>
+            <p class="removeable-warning">⚠️ This dish contains allergens you marked but they are removable.</p>
 
-            Warning this is a removeable one...
-            <br>
             <form method="POST" action="{{ route('user.individual', ['id' => $dish->id, 'state' => 0]) }}">
                 @csrf
-                <button type="submit">View</button>
+                <button type="submit" class="action-button alert">View Anyway</button>
             </form>
         </div>
     </div>
-
 @endforeach
+
+</div>

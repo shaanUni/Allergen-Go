@@ -10,7 +10,7 @@
 
 $font-primary: 'Inter', sans-serif;
 $primary-color: white;
-$geen-nav: #40945c;
+$green-nav: #40945c;
 
 body {
     background: $primary-color;
@@ -28,7 +28,7 @@ body {
 nav {
     width: 100%;
     height: 50px;
-    background-color: $geen-nav;
+    background-color: $green-nav;
     color: white;
 
     li {
@@ -42,7 +42,3 @@ nav {
     max-width: 500px;
     margin: 30px auto;
 }
-
-
-
-//form stuff

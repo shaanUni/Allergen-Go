@@ -1,92 +1,128 @@
+$font-primary: 'Inter', sans-serif;
+$color-bg: #e9f5e9;
+$color-bg-warning: #ffe5e5;
+$color-header: #b9e4c9;
+$color-title: #267a3d;
+$color-text: #444;
+$color-accent: #d14343;
+$gray-light: #f5f5f5;
+$gray-dark: #555;
+$badge-bg: #fef3c7;
+$badge-text: #92400e;
 
-  
-  .dish-card {
-    width: 100vw;
-    height: 100vh;
-    background-color: #e9f5e9;
-    border-radius: 0; // optional, or keep for soft edges
-    box-shadow: none;
-    overflow: hidden;
-    font-family: sans-serif;
+.dish-card__description {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+
+
+.dish-card {
+  width: 99.2vw;
+  height: 100vh;
+  background-color: $color-bg;
+  font-family: $font-primary;
+  display: flex;
+  flex-direction: column;
+
+  &--warning {
+    background-color: $color-bg-warning;
+  }
+
+  &__header {
+    background-color: $color-header;
+    padding: 16px 24px;
     display: flex;
-    flex-direction: column;
-  
-    &--warning {
-        background-color: #ffb0b0; // Light red background
-      }
+    align-items: center;
 
-    &__header {
-      background-color: #b9e4c9;
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 16px;
-    }
-  
     .icon-button {
       background: none;
       border: none;
-      font-size: 18px;
-      cursor: pointer;
-    }
-  
-    &__image {
-      background-color: #d1f0d1;
-      flex: 0 0 200px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-  
-    &__content {
-      flex: 1;
-      padding: 24px;
-      overflow-y: auto;
-  
-      & > *:not(:last-child) {
-        margin-bottom: 10px;
-      }
-    }
-  
-    &__removability {
-      font-size: 12px;
-      color: #666;
-    }
-  
-    &__title {
-      font-size: 28px;
+      font-size: 1rem;
+      color: #222;
       font-weight: bold;
-      color: #267a3d;
-    }
-  
-    &__description {
-      font-size: 16px;
-      color: #444;
-    }
-  
-    &__ingredients {
-      h3 {
-        font-size: 14px;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 6px;
+      cursor: pointer;
+      padding: 4px 8px;
+      transition: color 0.2s;
+
+      &:hover {
+        color: $color-title;
       }
-  
-      ul {
-        padding-left: 20px;
-  
-        li {
-          font-size: 14px;
-          color: #333;
-  
-          .removeable {
-            font-size: 12px;
-            color: #888;
-            margin-left: 4px;
-          }
+    }
+  }
+
+  &__content {
+    flex: 1;
+    padding: 24px 20px;
+    overflow-y: auto;
+    background-color: white;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: $color-title;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 1rem;
+      color: $color-text;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  &__ingredients {
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: #222;
+      letter-spacing: 0.5px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        background-color: $gray-light;
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.95rem;
+
+        .allergen {
+          font-weight: 500;
+          color: $gray-dark;
+        }
+
+        .tag-removeable {
+          background-color: $badge-bg;
+          color: $badge-text;
+          font-size: 0.75rem;
+          padding: 4px 8px;
+          border-radius: 12px;
+          font-weight: 600;
         }
       }
     }
-  
-    
   }
-  
+
+  .warning-box {
+    background-color: #fff0f0;
+    border-left: 5px solid $color-accent;
+    color: $color-accent;
+    padding: 12px 16px;
+    margin-top: 2rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+}
