@@ -1,0 +1,139 @@
+$font-primary: 'Inter', sans-serif;
+$accent-color: #40945c;
+$bg-light: #f8f9fa;
+$border-color: #e0e0e0;
+$text-dark: #333;
+$text-muted: #666;
+
+.dishes-page {
+  font-family: $font-primary;
+  padding: 2rem;
+
+  .page-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .dishes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    .dishes-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background 0.2s ease;
+  }
+
+  .btn-primary {
+    background-color: $accent-color;
+    color: white;
+
+    &:hover {
+      background-color: darken($accent-color, 5%);
+    }
+  }
+
+  .btn-secondary {
+    background-color: #e0e0e0;
+    color: #222;
+
+    &:hover {
+      background-color: #d5d5d5;
+    }
+  }
+
+  .dishes-table-wrapper {
+    overflow-x: auto;
+    background-color: white;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  .dishes-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+
+    thead {
+      background-color: $bg-light;
+
+      th {
+        text-align: left;
+        padding: 0.75rem;
+        font-weight: 600;
+        color: $text-dark;
+        border-bottom: 1px solid $border-color;
+      }
+    }
+
+    tbody {
+      tr {
+        &:hover {
+          background-color: #f1f5f4;
+        }
+
+        td {
+          padding: 0.75rem;
+          border-bottom: 1px solid $border-color;
+          vertical-align: top;
+          color: $text-muted;
+        }
+      }
+
+      .empty-row {
+        text-align: center;
+        font-style: italic;
+        color: #999;
+        padding: 1rem;
+      }
+    }
+  }
+
+  .btn-small {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-right: 0.3rem;
+    cursor: pointer;
+    display: inline-block;
+    transition: background 0.2s ease;
+    border: none;
+  }
+
+  .btn-warning {
+    background-color: #fff3cd;
+    color: #856404;
+
+    &:hover {
+      background-color: #ffe8a1;
+    }
+  }
+
+  .btn-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+
+    &:hover {
+      background-color: #f1b0b7;
+    }
+  }
+
+  .inline-form {
+    display: inline;
+  }
+}

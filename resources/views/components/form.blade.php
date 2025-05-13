@@ -1,9 +1,10 @@
 @csrf
 <label for="restaurant_code"></label>
 @if (isset($code))
-    <input type="text" name="restaurant_code" id="restaurant_code" value="{{ $code  }}" readonly required>
+    <input type="text" class="form-control" name="restaurant_code" id="restaurant_code" value="{{ $code  }}" readonly required>
 @else
-    <input type="text" class="form-control" placeholder="Enter Restaurant Code:" name="restaurant_code" id="restaurant_code" required>
+    <input type="text" class="form-control" placeholder="Enter Restaurant Code:" name="restaurant_code" id="restaurant_code"
+        required>
 @endif
 
 <button type="submit" class="submit-form-btn">Submit</button>

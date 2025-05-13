@@ -37,17 +37,24 @@ class StatsPageController extends Controller
             ->take(5) // restrict at 5
             ->get();
 
+        //Find the total of all the failed searches
+        $failedSearchesCount = Searches::with('admin.dishes')
+            ->where('admin_id', Auth::guard('admin')->id())
+            ->where('failure', true)
+            ->orderBy('created_at', 'desc') //order by most recent
+            ->count();
+
         $allergenCounts = AllergenCount::where('admin_id', Auth::guard('admin')->id())
             ->orderBy('count', 'desc')
             ->get();
 
         //Get the restaurant code for the form
         $restaurant = Admin::find(Auth::guard('admin')->id());
-        $restaurantCode = $restaurant->restaurant_code; 
-        
+        $restaurantCode = $restaurant->restaurant_code;
+
         //List of allergens for the form
         $allergens = config('allergens');
-        
+
         return view(
             'admin.stats',
             [
@@ -56,6 +63,7 @@ class StatsPageController extends Controller
                 'allergenCounts' => $allergenCounts,
                 'allergens' => $allergens,
                 'code' => $restaurantCode, // restaurant ID for the search form
+                'failedSearchCount' => $failedSearchesCount,
             ],
         );
     }

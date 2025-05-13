@@ -1,24 +1,27 @@
 @extends('admin.layout')
 
 @section('content')
-    <h1>Welcome to the Admin Dashboard</h1>
-    <p>This is your secure area.</p>
-    <a href="{{ route('admin.dishes.index') }}">Dishes</a>
-    <a href="{{ route('admin.qrcode') }}">QR code</a>
-    <a href="{{ route('admin.stats') }}">Stats</a>
+<div class="admin-dashboard">
+    <h1 class="dashboard-title">Welcome to the Admin Dashboard</h1>
+    <p class="dashboard-subtitle">This is your secure area to manage content and settings.</p>
 
+    <div class="dashboard-nav">
+        <a href="{{ route('admin.dishes.index') }}" class="dashboard-link">Manage Dishes</a>
+        <a href="{{ route('admin.qrcode') }}" class="dashboard-link">QR Code</a>
+        <a href="{{ route('admin.stats') }}" class="dashboard-link">View Stats</a>
+    </div>
 
-
-    @if ($restaurant_code == null)
-    <p>You need to generate a new code for users to use the app.</p>
-    <form action="{{ route('admin.generate') }}" method="GET">
-    @csrf
-    <button type="submit" class="btn btn-primary">Generate</button>
-</form>
-
-    @else
-        <p>Your restaurants unique code for users is:</p>
-        {{ $restaurant_code }}
-    @endif
-
-    @endsection
+    <div class="code-box">
+        @if ($restaurant_code == null)
+            <p class="code-warning">You need to generate a new code for users to access the app.</p>
+            <form action="{{ route('admin.generate') }}" method="GET">
+                @csrf
+                <button type="submit" class="dashboard-button">Generate Code</button>
+            </form>
+        @else
+            <p class="code-label">Your restaurant's unique access code:</p>
+            <div class="code-display">{{ $restaurant_code }}</div>
+        @endif
+    </div>
+</div>
+@endsection
