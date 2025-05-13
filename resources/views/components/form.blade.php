@@ -1,25 +1,28 @@
 @csrf
-<label for="restaurant_code">Enter Restaurant Code:</label>
+<label for="restaurant_code"></label>
 @if (isset($code))
-    <input type="text" name="restaurant_code" id="restaurant_code" value="{{ $code  }}" readonly required>
+    <input type="text" class="form-control" name="restaurant_code" id="restaurant_code" value="{{ $code  }}" readonly required>
 @else
-    <input type="text" name="restaurant_code" id="restaurant_code" required>
+    <input type="text" class="form-control" placeholder="Enter Restaurant Code:" name="restaurant_code" id="restaurant_code"
+        required>
 @endif
 
-<button type="submit">Submit</button>
+<button type="submit" class="submit-form-btn">Submit</button>
 
-<div class="mb-3">
-    <label class="form-label">Allergens</label><br>
-    @foreach ($allergens as $allergen)
-        <div class="border rounded p-2 mb-2">
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="allergen-{{ $allergen }}" name="allergens[]"
-                    value="{{ $allergen }}" {{ in_array($allergen, $selectedAllergens ?? []) ? 'checked' : '' }}>
+<div class="mb-3 allergy-form">
+    <label class="form-label test">Select your allergies:</label><br>
+    <div class="checkbox-grid">
+        @foreach ($allergens as $allergen)
+            <div class="border rounded p-2 mb-2 box">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="allergen-{{ $allergen }}" name="allergens[]"
+                        value="{{ $allergen }}" {{ in_array($allergen, $selectedAllergens ?? []) ? 'checked' : '' }}>
 
-                <label class="form-check-label" for="allergen-{{ $allergen }}">
-                    {{ ucfirst($allergen) }}
-                </label>
+                    <label class="form-check-label" for="allergen-{{ $allergen }}">
+                        {{ ucfirst($allergen) }}
+                    </label>
+                </div>
             </div>
-
-    @endforeach
+        @endforeach
+    </div>
 </div>

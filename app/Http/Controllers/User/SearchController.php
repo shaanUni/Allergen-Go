@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
+use App\Models\Dishes;
 use App\Models\Searches;
 use App\Models\AllergenCount;
 
@@ -50,7 +51,6 @@ class SearchController extends Controller
         $dishesWithRemoveables = $filteredAllergens['removeables'];
         $restaurant = $filteredAllergens['restaurant'];
 
-
         //return to the view with the dish and restaurant
         return view(
             'user.list',
@@ -60,6 +60,16 @@ class SearchController extends Controller
                 'restaurant' => $restaurant,
             ],
         );
+    }
+
+    public function showIndividualDish($id, $state){
+        
+        $dish = Dishes::findOrFail($id);
+
+        $allergens =  AllergenService::parse($dish->allergen_string)['allergens'];
+        $removeable =  AllergenService::parse($dish->allergen_string)['combined'];
+        
+        return view('user.individual', ['dish' => $dish, 'state' => $state], compact('allergens', 'removeable'));
     }
 
   

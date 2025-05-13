@@ -1,8 +1,33 @@
-<h1>QR Code for {{ $restaurantCode }}</h1>
+@extends('admin.layout')
 
-<div>
-    {!! QrCode::size(250)->generate($url) !!}
+@section('content')
+<div class="qr-page">
+    <div class="qr-header">
+        <h1>QR Code for <span>{{ $restaurantCode }}</span></h1>
+        <p class="qr-subtitle">Scan or print this code to access your public page.</p>
+    </div>
+
+    <div class="qr-card" id="qr-code-section">
+        <div class="qr-image">
+            {!! QrCode::size(250)->generate($url) !!}
+        </div>
+        <p class="qr-url">{{ $url }}</p>
+    </div>
+
+    <button onclick="printQRCode()" class="btn-print">🖨️ Print QR Code</button>
 </div>
 
-<p>Scan this code to view your public page:</p>
-<p><strong>{{ $url }}</strong></p>
+<script>
+    function printQRCode() {
+        const qrContent = document.getElementById('qr-code-section').innerHTML;
+        const printWindow = window.open('', '', 'height=500,width=500');
+        printWindow.document.write('<html><head><title>Print QR Code</title>');
+        printWindow.document.write('<style>body{display:flex;justify-content:center;align-items:center;height:100%;font-family:Inter,sans-serif;} img{width:250px;height:250px;}</style>');
+        printWindow.document.write('</head><body >');
+        printWindow.document.write(qrContent);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    }
+</script>
+@endsection

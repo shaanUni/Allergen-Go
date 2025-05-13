@@ -1,0 +1,104 @@
+$font-primary: 'Inter', sans-serif;
+$green-nav: #40945c;
+$green-hover: darken($green-nav, 5%);
+$white: #ffffff;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.admin-navbar {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  font-family: $font-primary;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+
+  &--green {
+    background-color: $green-nav;
+    color: $white;
+
+    .admin-navbar__brand {
+      color: $white;
+
+      &:hover {
+        color: lighten($white, 10%);
+      }
+    }
+
+    .admin-navbar__greeting {
+      color: #e1f5e9;
+    }
+
+    .btn-login {
+      background-color: transparent;
+      border: 1px solid #e1f5e9;
+      color: #ffffff;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    .btn-logout {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid #ef9a9a;
+      color: #ffdddd;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+    }
+  }
+
+  &__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__brand {
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    form {
+      margin: 0;
+    }
+  }
+
+  .btn-login,
+  .btn-logout {
+    background-color: transparent;
+    border: 1px solid #ffc2c2;
+    color: #ffffff;
+    padding: 0.45rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+    
+
+    &:hover {
+      background-color: #ffdddd;
+      color: #b22222;
+      border-color: #ffaaaa;
+    }
+  
+    &:active {
+      background-color: #f9caca;
+      color: #a00000;
+    }
+  }
+  
+}

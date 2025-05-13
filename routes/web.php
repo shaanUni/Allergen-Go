@@ -23,6 +23,9 @@ Route::prefix('user')->name('user.')->group(function(){
     Route::post('searchCode', [SearchController::class, 'searchCode'])->name('searchCode');
     Route::get('qr/{code}', [SearchController::class, 'qrCode'])->name('qr');
 
+    Route::post('individual/{id}/{state}', [SearchController::class, 'showIndividualDish'])->name('individual');
+
+
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {

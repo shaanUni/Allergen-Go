@@ -1,0 +1,128 @@
+$font-primary: 'Inter', sans-serif;
+$color-bg: #e9f5e9;
+$color-bg-warning: #ffe5e5;
+$color-header: #b9e4c9;
+$color-title: #267a3d;
+$color-text: #444;
+$color-accent: #d14343;
+$gray-light: #f5f5f5;
+$gray-dark: #555;
+$badge-bg: #fef3c7;
+$badge-text: #92400e;
+
+.dish-card__description {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+
+
+.dish-card {
+  width: 99.2vw;
+  height: 100vh;
+  background-color: $color-bg;
+  font-family: $font-primary;
+  display: flex;
+  flex-direction: column;
+
+  &--warning {
+    background-color: $color-bg-warning;
+  }
+
+  &__header {
+    background-color: $color-header;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+
+    .icon-button {
+      background: none;
+      border: none;
+      font-size: 1rem;
+      color: #222;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 4px 8px;
+      transition: color 0.2s;
+
+      &:hover {
+        color: $color-title;
+      }
+    }
+  }
+
+  &__content {
+    flex: 1;
+    padding: 24px 20px;
+    overflow-y: auto;
+    background-color: white;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: $color-title;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 1rem;
+      color: $color-text;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  &__ingredients {
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: #222;
+      letter-spacing: 0.5px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        background-color: $gray-light;
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.95rem;
+
+        .allergen {
+          font-weight: 500;
+          color: $gray-dark;
+        }
+
+        .tag-removeable {
+          background-color: $badge-bg;
+          color: $badge-text;
+          font-size: 0.75rem;
+          padding: 4px 8px;
+          border-radius: 12px;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+
+  .warning-box {
+    background-color: #fff0f0;
+    border-left: 5px solid $color-accent;
+    color: $color-accent;
+    padding: 12px 16px;
+    margin-top: 2rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+}

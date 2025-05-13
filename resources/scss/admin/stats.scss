@@ -1,0 +1,95 @@
+$font-primary: 'Inter', sans-serif;
+$accent-color: #40945c;
+$border-color: #e0e0e0;
+$bg-light: #f9f9f9;
+
+.stats-page {
+  font-family: $font-primary;
+  padding: 2rem;
+
+  .stats-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+  }
+
+  .stats-card {
+    background-color: white;
+    border: 1px solid $border-color;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+
+    h2 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: $accent-color;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-info {
+      font-size: 0.95rem;
+      color: #666;
+      margin-bottom: 1rem;
+    }
+
+    .stat-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      .stat-item {
+        font-size: 0.95rem;
+        background-color: $bg-light;
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        color: #444;
+      }
+    }
+
+    .allergen-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0.75rem;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 0.95rem;
+        color: #444;
+
+        .allergen-name {
+          font-weight: 500;
+        }
+
+        .allergen-count {
+          font-weight: 600;
+          color: $accent-color;
+        }
+      }
+    }
+  }
+}
+.stats-total {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 2rem;
+    text-align: center;
+  
+    span {
+      font-weight: 700;
+      color: #40945c;
+    }
+  }
+  

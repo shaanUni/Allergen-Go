@@ -7,25 +7,27 @@
     <meta name="author" content="">
     <meta name="csrf_token" content="{{ csrf_token() }}"/>
     <title>Admin Area</title>
-    @vite(['resources/js/app.js'])
+    @vite(['resources/js/admin.js'])
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light px-4">
-        <a class="navbar-brand" href="{{ route('admin.dashboard') }}">Admin Panel</a>
+<nav class="admin-navbar admin-navbar--green">
+    <div class="admin-navbar__container">
+        <a class="admin-navbar__brand" href="{{ route('admin.dashboard') }}">AlergenGo Admin Panel</a>
 
-        <div class="ms-auto">
+        <div class="admin-navbar__right">
             @auth('admin')
-                <span class="me-3">Hello, {{ auth('admin')->user()->name }}</span>
-
-                <form method="POST" action="{{ route('admin.logout') }}" class="d-inline">
+                <span class="admin-navbar__greeting">Hi, {{ auth('admin')->user()->name }}</span>
+                <form method="POST" action="{{ route('admin.logout') }}">
                     @csrf
-                    <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
+                    <button type="submit" class="btn-logout">Logout</button>
                 </form>
             @else
-                <a href="{{ route('admin.login') }}" class="btn btn-outline-primary btn-sm">Login</a>
+                <a href="{{ route('admin.login') }}" class="btn-login">Login</a>
             @endauth
         </div>
-    </nav>
+    </div>
+</nav>
+
 
     <div class="container py-4">
         @yield('content')
