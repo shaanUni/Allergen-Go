@@ -1,4 +1,4 @@
 import './bootstrap';
-import '../scss/app.scss';
-import '../scss/user.scss';
+import '../scss/admin/admin.scss';
+import '../scss/user/user.scss';
 
