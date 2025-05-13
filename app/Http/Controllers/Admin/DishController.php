@@ -38,6 +38,7 @@ class DishController extends Controller
             'description' => 'nullable|string',
             'allergens' => 'array',
             'price' => 'required|numeric|min:0',
+            'halal' => 'boolean',
         ]);
 
         $allergenString = AllergenService::restaurantSerialize($request);
@@ -45,7 +46,6 @@ class DishController extends Controller
         //ensure that we are only adding the dish to the correct restaurant
         $validated['admin_id'] = Auth::guard('admin')->id();
         $validated['allergen_string'] = $allergenString;
-
         Dishes::create($validated);
 
         return redirect()->route('admin.dishes.index')->with('success', 'Dish created successfully.');
@@ -78,6 +78,7 @@ class DishController extends Controller
             'description' => 'nullable|string',
             'allergens' => 'array',
             'price' => 'required|numeric|min:0',
+            'halal' => 'boolean',
         ]);
 
         $allergenString = AllergenService::restaurantSerialize($request);

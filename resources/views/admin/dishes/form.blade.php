@@ -38,6 +38,21 @@
 </div>
 
 <div class="mb-3">
+    <label class="form-label">Other dietary needs: </label><br>
+    <div class="border rounded p-2 mb-2">
+        <div class="form-check">
+            @if (isset($dish->halal) == true)
+                <input type="hidden" name="halal" value="0">
+            @endif
+            <input type="checkbox" class="form-check-input" id="halal" name="halal" value="1" {{ old('halal', $dish->halal ?? false) ? 'checked' : '' }}>
+
+            <label class="form-check-label" for="halal">halal</label>
+        </div>
+    </div>
+</div>
+
+
+<div class="mb-3">
     <label for="price" class="form-label">Price</label>
     <input type="number" name="price" id="price" step="0.01" class="form-control"
         value="{{ old('price', $dish->price ?? '') }}" required>
