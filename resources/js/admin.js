@@ -1,4 +1,6 @@
 // admin.js
+import './bootstrap';
+
 import '../scss/admin/admin.scss';
 import '../scss/admin/dashboard.scss';
 import '../scss/admin/dishes-list.scss';

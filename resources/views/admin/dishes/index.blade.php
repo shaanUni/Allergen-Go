@@ -9,6 +9,12 @@
             <a href="{{ route('admin.dishes.create') }}" class="btn-primary">+ Add New Dish</a>
         </div>
     </div>
+    
+    <form method="GET" action="{{ route('admin.dishes.index') }}" class="mb-3 search-dishes-div">
+        <input class="form-control text-box" type="text" name="search_dish" placeholder="search" value="{{ request('search_dish') }}">
+        <button type="submit" class="btn btn-primary">Search</button>
+        <a type="submit" href="{{ route('admin.dishes.index') }}" class="btn btn-primary red-btn">Clear</a>
+    </form>
 
     <div class="dishes-table-wrapper">
         <table class="dishes-table">
@@ -42,8 +48,12 @@
                     <td colspan="5" class="empty-row">No dishes found.</td>
                 </tr>
                 @endforelse
+        
             </tbody>
         </table>
     </div>
+    {{ $dishes->links('pagination::bootstrap-5') }}
+
 </div>
+
 @endsection
