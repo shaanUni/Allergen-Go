@@ -52,6 +52,13 @@ class StatsPageController extends Controller
         $restaurant = Admin::find(Auth::guard('admin')->id());
         $restaurantCode = $restaurant->restaurant_code;
 
+        $halalUsers = Searches::with('admin.dishes')
+        ->where('admin_id', Auth::guard('admin')->id())
+        ->where('halal', true)
+        ->get();
+        
+        $totalHalalUsers = count($halalUsers);
+
         //List of allergens for the form
         $allergens = config('allergens');
 
@@ -64,6 +71,7 @@ class StatsPageController extends Controller
                 'allergens' => $allergens,
                 'code' => $restaurantCode, // restaurant ID for the search form
                 'failedSearchCount' => $failedSearchesCount,
+                'totalHalalUsers' => $totalHalalUsers,
             ],
         );
     }

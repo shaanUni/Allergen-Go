@@ -18,8 +18,9 @@ class SearchService
         $validated = $request->validate([
             'restaurant_code' => 'required|string|max:20|alpha_dash',
             'allergens' => 'required|array',
+            'halal' => 'boolean'
         ]);
-
+        $halal = $validated['halal'];
         //This will contian an array of all the users allergies
         $userAllergies = $validated['allergens'];
 
@@ -27,7 +28,7 @@ class SearchService
         $restaurantCode = $validated['restaurant_code'];
 
         //Compare user allergies with restaurant dishes allergens
-        $filteredAllergens = self::filterAllergens($userAllergies, $restaurantCode, $whoami);
+        $filteredAllergens = self::filterAllergens($userAllergies, $halal, $restaurantCode, $whoami);
 
         //If the restaurant code was invalid, redirect
         if (!$filteredAllergens && $whoami == "user") {
@@ -48,7 +49,7 @@ class SearchService
     }
 
     //Main function that compares user allergies with dish allergens
-    public static function filterAllergens($userAllergies, $restaurantCode, $whoami)
+    public static function filterAllergens($userAllergies, $halal, $restaurantCode, $whoami)
     {
         //Here we find the admin (restaurant) where the restaurant_code matches ours, and we eager load it with all of the dishes
         $restaurant = Admin::with('dishes')->where('restaurant_code', $restaurantCode)->first();
@@ -90,7 +91,7 @@ class SearchService
                 if ($removeable == false) {
                     $filteredDishAllergens[] = $dishAllergens[$i];
                     //If it is removeable and the removeable allergen is in the users allergies
-                } else if ($removeable == true && in_array($dishAllergens[$i], $userAllergies)) {
+                } else if ($removeable == true && in_array($dishAllergens[$i], $userAllergies) && self::isHalal($dish->halal, $halal)) {
                     //If the dish has already been added to the array, skip the rest of the iteration
                     if (in_array($dish->id, $existingIds)) {
                         $i++;
@@ -102,7 +103,6 @@ class SearchService
 
                     //We now know this dish has been added to the removeables array
                     $existingIds[] = $dish->id;
-
                 }
 
                 //Even if there is 1 removeable allergen, there may be another non removeable one that the user is allergic to.  
@@ -123,9 +123,9 @@ class SearchService
 
             //Array intersect will return an array of values that are common in both arrays
             $commonAllergens = array_intersect($filteredDishAllergens, $userAllergies);
-
-            //If the array is empty, this means the dish does not have any allergens the user is allergic to
-            if (empty($commonAllergens)) {
+            
+            //If the array is empty, this means the dish does not have any allergens the user is allergic to, also ensure that the food is halal if user needs that
+            if (empty($commonAllergens) && self::isHalal($dish->halal, $halal)) {
                 $edibleDishes[] = $dish; // edibleDishes += dish
             }
         }
@@ -164,6 +164,7 @@ class SearchService
                 'admin_id' => $restaurantID,
                 'user_allergy_string' => $userAllergiesString,
                 'failure' => $searchFailureStatus,
+                'halal' => $halal,
             ]);
         }
 
@@ -172,5 +173,15 @@ class SearchService
             'removeables' => $dishesWithRemoveables,
             'restaurant' => $restaurant,
         ];
+    }
+
+    //behaviour for dealing with halal dishes
+    public static function isHalal($dishHalal, $userHalal){
+        if($userHalal == true && $dishHalal == true){
+            return true;
+        }else if($userHalal == false){
+            return true;
+        }
+        return false;
     }
 }

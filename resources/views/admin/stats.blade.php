@@ -6,6 +6,7 @@
     <div class="stats-page">
         <h1 class="stats-title">AllergenGo Stats Overview</h1>
         <p class="stats-total">Total Number of Searches: <span>{{ $totalSearches }}</span></p>
+        <p class="stats-total">Total Number of Searches by halal users: <span>{{ $totalHalalUsers }}</span></p>
 
         <div class="stats-grid">
             <!-- Failed Searches Box -->
