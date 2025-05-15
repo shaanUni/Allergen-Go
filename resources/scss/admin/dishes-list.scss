@@ -5,6 +5,22 @@ $border-color: #e0e0e0;
 $text-dark: #333;
 $text-muted: #666;
 
+.text-box{
+  width: 40%; 
+  margin-right: 10px;
+}
+.search-dishes-div{
+  display: flex; 
+  align-items: center;
+  padding-top: 20px;
+}
+
+.red-btn{
+  background-color: red !important;
+  position: relative;
+  left: 10px;
+}
+
 .dishes-page {
   font-family: $font-primary;
   padding: 2rem;

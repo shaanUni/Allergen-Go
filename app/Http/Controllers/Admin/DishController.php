@@ -19,10 +19,28 @@ class DishController extends Controller
         //We have a file which the whole codebase uses to acsess allergens. This is the single source of truth for whole app/site, which will refer here.
         $this->allergens = config('allergens');
     }
-    public function index()
+    public function index(Request $request)
     {
+        $request->validate([
+            'search_dish' => ['nullable', 'string', 'max:255']
+        ]);
+
         //retrive all dishes belonging to the currently authenticated admin
-        $dishes = Dishes::where('admin_id', Auth::guard('admin')->id())->get();
+        $dishes = Dishes::where('admin_id', Auth::guard('admin')->id());
+
+        //If admin used searchbar to search for dish by name or description
+        if($request->filled('search_dish')){
+            $search = $request->input('search_dish');
+            //query
+            $dishes->where(function ($q) use ($search){
+                $q->where('dish_name', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+        
+        //paginate dishes, including the query we made if there is one
+        $dishes = $dishes->paginate(10);
+
         return view('admin.dishes.index', compact('dishes'));
     }
     public function create()
