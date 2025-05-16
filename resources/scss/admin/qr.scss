@@ -279,10 +279,9 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
+  padding: 0.5rem 2rem;
   background: #fff;
-  border: 1px solid $border-color;
-  border-radius: 6px;
+  border: none;
   cursor: pointer;
   transition: all 0.2s;
   &:hover {
@@ -323,23 +322,12 @@ body {
   }
 }
 
-.info-box {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  background-color: #ffffff;
-  border-left: 5px solid $green-nav;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+.textbox{
+  width: 90%; 
+  margin-right: 10px;
+}
 
-  h2 {
-    font-size: 1.25rem;
-    margin-bottom: 0.75rem;
-    color: $green-dark;
-  }
-
-  p {
-    font-size: 0.95rem;
-    line-height: 1.6;
-    margin-bottom: 0.75rem;
-  }
+.admin-div-flex{
+  display: flex; 
+  align-items: center;
 }

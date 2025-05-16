@@ -1,13 +1,21 @@
 @csrf
-<label for="restaurant_code"></label>
-@if (isset($code))
-    <input type="text" class="form-control" name="restaurant_code" id="restaurant_code" value="{{ $code  }}" readonly required>
-@else
-    <input type="text" class="form-control" placeholder="Enter Restaurant Code:" name="restaurant_code" id="restaurant_code"
-        required>
-@endif
 
-<button type="submit" class="submit-form-btn">Submit</button>
+@if (isset($failedSearchCount))
+    <div class="admin-div-flex">
+@endif
+    <label for="restaurant_code"></label>
+    @if (isset($code))
+        <input type="text" class="form-control textbox" name="restaurant_code" id="restaurant_code" value="{{ $code  }}"
+            readonly required>
+    @else
+        <input type="text" class="form-control" placeholder="Enter Restaurant Code:" name="restaurant_code"
+            id="restaurant_code" required>
+    @endif
+    <button type="submit" class="submit-form-btn">Submit</button>
+    @if (isset($failedSearchCount))
+        </div>
+    @endif
+
 
 <div class="mb-3 allergy-form">
     <label class="form-label test">Select your allergies:</label><br>

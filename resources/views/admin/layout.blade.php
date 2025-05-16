@@ -7,7 +7,6 @@
     <meta name="author" content="">
     <meta name="csrf_token" content="{{ csrf_token() }}"/>
     <title>Admin Area</title>
-    @vite(['resources/css/app.css','resources/js/app.js'])
     @vite(['resources/js/admin.js'])
 </head>
 <body>
