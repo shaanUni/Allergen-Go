@@ -7,6 +7,7 @@
     <meta name="author" content="">
     <meta name="csrf_token" content="{{ csrf_token() }}"/>
     <title>User Area</title>
+    @vite(['resources/css/app.css','resources/js/app.js'])
     @vite(['resources/js/user.js'])
 </head>
 <body>

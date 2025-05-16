@@ -7,11 +7,12 @@
     <meta name="author" content="">
     <meta name="csrf_token" content="{{ csrf_token() }}"/>
     <title>Admin Area</title>
+    @vite(['resources/css/app.css','resources/js/app.js'])
     @vite(['resources/js/admin.js'])
 </head>
 <body>
-<nav class="admin-navbar admin-navbar--green">
-    <div class="admin-navbar__container">
+<nav class="admin-navbar {{  app()->environment('local') ? 'admin-navbar--green local' : 'admin-navbar--green' }}">
+    <div class="admin-navbar__container ">
         <a class="admin-navbar__brand" href="{{ route('admin.dashboard') }}">AlergenGo Admin Panel</a>
 
         <div class="admin-navbar__right">
