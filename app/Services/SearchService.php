@@ -17,24 +17,44 @@ class SearchService
         //Validate code entered by user
         $validated = $request->validate([
             'restaurant_code' => 'required|string|max:20|alpha_dash',
-            'allergens' => 'required|array',
+            'allergens' => 'array',
             'halal' => 'boolean'
         ]);
+
+        //Here we find the admin (restaurant) where the restaurant_code matches ours, and we eager load it with all of the dishes
+        $restaurant = Admin::with('dishes')->where('restaurant_code', $validated['restaurant_code'])->first();
+
+        //if the search found no matches
+        if ($restaurant == null) {
+            return "code";
+        }
+
+        //If the user entered the form with no info
+        if (isset($validated['allergens']) == 0 && $validated['halal'] == 0) {
+            return "empty";
+        }
+
         $halal = $validated['halal'];
-        //This will contian an array of all the users allergies
-        $userAllergies = $validated['allergens'];
+
+        $userAllergies = [];
+
+        //In case they don't have an allergy, they just want to search for halal dishes
+        if (isset($validated['allergens'])) {
+            //This will contian an array of all the users allergies
+            $userAllergies = $validated['allergens'];
+        }
 
         //store validated code in restaurantCode
         $restaurantCode = $validated['restaurant_code'];
 
         //Compare user allergies with restaurant dishes allergens
-        $filteredAllergens = self::filterAllergens($userAllergies, $halal, $restaurantCode, $whoami);
+        $filteredAllergens = self::filterAllergens($userAllergies, $halal, $restaurant, $whoami);
 
         //If the restaurant code was invalid, redirect
         if (!$filteredAllergens && $whoami == "user") {
-            return redirect()->route('user.search')->with('failure', 'Code invalid. try again.');
+            return false;
         } else if (!$filteredAllergens && $whoami == "client") {
-            return redirect()->route('admin.stats')->with('failure', 'Code invalid. try again.');
+            return false;
         }
 
         $edibleDishes = $filteredAllergens['dishes'];
@@ -49,15 +69,9 @@ class SearchService
     }
 
     //Main function that compares user allergies with dish allergens
-    public static function filterAllergens($userAllergies, $halal, $restaurantCode, $whoami)
+    public static function filterAllergens($userAllergies, $halal, $restaurant, $whoami)
     {
-        //Here we find the admin (restaurant) where the restaurant_code matches ours, and we eager load it with all of the dishes
-        $restaurant = Admin::with('dishes')->where('restaurant_code', $restaurantCode)->first();
 
-        //if the search found no matches
-        if ($restaurant == null) {
-            return false;
-        }
 
         //Get the dishes that where eager loaded
         $dishes = $restaurant->dishes;
@@ -123,7 +137,7 @@ class SearchService
 
             //Array intersect will return an array of values that are common in both arrays
             $commonAllergens = array_intersect($filteredDishAllergens, $userAllergies);
-            
+
             //If the array is empty, this means the dish does not have any allergens the user is allergic to, also ensure that the food is halal if user needs that
             if (empty($commonAllergens) && self::isHalal($dish->halal, $halal)) {
                 $edibleDishes[] = $dish; // edibleDishes += dish
@@ -133,7 +147,7 @@ class SearchService
         //We only want to do all of the logging stuff if it is a user doing the search, not the client themselves
         if ($whoami == "user") {
             //Restaurant ID for Searches table
-            $restaurantID = Admin::where('restaurant_code', $restaurantCode)->first()->id;
+            $restaurantID = $restaurant->id;
 
             //The allergen count table stores each allergen for a restaurant, and how many users have had that allergy, or more accurateley, how many searches have contained that allergy
             foreach ($userAllergies as $allergy) {
@@ -176,10 +190,11 @@ class SearchService
     }
 
     //behaviour for dealing with halal dishes
-    public static function isHalal($dishHalal, $userHalal){
-        if($userHalal == true && $dishHalal == true){
+    public static function isHalal($dishHalal, $userHalal)
+    {
+        if ($userHalal == true && $dishHalal == true) {
             return true;
-        }else if($userHalal == false){
+        } else if ($userHalal == false) {
             return true;
         }
         return false;

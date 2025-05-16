@@ -17,10 +17,14 @@
                 </p>
                 <div class="stat-list">
                     @foreach ($failedSearches as $failed)
-                        @php
-                            $failedAllergens = \App\Services\AllergenService::parse($failed->user_allergy_string)['allergens'];
-                        @endphp
-                        <p class="stat-item">{{ implode(', ', $failedAllergens) }}</p>
+                                    @php
+                                        $failedAllergens = \App\Services\AllergenService::parse($failed->user_allergy_string)['allergens'];
+                                    @endphp
+                        @if ($failed->halal == 1)
+                            <p class="stat-item">User wanted a halal dish, and the allergens where - {{ implode(', ', $failedAllergens) }}</p>
+                        @else
+                            <p class="stat-item">{{ implode(', ', $failedAllergens) }}</p>
+                        @endif
                     @endforeach
                 </div>
             </div>
@@ -47,7 +51,7 @@
         <form method="POST" action="{{ route('admin.search') }}">
             @include('components.form')
         </form>
-        </div>
+    </div>
 
 
 @endsection

@@ -46,6 +46,13 @@ class SearchController extends Controller
         //Call a service method that will compare user allergies with the dish allergens
         $filteredAllergens = SearchService::search($request, "user");
         
+        //The search service will return false if the user added no data to the form or restaurant code, so redirect
+        if($filteredAllergens == "empty"){
+            return redirect()->route('user.qr', ['code' => $request['restaurant_code']])->with('failure', 'You must select either halal, or one allergen.');
+        }else if($filteredAllergens == "code"){ // if the user entered an invalid code
+            return redirect()->route('user.search')->with('failure', 'You must select a valid code.');
+        }
+
         //Gather results to pass through
         $edibleDishes = $filteredAllergens['dishes'];
         $dishesWithRemoveables = $filteredAllergens['removeables'];
