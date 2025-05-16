@@ -10,7 +10,7 @@
     @vite(['resources/js/user.js'])
 </head>
 <body>
-    <div class="nav-div">
+    <div class="nav-div {{  app()->environment('local') ? 'local' : 'green' }}">
         <nav>
             <li class="logo">AllergenGo</li>
         </nav>

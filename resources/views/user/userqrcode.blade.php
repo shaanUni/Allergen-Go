@@ -7,12 +7,14 @@
         </div>
     @endif
     <div class="main">
-        <h2 class="search-title">Search for dishes: </h2>
-        
-        <form method="POST" action="{{ route('user.searchCode') }}">
-            @include('components.form')
-        </form>
+    <div class="search-section">
+            <h1 class="search-title">Search for Dishes</h1>
 
+            <form method="POST" action="{{ route('user.searchCode') }}" class="allergy-form">
+                @csrf
+                @include('components.form')
+            </form>
+        </div>
         <div class="info-box">
             <h2>Some information about AllergenGo: </h2>
         <p>If you are here, you must have allergies. The restaurant code you will enter will identify where you are eating. </p>
