@@ -5,8 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AllergenGo — Allergy-Safe Dining Made Simple</title>
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+
     <style>
         :root {
             --green: #40945c;
@@ -19,12 +19,10 @@
             --container-width: 1200px;
         }
 
-        *,
-        *::before,
-        *::after {
+        * {
             box-sizing: border-box;
         }
-
+     
         body {
             margin: 0;
             font-family: 'Inter', sans-serif;
@@ -38,20 +36,9 @@
             text-decoration: none;
         }
 
-        /* Utility */
-        .container {
-            max-width: var(--container-width);
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-
         .btn {
-            display: inline-block;
-            padding: 0.75rem 1.75rem;
-            border: none;
             border-radius: var(--radius);
             font-weight: 600;
-            cursor: pointer;
             transition: background var(--transition);
         }
 
@@ -64,44 +51,11 @@
             background: var(--green-dark);
         }
 
-        /* Header */
-        header {
-            background: #fff;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem 0;
-        }
-
-        .nav-logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--green-dark);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-        }
-
-        .nav-links a {
-            font-weight: 500;
-            color: var(--text-light);
-        }
-
-        .nav-links a:hover {
-            color: var(--text);
-        }
-
-        .get-started-btn{
+        .get-started-btn {
             color: white !important;
+            background-color: green !important;
         }
 
-        /* Hero */
         .hero {
             background: linear-gradient(135deg, #e9f5e9, #cdeedb);
             text-align: center;
@@ -122,7 +76,6 @@
             font-size: 1.125rem;
         }
 
-        /* Sections */
         section {
             padding: 4rem 0;
         }
@@ -135,7 +88,6 @@
             margin-bottom: 2rem;
         }
 
-        /* Features */
         #features .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -161,7 +113,6 @@
             font-size: 0.95rem;
         }
 
-        /* Why */
         #why .text-block {
             background: #fff;
             padding: 2.5rem;
@@ -176,7 +127,6 @@
             color: var(--text-light);
         }
 
-        /* Footer */
         footer {
             background: #f0f0f0;
             text-align: center;
@@ -185,7 +135,6 @@
             color: var(--text-light);
         }
 
-        /* Responsive tweaks */
         @media (min-width: 768px) {
             .hero h1 {
                 font-size: 3rem;
@@ -194,10 +143,6 @@
             .hero p {
                 font-size: 1.25rem;
             }
-
-            nav {
-                padding: 1.25rem 0;
-            }
         }
     </style>
 </head>
@@ -205,17 +150,31 @@
 <body>
 
     <header>
-        <div class="container">
-            <nav>
-                <a href="#" class="nav-logo">AllergenGo</a>
-                <div class="nav-links">
-                    <a class="btn" href="#features">Features</a>
-                    <a class="btn" href="#why">Why Us?</a>
-                    <a href="{{ route('user.search') }}" class="btn btn-primary get-started-btn">Get Started</a>
-                    <a href="{{ route('admin.login') }}" class="btn">Admin Login</a>
+        <nav class="navbar navbar-expand-lg bg-white shadow-sm">
+            <div class="container">
+                <a class="navbar-brand fw-bold text-success" href="#">AllergenGo</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav gap-2 align-items-center">
+                        <li class="nav-item">
+                            <a class="btn" href="#features">Features</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn" href="#why">Why Us?</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('user.search') }}" class="btn btn-primary get-started-btn">Get Started</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.login') }}" class="btn">Admin Login</a>
+                        </li>
+                    </ul>
                 </div>
-            </nav>
-        </div>
+            </div>
+        </nav>
     </header>
 
     <main>
@@ -224,7 +183,7 @@
                 <h1>Safe, simple dining for people with allergies</h1>
                 <p>Scan any restaurant’s QR code, filter out your allergens, and instantly see only the dishes you can
                     trust.</p>
-                <a href="{{ route('user.search') }}" class="btn btn-primary">Get Started</a>
+                <a href="{{ route('user.search') }}" class="btn btn-primary get-started-btn">Get Started</a>
             </div>
         </section>
 
@@ -262,12 +221,11 @@
                         will then be able to generate a QR code, which users will then scan.
                         Once they scan the qr code, they will enter what they are allergic to, and the app will compare
                         their allergies to the allergens in your dishes, and return a list of dishes they can eat.
-
                     </p>
 
                     <p>
-                        You will have acsess to a Statistics page, where you can gain futher insights and information,
-                        which can help you make better informed descisions in the future.
+                        You will have access to a Statistics page, where you can gain further insights and information,
+                        which can help you make better informed decisions in the future.
                     </p>
                 </div>
             </div>
@@ -277,6 +235,7 @@
     <footer>
         AllergenGo — Allergy-Safe Dining Made Simple
     </footer>
+    @vite('resources/js/app.js')
 
 </body>
 
