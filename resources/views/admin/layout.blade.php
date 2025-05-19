@@ -12,7 +12,7 @@
 <body>
 <nav class="admin-navbar {{  app()->environment('local') ? 'admin-navbar--green local' : 'admin-navbar--green' }}">
     <div class="admin-navbar__container ">
-        <a class="admin-navbar__brand" href="{{ route('admin.dashboard') }}">AlergenGo Admin Panel</a>
+        <a class="admin-navbar__brand" href="{{ route('admin.dashboard') }}">AllergenGo Admin Panel</a>
 
         <div class="admin-navbar__right">
             @auth('admin')

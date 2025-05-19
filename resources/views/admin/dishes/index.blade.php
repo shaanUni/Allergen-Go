@@ -1,11 +1,14 @@
 @extends('admin.layout')
 
 @section('content')
+<form action="{{ route('admin.dashboard') }}" method="get" style="display:inline;">
+  <button type="submit" class="back-button">Back to Dashboard</button>
+</form>
+
 <div class="dishes-page">
     <div class="dishes-header">
         <h1 class="page-title">Manage Dishes</h1>
         <div class="dishes-actions">
-            <a href="{{ route('admin.dashboard') }}" class="btn-secondary">Back to Dashboard</a>
             <a href="{{ route('admin.dishes.create') }}" class="btn-primary">+ Add New Dish</a>
         </div>
     </div>

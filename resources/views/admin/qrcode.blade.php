@@ -1,6 +1,10 @@
 @extends('admin.layout')
 
 @section('content')
+<form action="{{ route('admin.dashboard') }}" method="get" style="display:inline;">
+  <button type="submit" class="back-button">Back to Dashboard</button>
+</form>
+
 <div class="qr-page">
     <div class="qr-header">
         <h1>QR Code for <span>{{ $restaurantCode }}</span></h1>

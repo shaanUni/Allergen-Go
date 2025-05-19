@@ -13,6 +13,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/restaurant', function () {
+    return view('restaurant');
+})->name('restaurant');
+
 Route::get('/login', function () {
     return redirect()->route('admin.login');
 })->name('login');
@@ -24,8 +28,6 @@ Route::prefix('user')->name('user.')->group(function(){
     Route::get('qr/{code}', [SearchController::class, 'qrCode'])->name('qr');
 
     Route::post('individual/{id}/{state}', [SearchController::class, 'showIndividualDish'])->name('individual');
-
-
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {

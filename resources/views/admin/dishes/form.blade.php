@@ -59,5 +59,5 @@
 </div>
 
 <button type="submit" class="btn btn-primary">
-    {{ isset($dish->admin_id) ? 'Update allergen' : 'Create allergen' }}
+    {{ isset($dish->admin_id) ? 'Update Dish' : 'Create Dish' }}
 </button>

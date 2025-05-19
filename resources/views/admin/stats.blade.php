@@ -2,6 +2,10 @@
 
 @section('content')
 
+<form action="{{ route('admin.dashboard') }}" method="get" style="display:inline;">
+  <button type="submit" class="back-button">Back to Dashboard</button>
+</form>
+
 
     <div class="stats-page">
         <h1 class="stats-title">AllergenGo Stats Overview</h1>
@@ -17,11 +21,12 @@
                 </p>
                 <div class="stat-list">
                     @foreach ($failedSearches as $failed)
-                                    @php
-                                        $failedAllergens = \App\Services\AllergenService::parse($failed->user_allergy_string)['allergens'];
-                                    @endphp
+                        @php
+                            $failedAllergens = \App\Services\AllergenService::parse($failed->user_allergy_string)['allergens'];
+                        @endphp
                         @if ($failed->halal == 1)
-                            <p class="stat-item">User wanted a halal dish, and the allergens where - {{ implode(', ', $failedAllergens) }}</p>
+                            <p class="stat-item">User wanted a halal dish, and the allergens where -
+                                {{ implode(', ', $failedAllergens) }}</p>
                         @else
                             <p class="stat-item">{{ implode(', ', $failedAllergens) }}</p>
                         @endif

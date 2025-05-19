@@ -167,7 +167,7 @@
                             <a class="btn" href="#why">Why Us?</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('restaurant') }}" class="btn btn-primary get-started-btn">For Restaurants</a>
+                            <a href="{{ route('user.search') }}" class="btn btn-primary get-started-btn">Get Started</a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('admin.login') }}" class="btn">Admin Login</a>
@@ -182,8 +182,7 @@
         <section class="hero">
             <div class="container">
                 <h1>Safe, simple dining for people with allergies</h1>
-                <p>Scan any restaurant’s QR code, filter out your allergens, and instantly see only the dishes you can
-                    eat.</p>
+                <p>Add your dishes and allergens onto the app, and generate a QR code users can scan to filter these dishes based on their allergies.</p>
                 <a href="{{ route('user.search') }}" class="btn btn-primary get-started-btn">Get Started</a>
             </div>
         </section>
@@ -192,16 +191,16 @@
             <h2 class="section-title">Powerful Features</h2>
             <div class="features-grid">
                 <div class="feature">
-                    <h3>Search Dishes</h3>
-                    <p>Scan a QR code, add your allergens, and see which dishes are suitable for you to eat.</p>
+                    <h3>Real-Time Statistics</h3>
+                    <p>See which allergens customers report most often and optimize your menu for safety.</p>
                 </div>
                 <div class="feature">
-                    <h3>Fully Accurate</h3>
-                    <p>Feel confident knowing that the restaurant themselves at added the dishes and it's details.</p>
+                    <h3>You add the dishes</h3>
+                    <p>Add all your dishes and their allergens, so users can see the information.</p>
                 </div>
                 <div class="feature">
-                    <h3>Other Dietary Needs</h3>
-                    <p>No allergies, but looking for halal dishes? AllergenGo can search by halal dishes, so we have you covered.
+                    <h3>QR Code Menu Access</h3>
+                    <p>Generate a unique QR code so diners can view and filter your menu instantly.
                     </p>
                 </div>
             </div>
@@ -212,21 +211,21 @@
                 <h2 class="section-title">Why AllergenGo?</h2>
                 <div class="text-block">
                     <p>
-                        When you go out to eat with allergies you often need to speak
-                        to a chef, or read through a book. This method is outdated, unreliable, and prone to human
+                        When a person with an allergy comes to your restaurant, it often leads to them needing to speak
+                        to a chef, or reading through a book. This method is outdated, unreliable, and prone to human
                         error.
                     </p>
 
                     <p>
-                        With AllergenGo, you will scan a QR code, provided by the restaurant you are eating at.
-                        You will then enter your allergies and any other dietary restrictions you have, using our simple
-                        checkbox interface. You will then receive a list of edible dishes, which will help you decide which dish to buy.
+                        With AllergenGo, you will enter all your dishes on your admin page, with all the allergens. You
+                        will then be able to generate a QR code, which users will then scan.
+                        Once they scan the qr code, they will enter what they are allergic to, and the app will compare
+                        their allergies to the allergens in your dishes, and return a list of dishes they can eat.
                     </p>
 
                     <p>
-                        Best of all, it's free! So what do you have to lose? The traditional methods of
-                        finding a meal to eat is still there - however, after trying our site, you won't want
-                        to go back!
+                        You will have access to a Statistics page, where you can gain further insights and information,
+                        which can help you make better informed decisions in the future.
                     </p>
                 </div>
             </div>
@@ -234,7 +233,7 @@
     </main>
 
     <footer>
-        AllergenGo — Allergy Safe Dining, Made Simple
+        AllergenGo — Allergy-Safe Dining Made Simple
     </footer>
     @vite('resources/js/app.js')
 
