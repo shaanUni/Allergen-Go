@@ -1,8 +1,10 @@
 @extends('user.layout')
 
 @section('content')
+<div class="search-page">
+
     @if(session('failure'))
-        <div class="alert alert-danger">
+        <div class="alert-box alert-danger">
             {{ session('failure') }}
         </div>
     @endif
