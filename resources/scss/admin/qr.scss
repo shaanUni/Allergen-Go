@@ -158,31 +158,29 @@ $list-gap: 1.25rem;
     border-radius: 6px;
   }
 
+}
+.action-button {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  background-color: $green-nav;
+  color: white;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
 
-  .action-button {
-    padding: 0.5rem 1.25rem;
-    border: none;
-    background-color: $green-nav;
-    color: white;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s;
+  &.alert {
+    background-color: #e63946;
+  }
 
-    &.alert {
-      background-color: #e63946;
-    }
+  &:hover {
+    background-color: darken($green-nav, 10%);
+  }
 
-    &:hover {
-      background-color: darken($green-nav, 10%);
-    }
-
-    &.alert:hover {
-      background-color: darken(#e63946, 10%);
-    }
+  &.alert:hover {
+    background-color: darken(#e63946, 10%);
   }
 }
-
 .removeable-info {
   background-color: #fff6e6;
   border-left: 5px solid #ff9800;

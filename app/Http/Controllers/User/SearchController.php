@@ -57,7 +57,12 @@ class SearchController extends Controller
         $edibleDishes = $filteredAllergens['dishes'];
         $dishesWithRemoveables = $filteredAllergens['removeables'];
         $restaurant = $filteredAllergens['restaurant'];
-
+        
+        //Give the user a unique ID
+        if (!session()->has('guest_token')) {
+            session(['guest_token' => (string) Str::uuid()]);
+        }
+        
         //return to the view with the dish and restaurant
         return view(
             'user.list',

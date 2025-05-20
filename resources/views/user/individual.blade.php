@@ -33,13 +33,18 @@
             </ul>
         </div>
 
+
         @if ($state == 0)
         <div class="warning-box">
             <strong>⚠️ This dish contains allergens</strong><br>
             Some allergens can be removed, but please speak to the staff before ordering.
         </div>
         @endif
-
+    
+        <form method="POST" action="{{ route('user.individual', ['id' => $dish->id, 'state' => 1]) }}">
+                @csrf
+                <button type="submit" class="action-button-select">Select Dish</button>
+            </form>
     </div>
 </div>
 @endsection
