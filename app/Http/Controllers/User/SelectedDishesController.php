@@ -27,44 +27,15 @@ class SelectedDishesController extends Controller
         $this->allergens = config('allergens');
     }
 
+    //This method boths adds and removes selected dishes
     public function add($id, $state)
     {
-
-        if (!session()->has('selectedDishes')) {
-            session(['selectedDishes' => []]);
-        }
-        
-        if (!session()->has('selectedRemoveableDishes')) {
-            session(['selectedRemoveableDishes' => []]);
+        if ($state == "1") {
+            $selected = self::selectedDishHandler('selectedDishes', $id);
+        } else {
+            $selectedRemoveable = self::selectedDishHandler('selectedRemoveableDishes', $id);
         }
 
-        //store selected dishes array in local variable
-        $selected = session('selectedDishes', []);
-        $removeable = session('selectedRemoveableDishes', []);
-
-        if($state == 1){
-            if (!in_array($id, $selected)) {
-                $selected[] = $id;
-                session(['selectedDishes' => $selected]);
-            }else{
-                $modifiedArray = session('selectedDishes');
-                $arrayKey = array_search($id, $modifiedArray);
-                unset($modifiedArray[$arrayKey]); // remove
-                $modifiedArray = array_values($modifiedArray); // reindex
-                session(['selectedDishes' => $modifiedArray]); // place back in session
-            }
-        } else{
-            if(!in_array($id, $removeable)){
-                $removeable[] = $id;
-                session(['selectedRemoveableDishes' => $removeable]);
-            } else{
-                $modifiedArray = session('selectedRemoveableDishes');
-                unset($modifiedArray[$id]); // remove
-                $modifiedArray = array_values($modifiedArray); // reindex
-                session(['selectedDishes' => $modifiedArray]); // place back in session
-            }
-        }
-   
         //reload the list page with the details in memory
         $edibleDishes = session('dishes');
         $dishesWithRemoveables = session('removeables');
@@ -80,13 +51,14 @@ class SelectedDishesController extends Controller
         );
     }
 
+    //Render final page of users choices
     public function selected()
     {
-
+        //convert the array if ids into a collection of dishes
         $selectedDishes = Dishes::findMany(session("selectedDishes"));
         $removeable = Dishes::findMany(session("selectedRemoveableDishes"));
 
-        $dishesWithRemoveables = session('removeables');
+        //restaurant info from session
         $restaurant = session('restaurant');
 
         //remove everything from users session
@@ -102,6 +74,31 @@ class SelectedDishesController extends Controller
         );
     }
 
+    //Logic for creating an array in the session, and removing and adding dishes to it
+    public function selectedDishHandler($key, $id)
+    {
+        //If not yet created, then create the session with whatever key was given
+        if (!session()->has($key)) {
+            //init as an array
+            session([$key => []]);
+        }
+
+        //store selected dishes array in local variable
+        $selectedDishes = session($key, []);
+
+        //If it does not exsist in the array, we are adding it
+        if (!in_array($id, $selectedDishes)) {
+            $selectedDishes[] = $id;
+            session([$key => $selectedDishes]);
+            //else we are removing it from the array
+        } else {
+            $arrayKey = array_search($id, $selectedDishes); // find the index of the dish id
+            unset($selectedDishes[$arrayKey]); // use it to remove it from the array
+            $selectedDishes = array_values($selectedDishes); // reindex for a clean array
+            session([$key => $selectedDishes]); // place back in session
+        }
+
+    }
 
 
 }

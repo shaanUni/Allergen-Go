@@ -43,6 +43,11 @@ class SearchController extends Controller
 
     public function searchCode(Request $request)
     {   
+
+        if(session('selectedDishes')){
+            session()->forget(['selectedDishes', 'selectedRemoveableDishes']);
+        }
+
         //Call a service method that will compare user allergies with the dish allergens
         $filteredAllergens = SearchService::search($request, "user");
         
