@@ -25,17 +25,7 @@
                     <button type="submit" class="action-button">View Dish</button>
                 </form>
 
-                <form method="POST" action="{{ route('user.adddish', ['id' => $dish->id]) }}">
-                    @csrf
-                    <input type="hidden" name="dishes" value="{{ $dishes }}">
-                    <input type="hidden" name="removeables" value="{{ $removeables }}">
-                    <input type="hidden" name="restaurant" value="{{ $restaurant }}">
-                    <button type="submit">Add</button>
-                </form>
-
-                @csrf
                 <button type="submit" class="action-button">Add Dish</button>
-                </form>
 
 
             </div>

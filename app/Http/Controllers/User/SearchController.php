@@ -62,6 +62,16 @@ class SearchController extends Controller
         if (!session()->has('guest_token')) {
             session(['guest_token' => (string) Str::uuid()]);
         }
+
+        //Store the restaurant id with the user
+        if (!session()->has('restaurant_id')) {
+            session(['restaurant_id' => $restaurant->id]);
+        }
+        
+        //Set up an empty array where dishes IDs can be added
+        if (!session()->has('dishes_array')) {
+            session(['dishes_array' => []]);
+        }
         
         //return to the view with the dish and restaurant
         return view(

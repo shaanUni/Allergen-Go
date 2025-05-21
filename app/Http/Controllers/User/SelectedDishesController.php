@@ -28,21 +28,9 @@ class SelectedDishesController extends Controller
     }
 
     //
-    public function add(Request $request)
+    public function add()
     {
-        $edibleDishes = $request->input('dishes');
-        $dishesWithRemoveables = $request->input('removeables');
-        $restaurant = $request->input('restaurant');
-        
-          //return to the view with the dish and restaurant
-          return view(
-            'user.list',
-            [
-                'dishes' => $edibleDishes,
-                'removeables' => $dishesWithRemoveables,
-                'restaurant' => $restaurant,
-            ],
-        );
+   
     }
 
 
