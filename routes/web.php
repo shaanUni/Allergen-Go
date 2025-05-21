@@ -31,7 +31,8 @@ Route::prefix('user')->name('user.')->group(function(){
 
     Route::post('individual/{id}/{state}', [SearchController::class, 'showIndividualDish'])->name('individual');
 
-    Route::post('adddish/{id}', [SelectedDishesController::class, 'add'])->name('adddish');
+    Route::post('adddish/{id}/{state}', [SelectedDishesController::class, 'add'])->name('adddish');
+    Route::post('selected-dishes', [SelectedDishesController::class, 'selected'])->name('selected');
 
 });
 

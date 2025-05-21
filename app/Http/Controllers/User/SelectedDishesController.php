@@ -27,12 +27,72 @@ class SelectedDishesController extends Controller
         $this->allergens = config('allergens');
     }
 
-    //
-    public function add()
+    //add selected dish array to session, on list front end check if current dish id is there, and set button status from that
+    public function add($id, $state)
     {
-   
+
+        if (!session()->has('selectedDishes')) {
+            session(['selectedDishes' => []]);
+        }
+        
+        if (!session()->has('selectedRemoveableDishes')) {
+            session(['selectedRemoveableDishes' => []]);
+        }
+
+        //store selected dishes array in local variable
+        $selected = session('selectedDishes', []);
+        $removeable = session('selectedRemoveableDishes', []);
+
+        //if not already in the array
+        if (!in_array($id, $selected) && $state == 1) {
+            $selected[] = $id;
+            dump($id);
+            session(['selectedDishes' => $selected]);
+        } else{
+            if(!in_array($id, $removeable)){
+                $removeable[] = $id;
+                dump($id);
+                session(['selectedRemoveableDishes' => $removeable]);
+            }
+        }
+        
+        //reload the list page with the details in memory
+        $edibleDishes = session('dishes');
+        $dishesWithRemoveables = session('removeables');
+        $restaurant = session('restaurant');
+
+        return view(
+            'user.list',
+            [
+                'dishes' => $edibleDishes,
+                'removeables' => $dishesWithRemoveables,
+                'restaurant' => $restaurant,
+            ],
+        );
+    }
+
+    public function selected()
+    {
+
+        $selectedDishes = Dishes::findMany(session("selectedDishes"));
+        $removeable = Dishes::findMany(session("selectedRemoveableDishes"));
+
+        $dishesWithRemoveables = session('removeables');
+        $restaurant = session('restaurant');
+
+        //remove everything from users session
+        session()->forget(['selectedDishes', 'selectedRemoveableDishes', 'removeables', 'restaurant', 'dishes']);
+
+        return view(
+            'user.list',
+            [
+                'dishes' => $selectedDishes,
+                'removeables' => $removeable,
+                'restaurant' => $restaurant,
+            ],
+        );
     }
 
 
-  
+
 }

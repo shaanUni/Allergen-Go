@@ -24,10 +24,19 @@
                     @csrf
                     <button type="submit" class="action-button">View Dish</button>
                 </form>
-
-                <button type="submit" class="action-button">Add Dish</button>
-
-
+                @php
+                    $selectedBool = false;
+                    if (session('selectedDishes')) {
+                        $dishArray = session('selectedDishes');
+                        if (in_array($dish->id, $dishArray)) {
+                            $selectedBool = true;
+                        }
+                    }
+                @endphp
+                <form method="POST" action="{{ route('user.adddish', ['id' => $dish->id, 'state' => 1]) }}">
+                    @csrf
+                    <button type="submit" class="action-button">{{ $selectedBool ? 'Remove Dish' : 'Add dish'}}</button>
+                </form>
             </div>
         </div>
     @endforeach
@@ -70,16 +79,25 @@
                     @csrf
                     <button type="submit" class="action-button alert">View</button>
                 </form>
-                <form method="POST" action="{{ route('user.individual', ['id' => $dish->id, 'state' => 1]) }}">
+                @php
+                    $selectedBool = false;
+                    if (session('selectedRemoveableDishes')) {
+                        $removeableDishArray = session('selectedRemoveableDishes');
+                        if (in_array($dish->id, $removeableDishArray)) {
+                            $selectedBool = true;
+                        }
+                    }
+                @endphp
+                <form method="POST" action="{{ route('user.adddish', ['id' => $dish->id, 'state' => 0]) }}">
                     @csrf
-                    <button type="submit" class="action-button">Select Dish</button>
+                    <button type="submit" class="action-button">{{ $selectedBool ? 'Remove Dish' : 'Add dish'}}</button>
                 </form>
             </div>
         </div>
     @endforeach
 
-    <form method="POST">
+    <form method="POST" action="{{ route('user.selected') }}">
         @csrf
-        <button type="submit" class="action-button-finished">Finished</button>
+        <button type="submit" class="action-button">Finished</button>
     </form>
 </div>
