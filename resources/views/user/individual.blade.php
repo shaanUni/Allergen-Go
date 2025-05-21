@@ -44,9 +44,13 @@
 
             @php
                 $selectedBool = false;
-                if (session('selectedRemoveableDishes')) {
-                    $removeableDishArray = session('selectedRemoveableDishes');
-                    if (in_array($dish->id, $removeableDishArray)) {
+                $sessionKey = 'selectedRemoveableDishes';
+                if($state == 1){
+                    $sessionKey = 'selectedDishes';
+                }
+                if (session( $sessionKey)) {
+                    $dishArray = session( $sessionKey);
+                    if (in_array($dish->id, $dishArray)) {
                         $selectedBool = true;
                     }
                 }

@@ -27,7 +27,6 @@ class SelectedDishesController extends Controller
         $this->allergens = config('allergens');
     }
 
-    //add selected dish array to session, on list front end check if current dish id is there, and set button status from that
     public function add($id, $state)
     {
 
@@ -43,19 +42,29 @@ class SelectedDishesController extends Controller
         $selected = session('selectedDishes', []);
         $removeable = session('selectedRemoveableDishes', []);
 
-        //if not already in the array
-        if (!in_array($id, $selected) && $state == 1) {
-            $selected[] = $id;
-            dump($id);
-            session(['selectedDishes' => $selected]);
+        if($state == 1){
+            if (!in_array($id, $selected)) {
+                $selected[] = $id;
+                session(['selectedDishes' => $selected]);
+            }else{
+                $modifiedArray = session('selectedDishes');
+                $arrayKey = array_search($id, $modifiedArray);
+                unset($modifiedArray[$arrayKey]); // remove
+                $modifiedArray = array_values($modifiedArray); // reindex
+                session(['selectedDishes' => $modifiedArray]); // place back in session
+            }
         } else{
             if(!in_array($id, $removeable)){
                 $removeable[] = $id;
-                dump($id);
                 session(['selectedRemoveableDishes' => $removeable]);
+            } else{
+                $modifiedArray = session('selectedRemoveableDishes');
+                unset($modifiedArray[$id]); // remove
+                $modifiedArray = array_values($modifiedArray); // reindex
+                session(['selectedDishes' => $modifiedArray]); // place back in session
             }
         }
-        
+   
         //reload the list page with the details in memory
         $edibleDishes = session('dishes');
         $dishesWithRemoveables = session('removeables');
