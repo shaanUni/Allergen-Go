@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\DishController;
 use App\Http\Controllers\Admin\StatsPageController;
+use App\Http\Controllers\User\SelectedDishesController;
+use App\Models\SelectedDishes;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -28,6 +30,12 @@ Route::prefix('user')->name('user.')->group(function(){
     Route::get('qr/{code}', [SearchController::class, 'qrCode'])->name('qr');
 
     Route::post('individual/{id}/{state}', [SearchController::class, 'showIndividualDish'])->name('individual');
+
+    Route::post('adddish/{id}/{state}', [SelectedDishesController::class, 'add'])->name('adddish');
+    Route::post('selected-dishes', [SelectedDishesController::class, 'selected'])->name('selected');
+    Route::post('reset', [SelectedDishesController::class, 'reset'])->name('reset');
+
+
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {

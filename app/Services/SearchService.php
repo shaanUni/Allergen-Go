@@ -172,7 +172,9 @@ class SearchService
             if (count($edibleDishes) == 0 && count($dishesWithRemoveables) == 0) {
                 $searchFailureStatus = true;
             }
-
+            if(!session('user_allergy_string')){
+                session(['user_allergy_string' => $userAllergiesString]);
+            }
             //Save this search in table
             Searches::create([
                 'admin_id' => $restaurantID,

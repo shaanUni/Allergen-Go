@@ -49,6 +49,43 @@
                     @endforeach
                 </ul>
             </div>
+
+            <div class="stats-card">
+                <h2>Dish Counts</h2>
+                <p class="stat-info">
+                    Number of times each dish was selected:
+                </p>
+                <ul class="allergen-list">
+                    @foreach($groupedByDishId as $dishId => $group)
+                    @php
+                    $dish = \App\Models\Dishes::findOrFail($dishId);
+                    @endphp
+                    <li>
+                            <span class="allergen-name">{{ $dish->dish_name }}</span>
+                            <span class="allergen-count">{{ count($group) }}</span>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+
+            <div class="stats-card">
+                <h2>Dishes by allergen</h2>
+                <p class="stat-info">
+                    People with the allergy you entered, have selected the following dishes:
+                </p>
+                <form method="GET" action="{{ route('admin.stats') }}" class="mb-3 search-dishes-div">
+        <input class="form-control text-box" type="text" name="search_allergen" placeholder="search" value="{{ request('search_allergen') }}">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+                <ul class="allergen-list">
+                    @foreach ($filteredDishes as $dish)
+                    <li>
+                    <span class="allergen-name">{{ $dish->dish_name }}</span><br>
+                    </li>
+                    @endforeach
+                </ul>
+            </div>
+
         </div>
     </div>
     <div class="search-page">

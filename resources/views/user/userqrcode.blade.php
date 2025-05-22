@@ -26,6 +26,7 @@
         <br>    
         <p>Once you add your allergies then submit alongside with the code, we will return a list of edible dishes for you.</p>
         </div>
+        </div>
 
     </div>
 @endsection
