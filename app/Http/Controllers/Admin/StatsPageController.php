@@ -9,6 +9,7 @@ use App\Models\Dishes;
 use App\Models\Searches;
 use App\Models\AllergenCount;
 
+use App\Models\SelectedDishes;
 use App\Services\AllergenService;
 use App\Services\SearchService;
 
@@ -18,8 +19,11 @@ use Illuminate\Support\Facades\Auth;
 class StatsPageController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
+        $request->validate([
+            'search_allergen' => ['nullable', 'string', 'max:255']
+        ]);
 
         //Get the data from the searches table, and eager load it with the restaurant data and all it's dishes.
         $searches = Searches::with('admin.dishes')
@@ -53,14 +57,37 @@ class StatsPageController extends Controller
         $restaurantCode = $restaurant->restaurant_code;
 
         $halalUsers = Searches::with('admin.dishes')
-        ->where('admin_id', Auth::guard('admin')->id())
-        ->where('halal', true)
-        ->get();
-        
+            ->where('admin_id', Auth::guard('admin')->id())
+            ->where('halal', true)
+            ->get();
+
         $totalHalalUsers = count($halalUsers);
 
         //List of allergens for the form
         $allergens = config('allergens');
+
+        $allergenSearch = $request->input('search_allergen');
+
+        $dishes = SelectedDishes::where('admin_id', Auth::guard('admin')->id())->get();
+        $groupedByDishId = $dishes
+            ->groupBy('dishes_id')                      // Group by dishes_id
+            ->sortByDesc(fn($group) => $group->count()) // Sort groups by count descending
+            ->take(7);
+
+        $filteredDishes = [];
+        $storeDishId = 0;
+
+        foreach ($groupedByDishId as $dishId => $group) {
+            $storeDishId = $dishId;
+            foreach ($group as $selected) {
+                if (str_contains($selected->user_allergy_string, $allergenSearch)) {
+                    $filteredDishes[] = $storeDishId;
+                    break;
+                }
+            }
+        }
+
+        $filteredDishes = Dishes::findMany($filteredDishes);
 
         return view(
             'admin.stats',
@@ -72,6 +99,8 @@ class StatsPageController extends Controller
                 'code' => $restaurantCode, // restaurant ID for the search form
                 'failedSearchCount' => $failedSearchesCount,
                 'totalHalalUsers' => $totalHalalUsers,
+                'groupedByDishId' => $groupedByDishId,
+                'filteredDishes' => $filteredDishes,
             ],
         );
     }
