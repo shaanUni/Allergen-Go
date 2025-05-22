@@ -55,10 +55,12 @@
                     }
                 }
             @endphp
+            <div class="list-form">
             <form method="POST" action="{{ route('user.adddish', ['id' => $dish->id, 'state' => $state]) }}">
                 @csrf
-                <button type="submit" class="action-button">{{ $selectedBool ? 'Remove Dish' : 'Add dish'}}</button>
+                <button type="submit" class="action-button-select {{ $selectedBool ? 'remove-button' : ''}}">{{ $selectedBool ? 'Remove Dish' : 'Add dish'}}</button>
             </form>
+            </div>
         </div>
     </div>
 @endsection

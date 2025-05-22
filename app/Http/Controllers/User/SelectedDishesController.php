@@ -8,6 +8,7 @@ use App\Models\Dishes;
 use App\Models\Searches;
 use App\Models\AllergenCount;
 
+use App\Models\SelectedDishes;
 use App\Services\AllergenService;
 use App\Services\SearchService;
 
@@ -30,9 +31,10 @@ class SelectedDishesController extends Controller
     //This method boths adds and removes selected dishes
     public function add($id, $state)
     {
+        //If normal dishes
         if ($state == "1") {
             $selected = self::selectedDishHandler('selectedDishes', $id);
-        } else {
+        } else { // if dishes with removeable allergens
             $selectedRemoveable = self::selectedDishHandler('selectedRemoveableDishes', $id);
         }
 
@@ -57,12 +59,22 @@ class SelectedDishesController extends Controller
         //convert the array if ids into a collection of dishes
         $selectedDishes = Dishes::findMany(session("selectedDishes"));
         $removeable = Dishes::findMany(session("selectedRemoveableDishes"));
+        
+        //Merge into one collection and reidnex
+        $allDishes = $selectedDishes->merge($removeable)->values();
 
         //restaurant info from session
         $restaurant = session('restaurant');
-
-        //remove everything from users session
-        session()->forget(['selectedDishes', 'selectedRemoveableDishes', 'removeables', 'restaurant', 'dishes']);
+        $userAllergiesString = session('user_allergy_string');
+        
+        //Add info about the dishes that have been selected, for admins stats page
+        foreach($allDishes as $dish){
+            SelectedDishes::Create([
+                'admin_id' => $restaurant->id,
+                'dishes_id' => $dish->id,
+                'user_allergy_string' => $userAllergiesString,
+            ]);
+        }
 
         return view(
             'user.list',
@@ -100,5 +112,20 @@ class SelectedDishesController extends Controller
 
     }
 
+    //For when the user wants to re-select dishes
+    public function reset(){
+        $edibleDishes = session('dishes');
+        $dishesWithRemoveables = session('removeables');
+        $restaurant = session('restaurant');
+
+        return view(
+            'user.list',
+            [
+                'dishes' => $edibleDishes,
+                'removeables' => $dishesWithRemoveables,
+                'restaurant' => $restaurant,
+            ],
+        );
+    }
 
 }

@@ -1,6 +1,21 @@
 <div class="list-main">
+
+    <div class="list-forms top">
+        <form method="GET" action="{{ route('user.qr', ['code' => $restaurant->restaurant_code]) }}">
+            @csrf
+            <button type="submit" class="top-buttons">Re-select Allergens</button>
+        </form>
+        @if (Route::currentRouteName() == 'user.selected')
+            <form method="POST" action="{{ route('user.reset') }}">
+                @csrf
+                <button type="submit" class="top-buttons right-btn">Re-select dishes</button>
+            </form>
+        @endif
+
+    </div>
+
     <div class="list-info">
-        <h2>List of Edible Dishes</h2>
+        <h2>{{ Route::currentRouteName() == "user.selected" ? 'List of Selected Dishes' : ' List of Edible Dishes' }}</h2>
         <h3>Restaurant: <span>{{ $restaurant->name }}</span></h3>
     </div>
 
@@ -20,23 +35,26 @@
                     @endforeach
                 </p>
 
-                <form method="POST" action="{{ route('user.individual', ['id' => $dish->id, 'state' => 1]) }}">
-                    @csrf
-                    <button type="submit" class="action-button">View Dish</button>
-                </form>
-                @php
-                    $selectedBool = false;
-                    if (session('selectedDishes')) {
-                        $dishArray = session('selectedDishes');
-                        if (in_array($dish->id, $dishArray)) {
-                            $selectedBool = true;
+                <div class="list-forms">
+                    <form method="POST" action="{{ route('user.individual', ['id' => $dish->id, 'state' => 1]) }}">
+                        @csrf
+                        <button type="submit" class="action-button">View Dish</button>
+                    </form>
+                    @php
+                        $selectedBool = false;
+                        if (session('selectedDishes')) {
+                            $dishArray = session('selectedDishes');
+                            if (in_array($dish->id, $dishArray)) {
+                                $selectedBool = true;
+                            }
                         }
-                    }
-                @endphp
-                <form method="POST" action="{{ route('user.adddish', ['id' => $dish->id, 'state' => 1]) }}">
-                    @csrf
-                    <button type="submit" class="action-button">{{ $selectedBool ? 'Remove Dish' : 'Add dish'}}</button>
-                </form>
+                    @endphp
+                    <form method="POST" action="{{ route('user.adddish', ['id' => $dish->id, 'state' => 1]) }}">
+                        @csrf
+                        <button type="submit"
+                            class="action-button add-button {{ $selectedBool ? 'remove-button' : ''}}">{{ $selectedBool ? 'Remove Dish' : 'Add dish'}}</button>
+                    </form>
+                </div>
             </div>
         </div>
     @endforeach
@@ -74,30 +92,42 @@
                 </ul>
 
                 <p class="removeable-warning">⚠️ This dish contains allergens you marked but they are removable.</p>
+                <div class="list-forms">
 
-                <form method="POST" action="{{ route('user.individual', ['id' => $dish->id, 'state' => 0]) }}">
-                    @csrf
-                    <button type="submit" class="action-button alert">View</button>
-                </form>
-                @php
-                    $selectedBool = false;
-                    if (session('selectedRemoveableDishes')) {
-                        $removeableDishArray = session('selectedRemoveableDishes');
-                        if (in_array($dish->id, $removeableDishArray)) {
-                            $selectedBool = true;
+                    <form method="POST" action="{{ route('user.individual', ['id' => $dish->id, 'state' => 0]) }}">
+                        @csrf
+                        <button type="submit" class="action-button alert">View</button>
+                    </form>
+                    @php
+                        $selectedBool = false;
+                        if (session('selectedRemoveableDishes')) {
+                            $removeableDishArray = session('selectedRemoveableDishes');
+                            if (in_array($dish->id, $removeableDishArray)) {
+                                $selectedBool = true;
+                            }
                         }
-                    }
-                @endphp
-                <form method="POST" action="{{ route('user.adddish', ['id' => $dish->id, 'state' => 0]) }}">
-                    @csrf
-                    <button type="submit" class="action-button">{{ $selectedBool ? 'Remove Dish' : 'Add dish'}}</button>
-                </form>
+                    @endphp
+                    <form method="POST" action="{{ route('user.adddish', ['id' => $dish->id, 'state' => 0]) }}">
+                        @csrf
+                        <button type="submit"
+                            class="action-button add-button {{ $selectedBool ? 'remove-button' : ''}}">{{ $selectedBool ? 'Remove Dish' : 'Add dish'}}</button>
+                    </form>
+                </div>
             </div>
-        </div>
     @endforeach
 
-    <form method="POST" action="{{ route('user.selected') }}">
-        @csrf
-        <button type="submit" class="action-button">Finished</button>
-    </form>
+
+
+    </div>
+    @if (Route::currentRouteName() != 'user.selected')
+            
+    <div class="list-text finished-btn">
+
+        <form method="POST" action="{{ route('user.selected') }}">
+            @csrf
+            <button type="submit" class="action-button ">Finished</button>
+        </form>
+    </div>
+    @endif
+
 </div>

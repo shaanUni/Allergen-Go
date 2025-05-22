@@ -42,19 +42,20 @@ class SearchController extends Controller
     }
 
     public function searchCode(Request $request)
-    {   
+    {
 
-        if(session('selectedDishes')){
-            session()->forget(['selectedDishes', 'selectedRemoveableDishes']);
+        //If selected dishes is in session, that means the user already started choosing dishes, but came back, so wipe everything
+        if (session('selectedDishes')) {
+            session()->forget(['selectedDishes', 'selectedRemoveableDishes', 'removeables', 'restaurant', 'dishes']);
         }
 
         //Call a service method that will compare user allergies with the dish allergens
         $filteredAllergens = SearchService::search($request, "user");
-        
+
         //The search service will return false if the user added no data to the form or restaurant code, so redirect
-        if($filteredAllergens == "empty"){
+        if ($filteredAllergens == "empty") {
             return redirect()->route('user.qr', ['code' => $request['restaurant_code']])->with('failure', 'You must select either halal, or one allergen.');
-        }else if($filteredAllergens == "code"){ // if the user entered an invalid code
+        } else if ($filteredAllergens == "code") { // if the user entered an invalid code
             return redirect()->route('user.search')->with('failure', 'You must select a valid code.');
         }
 
@@ -62,7 +63,7 @@ class SearchController extends Controller
         $edibleDishes = $filteredAllergens['dishes'];
         $dishesWithRemoveables = $filteredAllergens['removeables'];
         $restaurant = $filteredAllergens['restaurant'];
-        
+
         //Give the user a unique ID
         if (!session()->has('guest_token')) {
             session(['guest_token' => (string) Str::uuid()]);
@@ -76,7 +77,7 @@ class SearchController extends Controller
         if (!session()->has('removeables')) {
             session(['removeables' => $dishesWithRemoveables]);
         }
-        
+
         if (!session()->has('dishes')) {
             session(['dishes' => $edibleDishes]);
         }
@@ -92,15 +93,16 @@ class SearchController extends Controller
         );
     }
 
-    public function showIndividualDish($id, $state){
-        
+    public function showIndividualDish($id, $state)
+    {
+
         $dish = Dishes::findOrFail($id);
 
-        $allergens =  AllergenService::parse($dish->allergen_string)['allergens'];
-        $removeable =  AllergenService::parse($dish->allergen_string)['combined'];
-        
+        $allergens = AllergenService::parse($dish->allergen_string)['allergens'];
+        $removeable = AllergenService::parse($dish->allergen_string)['combined'];
+
         return view('user.individual', ['dish' => $dish, 'state' => $state], compact('allergens', 'removeable'));
     }
 
-  
+
 }

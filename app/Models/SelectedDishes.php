@@ -10,7 +10,7 @@ class SelectedDishes extends Model
     
     //
     protected $fillable = [
-        'admin_id', 'dish_id', 'user_allergy_string',
+        'admin_id', 'dishes_id', 'user_allergy_string',
     ];
 
     public function admin(){

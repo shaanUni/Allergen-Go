@@ -150,31 +150,6 @@ $green-nav: #40945c;
   }
 }
 
-.action-button-select {
-  padding: 0.5rem 1.25rem;
-  border: none;
-  background-color: $green-nav;
-  color: white;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  position: relative;
-  top: 20px;
-
-  &.alert {
-    background-color: #e63946;
-  }
-
-  &:hover {
-    background-color: darken($green-nav, 10%);
-  }
-
-  &.alert:hover {
-    background-color: darken(#e63946, 10%);
-  }
-}
-
 .action-button-finished {
   padding: 0.5rem 1.25rem;
   border: none;
@@ -197,3 +172,4 @@ $green-nav: #40945c;
     background-color: darken(#e63946, 10%);
   }
 }
+

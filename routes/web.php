@@ -33,6 +33,8 @@ Route::prefix('user')->name('user.')->group(function(){
 
     Route::post('adddish/{id}/{state}', [SelectedDishesController::class, 'add'])->name('adddish');
     Route::post('selected-dishes', [SelectedDishesController::class, 'selected'])->name('selected');
+    Route::post('reset', [SelectedDishesController::class, 'reset'])->name('reset');
+
 
 });
 
