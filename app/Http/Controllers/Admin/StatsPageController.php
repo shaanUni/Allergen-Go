@@ -76,13 +76,16 @@ class StatsPageController extends Controller
 
         $filteredDishes = [];
         $storeDishId = 0;
+        if ($allergenSearch != null) {
+            foreach ($groupedByDishId as $dishId => $group) {
+                $storeDishId = $dishId;
+                foreach ($group as $selected) {
+               // dump($selected->user_allergy_string);
 
-        foreach ($groupedByDishId as $dishId => $group) {
-            $storeDishId = $dishId;
-            foreach ($group as $selected) {
-                if (str_contains($selected->user_allergy_string, $allergenSearch)) {
-                    $filteredDishes[] = $storeDishId;
-                    break;
+                    if (str_contains($selected->user_allergy_string, $allergenSearch)) {
+                        $filteredDishes[] = $storeDishId;
+                        break;
+                    }
                 }
             }
         }
