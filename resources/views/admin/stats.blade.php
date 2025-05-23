@@ -95,12 +95,17 @@
                 </form>
                 <p>Total Dishes selected by people with this allergy: {{ $filteredDishesCount }}</p>
                 <ul class="allergen-list">
-                    @foreach ($filteredDishes as $dish)
+                    @foreach ($groupedCounts as $dishId => $count)
+                        @php
+                            $dish = \App\Models\Dishes::findOrFail($dishId);
+                            $name = $dish->dish_name;
+                        @endphp
                         <li>
-                            <span class="allergen-name">{{ $dish->dish_name }}</span>
-                            <span class="allergen-count">{{ $groupedCounts[$dish->id] }}</span>
+                            <span class="allergen-name">{{ $name }}</span>
+                            <span class="allergen-count">{{ $count }}</span>
                         </li>
                     @endforeach
+
                 </ul>
             </div>
 

@@ -66,34 +66,41 @@ class StatsPageController extends Controller
         //List of allergens for the form
         $allergens = config('allergens');
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //Restaurant will enter an allergy, to sort all selected dishes where people have had this allergy
         $allergenSearch = $request->input('search_allergen');
 
+        //Eager load dishes with the selected dishes table, and multi tenancy security
         $dishes = SelectedDishes::with('dish')->where('admin_id', Auth::guard('admin')->id())->get();
 
-
-
+        //For the dish counts box
         $groupedByDishId = $dishes
             ->groupBy('dishes_id')                      // Group by dishes_id
             ->sortByDesc(fn($group) => $group->count()) // Sort groups by count descending
             ->take(7);
 
 
-
+        //Another variable of eager laoded dishes with the selected dishes table
         $selectedDishes = SelectedDishes::with('dish')
             ->where('admin_id', Auth::guard('admin')->id())
             ->get();
 
+        //If restaurant entered something into search box
         if ($allergenSearch) {
+            //Do the search
             $filtered = $selectedDishes->filter(function ($selected) use ($allergenSearch) {
                 return $selected->dish && str_contains($selected->user_allergy_string, $allergenSearch);
             });
 
+            //Get all the ids of selected dishes table
             $dishes1 = $filtered->unique('id')->filter();
+            //then get ids of the dishes themselves
             $ids = $dishes1->pluck('dishes_id');
-            $groupedCounts = $ids->countBy();
+            //count each dish
+            $groupedCounts = $ids->countBy()->sortDesc();;
+            //total
             $filteredDishesCount = count($ids);
-            $filteredDishes = Dishes::findMany($ids)->sortBy();
+            //Get dishes from ids
+            $filteredDishes = Dishes::findMany($ids);
         }
         
         return view(
