@@ -44,10 +44,8 @@ class SearchController extends Controller
     public function searchCode(Request $request)
     {
 
-        //If selected dishes is in session, that means the user already started choosing dishes, but came back, so wipe everything
-        if (session('selectedDishes')) {
-            session()->forget(['selectedDishes', 'selectedRemoveableDishes', 'removeables', 'restaurant', 'dishes', 'user_allergy_string']);
-        }
+        //wipe everything, in case user has come back 
+        session()->forget(['selectedDishes', 'selectedRemoveableDishes', 'removeables', 'restaurant', 'dishes', 'user_allergy_string']);
 
         //Call a service method that will compare user allergies with the dish allergens
         $filteredAllergens = SearchService::search($request, "user");

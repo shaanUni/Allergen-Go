@@ -93,3 +93,38 @@ $bg-light: #f9f9f9;
     }
   }
   
+
+  .dish-counts-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  
+    th, td {
+      padding: 0.75rem 1rem; // more breathing room
+      text-align: left;
+      border-bottom: 1px solid #e0e0e0;
+    }
+  
+    th {
+      font-weight: 600;
+      color: #333;
+    }
+  
+    td {
+      font-size: 0.95rem;
+      vertical-align: middle;
+    }
+  
+    .count {
+      color: green;
+      font-weight: bold;
+    }
+  }
+
+  .table-wrapper {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  }
+  

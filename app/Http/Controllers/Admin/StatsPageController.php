@@ -66,32 +66,36 @@ class StatsPageController extends Controller
         //List of allergens for the form
         $allergens = config('allergens');
 
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         $allergenSearch = $request->input('search_allergen');
 
-        $dishes = SelectedDishes::where('admin_id', Auth::guard('admin')->id())->get();
+        $dishes = SelectedDishes::with('dish')->where('admin_id', Auth::guard('admin')->id())->get();
+
+
+
         $groupedByDishId = $dishes
             ->groupBy('dishes_id')                      // Group by dishes_id
             ->sortByDesc(fn($group) => $group->count()) // Sort groups by count descending
             ->take(7);
 
-        $filteredDishes = [];
-        $storeDishId = 0;
-        if ($allergenSearch != null) {
-            foreach ($groupedByDishId as $dishId => $group) {
-                $storeDishId = $dishId;
-                foreach ($group as $selected) {
-               // dump($selected->user_allergy_string);
 
-                    if (str_contains($selected->user_allergy_string, $allergenSearch)) {
-                        $filteredDishes[] = $storeDishId;
-                        break;
-                    }
-                }
-            }
+
+        $selectedDishes = SelectedDishes::with('dish')
+            ->where('admin_id', Auth::guard('admin')->id())
+            ->get();
+
+        if ($allergenSearch) {
+            $filtered = $selectedDishes->filter(function ($selected) use ($allergenSearch) {
+                return $selected->dish && str_contains($selected->user_allergy_string, $allergenSearch);
+            });
+
+            $dishes1 = $filtered->unique('id')->filter();
+            $ids = $dishes1->pluck('dishes_id');
+            $groupedCounts = $ids->countBy();
+            $filteredDishesCount = count($ids);
+            $filteredDishes = Dishes::findMany($ids)->sortBy();
         }
-
-        $filteredDishes = Dishes::findMany($filteredDishes);
-
+        
         return view(
             'admin.stats',
             [
@@ -104,6 +108,8 @@ class StatsPageController extends Controller
                 'totalHalalUsers' => $totalHalalUsers,
                 'groupedByDishId' => $groupedByDishId,
                 'filteredDishes' => $filteredDishes,
+                'filteredDishesCount' => $filteredDishesCount,
+                'groupedCounts' => $groupedCounts,
             ],
         );
     }

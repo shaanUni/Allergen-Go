@@ -1,10 +1,9 @@
 @extends('admin.layout')
 
 @section('content')
-
-<form action="{{ route('admin.dashboard') }}" method="get" style="display:inline;">
-  <button type="submit" class="back-button">Back to Dashboard</button>
-</form>
+    <form action="{{ route('admin.dashboard') }}" method="get" style="display:inline;">
+        <button type="submit" class="back-button">Back to Dashboard</button>
+    </form>
 
 
     <div class="stats-page">
@@ -15,7 +14,7 @@
         <div class="stats-grid">
             <!-- Failed Searches Box -->
             <div class="stats-card">
-                <h2>Failed Searches - {{$failedSearchCount }}</h2>
+                <h2>Failed Searches - {{ $failedSearchCount }}</h2>
                 <p class="stat-info">
                     These are user allergy combinations that didn’t return any edible dishes:
                 </p>
@@ -56,15 +55,31 @@
                     Number of times each dish was selected:
                 </p>
                 <ul class="allergen-list">
-                    @foreach($groupedByDishId as $dishId => $group)
-                    @php
-                    $dish = \App\Models\Dishes::findOrFail($dishId);
-                    @endphp
-                    <li>
-                            <span class="allergen-name">{{ $dish->dish_name }}</span>
-                            <span class="allergen-count">{{ count($group) }}</span>
-                        </li>
-                    @endforeach
+                    <table class="dish-counts-table">
+                        <thead>
+                            <tr>
+                                <th>Dish Name</th>
+                                <th>Revenue</th>
+                                <th>Times selected</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($groupedByDishId as $dishId => $group)
+                                @php
+                                    $dish = \App\Models\Dishes::find($dishId);
+                                    $revenue = $dish->price * count($group);
+                                    $count = count($group);
+                                @endphp
+                                <tr>
+                                    <td>{{ $dish->dish_name }}</td>
+                                    <td>£{{ number_format($revenue, 2) }}</td>
+                                    <td class="count">{{ $count }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+
+
                 </ul>
             </div>
 
@@ -74,14 +89,17 @@
                     People with the allergy you entered, have selected the following dishes:
                 </p>
                 <form method="GET" action="{{ route('admin.stats') }}" class="mb-3 search-dishes-div">
-        <input class="form-control text-box" type="text" name="search_allergen" placeholder="search" value="{{ request('search_allergen') }}">
-        <button type="submit" class="btn btn-primary">Search</button>
-    </form>
+                    <input class="form-control text-box" type="text" name="search_allergen" placeholder="search"
+                        value="{{ request('search_allergen') }}">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+                <p>Total Dishes selected by people with this allergy: {{ $filteredDishesCount }}</p>
                 <ul class="allergen-list">
                     @foreach ($filteredDishes as $dish)
-                    <li>
-                    <span class="allergen-name">{{ $dish->dish_name }}</span><br>
-                    </li>
+                        <li>
+                            <span class="allergen-name">{{ $dish->dish_name }}</span>
+                            <span class="allergen-count">{{ $groupedCounts[$dish->id] }}</span>
+                        </li>
                     @endforeach
                 </ul>
             </div>
@@ -94,6 +112,4 @@
             @include('components.form')
         </form>
     </div>
-
-
 @endsection

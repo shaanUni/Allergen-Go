@@ -18,6 +18,6 @@ class SelectedDishes extends Model
     }
 
     public function dish(){
-        return $this->belongsTo(Dishes::class);
+        return $this->belongsTo(Dishes::class, 'dishes_id');
     }
 }
