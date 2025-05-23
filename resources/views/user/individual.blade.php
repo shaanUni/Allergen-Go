@@ -9,7 +9,7 @@
         </div>
 
         <!-- Dish content -->
-        <div class="dish-card__content">
+        <div class="dish-card__content {{ $state == 0 ? 'danger' : 'nish'}}">
 
             <h2 class="dish-card__title">{{ $dish->dish_name }}</h2>
             <h3 class="dish-card__title">£{{ $dish->price }}</h3>

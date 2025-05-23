@@ -15,7 +15,8 @@
     </div>
 
     <div class="list-info">
-        <h2>{{ Route::currentRouteName() == "user.selected" ? 'List of Selected Dishes' : ' List of Edible Dishes' }}</h2>
+        <h2>{{ Route::currentRouteName() == 'user.selected' ? 'List of Selected Dishes' : ' List of Edible Dishes' }}
+        </h2>
         <h3>Restaurant: <span>{{ $restaurant->name }}</span></h3>
     </div>
 
@@ -30,8 +31,10 @@
                 <p class="dish-description">{{ Str::limit($dish->description, 25, '...') }}</p>
 
                 <p class="dish-allergens">
-                    @foreach(array_slice($allergens, 0, 4) as $allergen)
-                        {{ $allergen }}@if(!$loop->last), @else... @endif
+                    @foreach (array_slice($allergens, 0, 4) as $allergen)
+                        {{ $allergen }}@if (!$loop->last)
+                        , @else...
+                        @endif
                     @endforeach
                 </p>
 
@@ -49,11 +52,14 @@
                             }
                         }
                     @endphp
-                    <form method="POST" action="{{ route('user.adddish', ['id' => $dish->id, 'state' => 1]) }}">
-                        @csrf
-                        <button type="submit"
-                            class="action-button add-button {{ $selectedBool ? 'remove-button' : ''}}">{{ $selectedBool ? 'Remove Dish' : 'Add dish'}}</button>
-                    </form>
+                    @if (Route::currentRouteName() != 'user.selected')
+                        <form method="POST" action="{{ route('user.adddish', ['id' => $dish->id, 'state' => 1]) }}">
+                            @csrf
+                            <button type="submit"
+                                class="action-button add-button {{ $selectedBool ? 'remove-button' : '' }}">{{ $selectedBool ? 'Remove Dish' : 'Add dish' }}</button>
+                        </form>
+                    @endif
+
                 </div>
             </div>
         </div>
@@ -81,10 +87,10 @@
                 <p class="dish-description">{{ $dish->description }}</p>
 
                 <ul class="dish-allergens">
-                    @foreach($allergens as $allergen)
+                    @foreach ($allergens as $allergen)
                         <li class="removeable-allergen">
                             {{ $allergen }}
-                            @if($combined[$allergen])
+                            @if ($combined[$allergen])
                                 <span class="removeable-tag">(Removeable)</span>
                             @endif
                         </li>
@@ -107,20 +113,22 @@
                             }
                         }
                     @endphp
-                    <form method="POST" action="{{ route('user.adddish', ['id' => $dish->id, 'state' => 0]) }}">
-                        @csrf
-                        <button type="submit"
-                            class="action-button add-button {{ $selectedBool ? 'remove-button' : ''}}">{{ $selectedBool ? 'Remove Dish' : 'Add dish'}}</button>
-                    </form>
+                    @if (Route::currentRouteName() != 'user.selected')
+                        <form method="POST" action="{{ route('user.adddish', ['id' => $dish->id, 'state' => 0]) }}">
+                            @csrf
+                            <button type="submit"
+                                class="action-button add-button {{ $selectedBool ? 'remove-button' : '' }}">{{ $selectedBool ? 'Remove Dish' : 'Add dish' }}</button>
+                        </form>
+                    @endif
+
                 </div>
             </div>
     @endforeach
 
 
 
-    </div>
-    @if (Route::currentRouteName() != 'user.selected')
-            
+</div>
+@if (Route::currentRouteName() != 'user.selected')
     <div class="list-text finished-btn">
 
         <form method="POST" action="{{ route('user.selected') }}">
@@ -128,6 +136,6 @@
             <button type="submit" class="action-button ">Finished</button>
         </form>
     </div>
-    @endif
+@endif
 
 </div>

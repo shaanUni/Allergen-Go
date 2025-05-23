@@ -84,6 +84,10 @@ class StatsPageController extends Controller
             ->where('admin_id', Auth::guard('admin')->id())
             ->get();
 
+        $filteredDishesCount = 0;
+        $filteredDishes = [];
+        $groupedCounts = [];
+
         //If restaurant entered something into search box
         if ($allergenSearch) {
             //Do the search
@@ -96,13 +100,12 @@ class StatsPageController extends Controller
             //then get ids of the dishes themselves
             $ids = $dishes1->pluck('dishes_id');
             //count each dish
-            $groupedCounts = $ids->countBy()->sortDesc();;
+            $groupedCounts = $ids->countBy()->sortDesc();
             //total
             $filteredDishesCount = count($ids);
             //Get dishes from ids
             $filteredDishes = Dishes::findMany($ids);
         }
-        
         return view(
             'admin.stats',
             [
