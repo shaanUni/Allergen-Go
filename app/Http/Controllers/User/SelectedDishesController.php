@@ -31,8 +31,9 @@ class SelectedDishesController extends Controller
     //This method boths adds and removes selected dishes
     public function add(Request $request, $id, $state)
     {
+        //Get UUID from the view
         $uuid = $request->input('uuid');
-        dump($uuid);
+
         //If normal dishes
         if ($state == "1") {
             $selected = self::selectedDishHandler('selectedDishes'. $uuid, $id);
@@ -41,7 +42,7 @@ class SelectedDishesController extends Controller
         }
 
         //reload the list page with the details in memory
-        $edibleDishes = session('dishes'.$uuid);
+        $edibleDishes = session('dishes'.$uuid); //the session key is dishes + the uuid 
         $dishesWithRemoveables = session('removeables'.$uuid);
         $restaurant = session('restaurant');
         

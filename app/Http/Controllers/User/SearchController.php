@@ -44,7 +44,7 @@ class SearchController extends Controller
     public function searchCode(Request $request)
     {
 
-        //generate new uuid
+        //generate new uuid - Before if a user had many tabs open, the app would break. The UUID should fix that.
         $uuid = (string) Str::uuid();
 
         // Grab exsisting UUIDs or create an array
@@ -55,6 +55,7 @@ class SearchController extends Controller
             $uuids[] = $uuid;
             session(['uuids' => $uuids]);
         }
+
         //wipe everything, in case user has come back 
         session()->forget(['selectedDishes', 'selectedRemoveableDishes', 'removeables', 'user_allergy_string']);
 
@@ -83,17 +84,15 @@ class SearchController extends Controller
             session(['restaurant' => $restaurant]);
         }
 
+        //Store dishes with removeable allergens in session, with the key removeable plus whatever the uuid is, so it is specific to each person
         if (!session()->has('removeables'.$uuid)) {
             session(['removeables'.$uuid => $dishesWithRemoveables]);
         }
 
+        //same with normal dishes as we did above. Now will look like dishes903020-12sas... We will pass the UUID through to the view, and from there will be used everywhere else in the app
         if (!session()->has('dishes'. $uuid)) {
             session(['dishes'. $uuid => $edibleDishes]);
         }
-
-
-
-        dump($uuid);
 
         //return to the view with the dish and restaurant
         return view(
@@ -107,12 +106,16 @@ class SearchController extends Controller
         );
     }
 
+    //When User wants to view a specific dish
     public function showIndividualDish(Request $request, $id, $state)
     {
+        //get the UUID
         $uuid = $request->input('uuid');
 
+        //find the dish in the DB
         $dish = Dishes::findOrFail($id);
 
+        //parse that dishes allergen info
         $allergens = AllergenService::parse($dish->allergen_string)['allergens'];
         $removeable = AllergenService::parse($dish->allergen_string)['combined'];
 
