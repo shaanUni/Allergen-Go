@@ -44,9 +44,9 @@
 
             @php
                 $selectedBool = false;
-                $sessionKey = 'selectedRemoveableDishes';
+                $sessionKey = 'selectedRemoveableDishes'. $uuid;
                 if($state == 1){
-                    $sessionKey = 'selectedDishes';
+                    $sessionKey = 'selectedDishes'. $uuid;
                 }
                 if (session( $sessionKey)) {
                     $dishArray = session( $sessionKey);
@@ -58,6 +58,8 @@
             <div class="list-form">
             <form method="POST" action="{{ route('user.adddish', ['id' => $dish->id, 'state' => $state]) }}">
                 @csrf
+                <input type="hidden" name="uuid" value="{{ $uuid }}">
+
                 <button type="submit" class="action-button-select {{ $selectedBool ? 'remove-button' : ''}}">{{ $selectedBool ? 'Remove Dish' : 'Add dish'}}</button>
             </form>
             </div>
