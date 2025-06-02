@@ -44,8 +44,19 @@ class SearchController extends Controller
     public function searchCode(Request $request)
     {
 
+        //generate new uuid
+        $uuid = (string) Str::uuid();
+
+        // Grab exsisting UUIDs or create an array
+        $uuids = session('uuids', []);
+
+        if (!in_array($uuid, $uuids)) {
+            //add the new uuid
+            $uuids[] = $uuid;
+            session(['uuids' => $uuids]);
+        }
         //wipe everything, in case user has come back 
-        session()->forget(['selectedDishes', 'selectedRemoveableDishes', 'removeables', 'restaurant', 'dishes', 'user_allergy_string']);
+        session()->forget(['selectedDishes', 'selectedRemoveableDishes', 'removeables', 'user_allergy_string']);
 
         //Call a service method that will compare user allergies with the dish allergens
         $filteredAllergens = SearchService::search($request, "user");
@@ -72,13 +83,17 @@ class SearchController extends Controller
             session(['restaurant' => $restaurant]);
         }
 
-        if (!session()->has('removeables')) {
-            session(['removeables' => $dishesWithRemoveables]);
+        if (!session()->has('removeables'.$uuid)) {
+            session(['removeables'.$uuid => $dishesWithRemoveables]);
         }
 
-        if (!session()->has('dishes')) {
-            session(['dishes' => $edibleDishes]);
+        if (!session()->has('dishes'. $uuid)) {
+            session(['dishes'. $uuid => $edibleDishes]);
         }
+
+
+
+        dump($uuid);
 
         //return to the view with the dish and restaurant
         return view(
@@ -87,19 +102,21 @@ class SearchController extends Controller
                 'dishes' => $edibleDishes,
                 'removeables' => $dishesWithRemoveables,
                 'restaurant' => $restaurant,
+                'uuid' => $uuid,
             ],
         );
     }
 
-    public function showIndividualDish($id, $state)
+    public function showIndividualDish(Request $request, $id, $state)
     {
+        $uuid = $request->input('uuid');
 
         $dish = Dishes::findOrFail($id);
 
         $allergens = AllergenService::parse($dish->allergen_string)['allergens'];
         $removeable = AllergenService::parse($dish->allergen_string)['combined'];
 
-        return view('user.individual', ['dish' => $dish, 'state' => $state], compact('allergens', 'removeable'));
+        return view('user.individual', ['dish' => $dish, 'state' => $state, 'uuid' => $uuid], compact('allergens', 'removeable'));
     }
 
 
