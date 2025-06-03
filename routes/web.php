@@ -48,7 +48,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
 
     // Stripe success callback
-    Route::get('/subscription/success', [RegisterController::class, 'subscriptionSuccess'])->name('admin.subscription.success');
+    Route::get('/subscription/success', [RegisterController::class, 'subscriptionSuccess'])->name('subscription.success');
 
     //Once the admin has logged in, they can acsess these pages
     Route::middleware('auth:admin')->group(function () {

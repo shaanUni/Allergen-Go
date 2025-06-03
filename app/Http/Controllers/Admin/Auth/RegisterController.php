@@ -34,7 +34,7 @@ class RegisterController extends Controller
         // Redirect to Stripe Checkout
         return $admin->newSubscription('default', 'price_1RVu5hCtfDW7CkKEgj91o3ZK') // 2nd param is price ID
             ->checkout([
-                'success_url' => route('admin.dashboard'),
+                'success_url' => route('admin.subscription.success'),
                 'cancel_url' => route('admin.register'),
             ]);
     }
