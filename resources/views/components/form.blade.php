@@ -26,7 +26,7 @@
                     <input type="checkbox" class="form-check-input" id="allergen-{{ $allergen }}" name="allergens[]"
                         value="{{ $allergen }}" {{ in_array($allergen, $selectedAllergens ?? []) ? 'checked' : '' }}>
 
-                    <label class="form-check-label" for="allergen-{{ $allergen }}">
+                    <label class="form-check-label allergen-{{ $allergen }}" for="allergen-{{ $allergen }}">
                         {{ ucfirst($allergen) }}
                     </label>
                 </div>

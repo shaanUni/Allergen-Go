@@ -68,8 +68,16 @@ body {
 
 .checkbox-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
   gap: 0.5rem;
+}
+
+@media (max-width: 455px) {
+  .checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+    gap: 0.5rem;
+  }
 }
 
 .form-check {
@@ -97,6 +105,11 @@ body {
 .form-check-label {
   font-size: 0.95rem;
   font-weight: 500;
+
+}
+
+.allergen-crustaceans{
+  font-size: 0.95rem;
 }
 
 .submit-form-btn {
