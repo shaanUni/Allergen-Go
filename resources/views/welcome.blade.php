@@ -19,7 +19,7 @@
             </div>
             <div class="feature">
                 <h3>Fully Accurate</h3>
-                <p>Feel confident knowing that the restaurant themselves at added the dishes and it's details.</p>
+                <p>Feel confident knowing that the restaurant themselves have added the dishes and it's allergens.</p>
             </div>
             <div class="feature">
                 <h3>Other Dietary Needs</h3>
@@ -32,7 +32,7 @@
 
     <section id="why">
         <div class="container">
-            <h2 class="section-title">Why AllergenGo?</h2>
+            <h2 class="section-title">What is AllergenGo?</h2>
             <div class="text-block">
                 <p>
                     When you go out to eat with allergies you often need to speak

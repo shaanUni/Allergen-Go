@@ -59,8 +59,8 @@ $white: #ffffff;
 
     .btn-login {
       background-color: transparent;
-      border: 1px solid #e1f5e9;
-      color: #ffffff;
+      border: 1px solid #000000;
+      color: #000000;
 
       &:hover {
         background-color: rgba(255, 255, 255, 0.1);
@@ -69,8 +69,8 @@ $white: #ffffff;
 
     .btn-logout {
       background-color: rgba(255, 255, 255, 0.1);
-      border: 1px solid #ef9a9a;
-      color: #ffdddd;
+      border: 1px solid #000000;
+      color: #000000;
 
       &:hover {
         background-color: rgba(255, 255, 255, 0.2);
@@ -106,7 +106,7 @@ $white: #ffffff;
   .btn-login,
   .btn-logout {
     background-color: transparent;
-    border: 1px solid #ffc2c2;
+    border: 1px solid #ffffff;
     color: #ffffff;
     padding: 0.45rem 1rem;
     font-size: 0.85rem;
@@ -114,17 +114,15 @@ $white: #ffffff;
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.2s, border-color 0.2s, color 0.2s;
-    
+    text-decoration-line: none;
 
     &:hover {
-      background-color: #ffdddd;
-      color: #b22222;
-      border-color: #ffaaaa;
+      color: #ffffff;
     }
   
     &:active {
       background-color: #f9caca;
-      color: #a00000;
+      color: #ffffff;
     }
   }
   

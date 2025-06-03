@@ -47,6 +47,10 @@ a {
     border-color: green !important;
 }
 
+.nav-item{
+    color: black;
+}
+
 .hero {
     background: linear-gradient(135deg, #e9f5e9, #cdeedb);
     text-align: center;
@@ -89,7 +93,7 @@ section {
     background: #fff;
     padding: 2rem;
     border-radius: var(--radius);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     text-align: center;
 }
 

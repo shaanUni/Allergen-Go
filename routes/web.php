@@ -13,7 +13,7 @@ use PhpParser\Node\Expr\FuncCall;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
 Route::get('/restaurant', function () {
     return view('restaurant');

@@ -80,8 +80,8 @@ class StatsPageController extends Controller
 
         //Another variable of eager laoded dishes with the selected dishes table
         $selectedDishes = SelectedDishes::with('dish')
-        ->where('admin_id', Auth::guard('admin')->id())
-        ->get();
+            ->where('admin_id', Auth::guard('admin')->id())
+            ->get();
 
 
         $filteredDishesCount = 0;

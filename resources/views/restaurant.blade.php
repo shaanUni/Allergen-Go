@@ -7,7 +7,7 @@
             <h1>Safe, simple dining for people with allergies</h1>
             <p>Add your dishes and allergens onto the app, and generate a QR code users can scan to filter these dishes
                 based on their allergies.</p>
-            <a href="{{ route('user.search') }}" class="btn btn-primary get-started-btn">Get Started</a>
+            <a href="{{ route('admin.login') }}" class="btn btn-primary get-started-btn">Get Started</a>
         </div>
     </section>
 
@@ -16,15 +16,15 @@
         <div class="features-grid">
             <div class="feature">
                 <h3>Real-Time Statistics</h3>
-                <p>See which allergens customers report most often and optimize your menu for safety.</p>
+                <p>See the most common allergies, what dishes they chose and optimize your menu for safety.</p>
             </div>
             <div class="feature">
                 <h3>You add the dishes</h3>
-                <p>Add all your dishes and their allergens, so users can see the information.</p>
+                <p>Add all your dishes and their allergens, so users can safely choose suitable dishes with ease of mind.</p>
             </div>
             <div class="feature">
                 <h3>QR Code Menu Access</h3>
-                <p>Generate a unique QR code so diners can view and filter your menu instantly.
+                <p>Generate a unique QR code so diners can view and filter your menu instantly. Print it out, give it with menus, and see how much time is saved.
                 </p>
             </div>
         </div>
@@ -32,7 +32,7 @@
 
     <section id="why">
         <div class="container">
-            <h2 class="section-title">Why AllergenGo?</h2>
+            <h2 class="section-title">What is AllergenGo?</h2>
             <div class="text-block">
                 <p>
                     When a person with an allergy comes to your restaurant, it often leads to them needing to speak

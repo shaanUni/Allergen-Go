@@ -23,7 +23,14 @@
                             <a class="btn" href="#features">Features</a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn" href="#why">Why Us?</a>
+                            <a class="btn" href="#why">What is AllergenGo?</a>
+                        </li>
+                        <li class="nav-item">
+                        @if (request()->path() == '/')
+                            <a class="btn" href="{{ route('restaurant') }}">For Restaurants</a>
+                        @else                        
+                            <a class="btn" href="{{ route('home') }}">For Users</a>
+                        @endif    
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('user.search') }}" class="btn btn-primary get-started-btn">Get Started</a>
