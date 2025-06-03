@@ -25,25 +25,25 @@ class StatsPageController extends Controller
             'search_allergen' => ['nullable', 'string', 'max:255']
         ]);
 
-        //Get the data from the searches table, and eager load it with the restaurant data and all it's dishes.
-        $searches = Searches::with('admin.dishes')
-            ->where('admin_id', Auth::guard('admin')->id()) // Only take their own searches
-            ->get();
+        //This variable will be used alot, it is a query getting all the searches and dishes for a restaurant
+        $searchQuery = Searches::with('admin.dishes') // eager loading dishes
+        ->where('admin_id', Auth::guard('admin')->id()); // security, ensure the restaurant can only see its own data
+
+        //Get the data from the searches table
+        $searches = $searchQuery->get(); 
 
         //This can give the restaurant an insight into how many people will allergens go to the restaurant. It is just a total of all the searches.
         $totalSearches = count($searches);
 
         //Find all of the failed searches. (failed meaning the user could not have anything to eat)
-        $failedSearches = Searches::with('admin.dishes')
-            ->where('admin_id', Auth::guard('admin')->id())
+        $failedSearches = $searchQuery
             ->where('failure', true)
             ->orderBy('created_at', 'desc') //order by most recent
             ->take(5) // restrict at 5
             ->get();
 
         //Find the total of all the failed searches
-        $failedSearchesCount = Searches::with('admin.dishes')
-            ->where('admin_id', Auth::guard('admin')->id())
+        $failedSearchesCount = $searchQuery
             ->where('failure', true)
             ->orderBy('created_at', 'desc') //order by most recent
             ->count();
@@ -56,8 +56,7 @@ class StatsPageController extends Controller
         $restaurant = Admin::find(Auth::guard('admin')->id());
         $restaurantCode = $restaurant->restaurant_code;
 
-        $halalUsers = Searches::with('admin.dishes')
-            ->where('admin_id', Auth::guard('admin')->id())
+        $halalUsers = $searchQuery
             ->where('halal', true)
             ->get();
 
@@ -80,8 +79,7 @@ class StatsPageController extends Controller
 
 
         //Another variable of eager laoded dishes with the selected dishes table
-        $selectedDishes = SelectedDishes::with('dish')
-            ->where('admin_id', Auth::guard('admin')->id())
+        $selectedDishes = $searchQuery
             ->get();
 
         $filteredDishesCount = 0;
