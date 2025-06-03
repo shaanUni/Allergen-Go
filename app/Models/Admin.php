@@ -4,10 +4,14 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Cashier\Billable;
 
 class Admin extends Authenticatable
 {
     use Notifiable;
+
+    //for stripe
+    use Billable;
 
     protected $guard = 'admin';
 

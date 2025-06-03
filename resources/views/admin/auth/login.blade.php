@@ -25,5 +25,6 @@
 
         <button type="submit" class="btn-login">Login</button>
     </form>
+    <a href="{{ route('admin.register') }}">Create account here!</a>
 </div>
 @endsection
