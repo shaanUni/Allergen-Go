@@ -29,36 +29,43 @@ class SelectedDishesController extends Controller
     }
 
     //This method boths adds and removes selected dishes
-    public function add($id, $state)
+    public function add(Request $request, $id, $state)
     {
+        //Get UUID from the view
+        $uuid = $request->input('uuid');
+
         //If normal dishes
         if ($state == "1") {
-            $selected = self::selectedDishHandler('selectedDishes', $id);
+            $selected = self::selectedDishHandler('selectedDishes'. $uuid, $id);
         } else { // if dishes with removeable allergens
-            $selectedRemoveable = self::selectedDishHandler('selectedRemoveableDishes', $id);
+            $selectedRemoveable = self::selectedDishHandler('selectedRemoveableDishes'. $uuid, $id);
         }
 
         //reload the list page with the details in memory
-        $edibleDishes = session('dishes');
-        $dishesWithRemoveables = session('removeables');
+        $edibleDishes = session('dishes'.$uuid); //the session key is dishes + the uuid 
+        $dishesWithRemoveables = session('removeables'.$uuid);
         $restaurant = session('restaurant');
-
+        
+        
         return view(
             'user.list',
             [
                 'dishes' => $edibleDishes,
                 'removeables' => $dishesWithRemoveables,
                 'restaurant' => $restaurant,
+                'uuid' => $uuid,
             ],
         );
     }
 
     //Render final page of users choices
-    public function selected()
+    public function selected(Request $request)
     {
+        $uuid = $request->input('uuid');
+
         //convert the array if ids into a collection of dishes
-        $selectedDishes = Dishes::findMany(session("selectedDishes"));
-        $removeable = Dishes::findMany(session("selectedRemoveableDishes"));
+        $selectedDishes = Dishes::findMany(session('selectedDishes'. $uuid));
+        $removeable = Dishes::findMany(session('selectedRemoveableDishes'. $uuid));
         
         //Merge into one collection and reidnex
         $allDishes = $selectedDishes->merge($removeable)->values();
@@ -82,6 +89,7 @@ class SelectedDishesController extends Controller
                 'dishes' => $selectedDishes,
                 'removeables' => $removeable,
                 'restaurant' => $restaurant,
+                'uuid' => $uuid,
             ],
         );
     }
@@ -113,9 +121,12 @@ class SelectedDishesController extends Controller
     }
 
     //For when the user wants to re-select dishes
-    public function reset(){
-        $edibleDishes = session('dishes');
-        $dishesWithRemoveables = session('removeables');
+    public function reset(Request $request){
+        
+        $uuid = $request->input('uuid');
+
+        $edibleDishes = session('dishes'.$uuid);
+        $dishesWithRemoveables = session('removeables'.$uuid);
         $restaurant = session('restaurant');
 
         return view(
@@ -124,6 +135,7 @@ class SelectedDishesController extends Controller
                 'dishes' => $edibleDishes,
                 'removeables' => $dishesWithRemoveables,
                 'restaurant' => $restaurant,
+                'uuid' => $uuid,
             ],
         );
     }

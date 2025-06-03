@@ -8,6 +8,7 @@
         @if (Route::currentRouteName() == 'user.selected')
             <form method="POST" action="{{ route('user.reset') }}">
                 @csrf
+                <input type="hidden" name="uuid" value="{{ $uuid }}">
                 <button type="submit" class="top-buttons right-btn">Re-select dishes</button>
             </form>
         @endif
@@ -41,12 +42,15 @@
                 <div class="list-forms">
                     <form method="POST" action="{{ route('user.individual', ['id' => $dish->id, 'state' => 1]) }}">
                         @csrf
+                        <input type="hidden" name="uuid" value="{{ $uuid }}">
+
                         <button type="submit" class="action-button">View Dish</button>
                     </form>
                     @php
+
                         $selectedBool = false;
-                        if (session('selectedDishes')) {
-                            $dishArray = session('selectedDishes');
+                        if (session('selectedDishes' . $uuid)) {
+                            $dishArray = session('selectedDishes' . $uuid);
                             if (in_array($dish->id, $dishArray)) {
                                 $selectedBool = true;
                             }
@@ -54,6 +58,7 @@
                     @endphp
                     @if (Route::currentRouteName() != 'user.selected')
                         <form method="POST" action="{{ route('user.adddish', ['id' => $dish->id, 'state' => 1]) }}">
+                            <input type="hidden" name="uuid" value="{{ $uuid }}">
                             @csrf
                             <button type="submit"
                                 class="action-button add-button {{ $selectedBool ? 'remove-button' : '' }}">{{ $selectedBool ? 'Remove Dish' : 'Add dish' }}</button>
@@ -102,12 +107,14 @@
 
                     <form method="POST" action="{{ route('user.individual', ['id' => $dish->id, 'state' => 0]) }}">
                         @csrf
+                        <input type="hidden" name="uuid" value="{{ $uuid }}">
+
                         <button type="submit" class="action-button alert">View</button>
                     </form>
                     @php
                         $selectedBool = false;
-                        if (session('selectedRemoveableDishes')) {
-                            $removeableDishArray = session('selectedRemoveableDishes');
+                        if (session('selectedRemoveableDishes' . $uuid)) {
+                            $removeableDishArray = session('selectedRemoveableDishes' . $uuid);
                             if (in_array($dish->id, $removeableDishArray)) {
                                 $selectedBool = true;
                             }
@@ -116,6 +123,7 @@
                     @if (Route::currentRouteName() != 'user.selected')
                         <form method="POST" action="{{ route('user.adddish', ['id' => $dish->id, 'state' => 0]) }}">
                             @csrf
+                            <input type="hidden" name="uuid" value="{{ $uuid }}">
                             <button type="submit"
                                 class="action-button add-button {{ $selectedBool ? 'remove-button' : '' }}">{{ $selectedBool ? 'Remove Dish' : 'Add dish' }}</button>
                         </form>
@@ -127,15 +135,16 @@
 
 
 
-</div>
-@if (Route::currentRouteName() != 'user.selected')
-    <div class="list-text finished-btn">
-
-        <form method="POST" action="{{ route('user.selected') }}">
-            @csrf
-            <button type="submit" class="action-button ">Finished</button>
-        </form>
     </div>
-@endif
+    @if (Route::currentRouteName() != 'user.selected')
+        <div class="list-text finished-btn">
+
+            <form method="POST" action="{{ route('user.selected') }}">
+                @csrf
+                <input type="hidden" name="uuid" value="{{ $uuid }}">
+                <button type="submit" class="action-button ">Finished</button>
+            </form>
+        </div>
+    @endif
 
 </div>
