@@ -15,10 +15,24 @@ class SubscriptionController extends Controller
     {
         $admin = Auth::guard('admin')->user();
 
-        return $admin->newSubscription('default', 'price_1RVu5hCtfDW7CkKEgj91o3ZK')  
+        return $admin->newSubscription('default', 'price_1RVu5hCtfDW7CkKEgj91o3ZK')
             ->checkout([
                 'success_url' => route('admin.dashboard') . '?subscribed=1',
                 'cancel_url' => route('user.search'),
             ]);
     }
+
+    public function cancelSubscription()
+    {
+        $admin = Auth::guard('admin')->user();
+
+        
+        if ($admin->subscribed('default')) {
+            $admin->subscription('default')->cancel();
+            return back()->with('success', 'Subscription canceled. You will retain access until the end of the billing period.');
+        }
+
+        return back()->with('error', 'No active subscription found.');
+    }
+
 }

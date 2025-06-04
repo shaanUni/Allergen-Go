@@ -63,6 +63,10 @@ class DashboardController extends Controller
         return view('admin.qrcode', compact('url', 'restaurantCode'));
     }
 
+    public function account()
+    {
+        return view('admin.account');
+    }
 
     private function getRestaurantCode()
     {

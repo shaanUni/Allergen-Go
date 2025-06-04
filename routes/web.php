@@ -60,10 +60,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
     //Once the admin has logged in, they can acsess these pages
     Route::middleware('auth:admin', 'subscribed')->group(function () {
         Route::get('/checkout', [SubscriptionController::class, 'checkout']);
+        Route::post('/admin/subscription/cancel', [SubscriptionController::class, 'cancelSubscription'])->name('subscription.cancel');
 
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('generate', [DashboardController::class, 'generate'])->name('generate');
         Route::get('qrcode', [DashboardController::class, 'qrCode'])->name('qrcode');
+        Route::get('account', [DashboardController::class, 'account'])->name('account');
 
         Route::get('stats', [StatsPageController::class, 'index'])->name('stats');
         Route::post('search', [StatsPageController::class, 'search'])->name('search');
