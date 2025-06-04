@@ -3,7 +3,7 @@
 @section('content')
 <div class="container mt-5">
     <h2>Create Admin Account</h2>
-
+    <h6>Create your account to get started. You'll then be taken to our secure payment page to complete your subscription — £30/month for full access to AllergenGo.</h6>
     <form method="POST" action="{{ route('admin.register.submit') }}">
         @csrf
 
