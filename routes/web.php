@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\Auth\RegisterController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SubscriptionController;
+use App\Http\Controllers\Admin\Auth\ForgotPasswordController;
+use App\Http\Controllers\Admin\Auth\ResetPasswordController;
 use App\Http\Controllers\User\SearchController;
 use PhpParser\Node\Expr\FuncCall;
 
@@ -49,6 +51,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     // Stripe success callback
     Route::get('/subscription/success', [RegisterController::class, 'subscriptionSuccess'])->name('subscription.success');
+
+    Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
     //Once the admin has logged in, they can acsess these pages
     Route::middleware('auth:admin')->group(function () {

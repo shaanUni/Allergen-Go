@@ -26,5 +26,7 @@
         <button type="submit" class="btn-login">Login</button>
     </form>
     <a href="{{ route('admin.register') }}">Create account here!</a>
+    <a href="{{ route('admin.password.request') }}">Forgot your password?</a>
+
 </div>
 @endsection
