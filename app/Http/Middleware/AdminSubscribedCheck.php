@@ -14,7 +14,7 @@ class AdminSubscribedCheck
         $admin = Auth::guard('admin')->user();
 
         if (!$admin || !$admin->subscribed('default')) {
-            return redirect()->route('admin.subscription.required')->with('error', 'You must be subscribed to access this area.');
+            return redirect()->route('admin.register')->with('error', 'You must be subscribed to access this area.');
         }
 
         return $next($request);

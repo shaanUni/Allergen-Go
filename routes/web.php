@@ -14,6 +14,9 @@ use App\Http\Controllers\Admin\Auth\ResetPasswordController;
 use App\Http\Controllers\User\SearchController;
 use PhpParser\Node\Expr\FuncCall;
 use App\Http\Middleware\AdminSubscribedCheck;
+use Laravel\Cashier\Http\Controllers\WebhookController;
+
+Route::post('/stripe/webhook', WebhookController::class)->name('cashier.webhook');
 
 
 Route::get('/', function () {
