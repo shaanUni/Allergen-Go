@@ -6,7 +6,11 @@ use App\Http\Controllers\User\SelectedDishesController;
 use App\Models\SelectedDishes;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Auth\LoginController;
+use App\Http\Controllers\Admin\Auth\RegisterController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\SubscriptionController;
+use App\Http\Controllers\Admin\Auth\ForgotPasswordController;
+use App\Http\Controllers\Admin\Auth\ResetPasswordController;
 use App\Http\Controllers\User\SearchController;
 use PhpParser\Node\Expr\FuncCall;
 
@@ -23,7 +27,7 @@ Route::get('/login', function () {
     return redirect()->route('admin.login');
 })->name('login');
 
-Route::prefix('user')->name('user.')->group(function(){
+Route::prefix('user')->name('user.')->group(function () {
 
     Route::get('search', [SearchController::class, 'search'])->name('search');
     Route::post('searchCode', [SearchController::class, 'searchCode'])->name('searchCode');
@@ -41,8 +45,22 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('login', [LoginController::class, 'login']);
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
     
+    // Registration
+    Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
+    Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
+
+    // Stripe success callback
+    Route::get('/subscription/success', [RegisterController::class, 'subscriptionSuccess'])->name('subscription.success');
+
+    Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+
     //Once the admin has logged in, they can acsess these pages
     Route::middleware('auth:admin')->group(function () {
+        Route::get('/checkout', [SubscriptionController::class, 'checkout']);
+
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('generate', [DashboardController::class, 'generate'])->name('generate');
         Route::get('qrcode', [DashboardController::class, 'qrCode'])->name('qrcode');
@@ -58,7 +76,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('dishes/{id}/edit', [DishController::class, 'edit'])->name('dishes.edit');
         Route::put('dishes/{id}', [DishController::class, 'update'])->name('dishes.update');
-        
+
         Route::delete('dishes/{id}', [DishController::class, 'destroy'])->name('dishes.destroy');
 
     });
