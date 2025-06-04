@@ -15,11 +15,6 @@ use App\Http\Controllers\User\SearchController;
 use PhpParser\Node\Expr\FuncCall;
 use App\Http\Middleware\AdminSubscribedCheck;
 
-Route::group(['prefix' => 'stripe'], function () {
-    \Laravel\Cashier\Cashier::routes();
-});
-
-
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
