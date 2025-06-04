@@ -42,4 +42,10 @@ class Admin extends Authenticatable
     {
         $this->notify(new AdminResetPassword($token));
     }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(\Laravel\Cashier\Subscription::class, 'user_id');
+    }
+
 }

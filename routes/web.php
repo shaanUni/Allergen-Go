@@ -13,6 +13,10 @@ use App\Http\Controllers\Admin\Auth\ForgotPasswordController;
 use App\Http\Controllers\Admin\Auth\ResetPasswordController;
 use App\Http\Controllers\User\SearchController;
 use PhpParser\Node\Expr\FuncCall;
+use App\Http\Middleware\AdminSubscribedCheck;
+use Laravel\Cashier\Http\Controllers\WebhookController;
+
+Route::post('/stripe/webhook', WebhookController::class)->name('cashier.webhook');
 
 
 Route::get('/', function () {
@@ -58,7 +62,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
     //Once the admin has logged in, they can acsess these pages
-    Route::middleware('auth:admin')->group(function () {
+    Route::middleware('auth:admin', 'subscribed')->group(function () {
         Route::get('/checkout', [SubscriptionController::class, 'checkout']);
 
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
