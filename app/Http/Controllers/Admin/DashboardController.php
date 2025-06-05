@@ -72,7 +72,13 @@ class DashboardController extends Controller
         $subscription = $admin->subscription('default');
         $status = $subscription->stripe_status;
         $date = Carbon::parse($subscription->ends_at)->format('F j, Y');
-        ;
+
+        // Create a SetupIntent for this user. Cashier will set up the Stripe customer automatically if needed.
+        // The SetupIntent’s client_secret is used by Stripe.js on the front-end.
+        $intent = $admin->createSetupIntent();
+
+        // Optionally, you can pass in the current default payment method (so the user sees “Current card: **** 4242”).
+        $defaultMethod = $admin->defaultPaymentMethod();
 
         $cancelled = "";
 
@@ -82,7 +88,13 @@ class DashboardController extends Controller
 
         $invoices = $admin->invoices();
 
-        return view('admin.account', ['cancelled' => $cancelled, 'date' => $date, 'invoices' => $invoices]);
+        return view('admin.account', [
+            'cancelled' => $cancelled,
+            'date' => $date,
+            'invoices' => $invoices,
+            'intent' => $intent,
+            'defaultMethod' => $defaultMethod,
+        ]);
     }
     public function updateCard(Request $request)
     {
