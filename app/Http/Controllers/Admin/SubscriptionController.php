@@ -26,19 +26,19 @@ class SubscriptionController extends Controller
     {
         $admin = Auth::guard('admin')->user()->fresh();
 
-        $subscription = $admin->subscription('default');
-
-        if (!$subscription) {
-            dd('Subscription object is NULL', $admin->subscriptions()->get());
+        if (!$admin->hasStripeId()) {
+            $admin->createAsStripeCustomer();
         }
 
-       // dd('Subscription found', $subscription->toArray());
-        if ($admin->subscribed('default')) {
-            $admin->subscription('default')->cancel();
-            return back()->with('success', 'Subscription canceled. You will retain access until the end of the billing period.');
+        $subscription = $admin->subscription('default');
+
+        if ($subscription && $subscription->valid()) {
+            $subscription->cancel();
+            return back()->with('success', 'Subscription canceled.');
         }
 
         return back()->with('error', 'No active subscription found.');
+
     }
 
 }
