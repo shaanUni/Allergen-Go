@@ -33,6 +33,12 @@ class SubscriptionController extends Controller
         $subscription = $admin->subscription('default');
 
         if ($subscription && $subscription->valid()) {
+            dd([
+                'subscription' => get_class($subscription),
+                'has_stripe_method' => method_exists($admin, 'stripe'),
+                'stripe_client' => $admin->stripe(),
+            ]);
+            
             $subscription->cancel();
             return back()->with('success', 'Subscription canceled.');
         }
