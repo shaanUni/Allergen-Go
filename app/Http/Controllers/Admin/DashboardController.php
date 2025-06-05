@@ -65,6 +65,11 @@ class DashboardController extends Controller
 
     public function account()
     {
+        $admin = Auth::guard('admin')->user()->fresh();
+
+        //Grab the local Subscription record 
+        $subscription = $admin->subscription('default');
+        dd($subscription);
         return view('admin.account');
     }
 
