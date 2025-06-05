@@ -32,7 +32,7 @@ class SubscriptionController extends Controller
             dd('Subscription object is NULL', $admin->subscriptions()->get());
         }
 
-        dd('Subscription found', $subscription->toArray());
+       // dd('Subscription found', $subscription->toArray());
         if ($admin->subscribed('default')) {
             $admin->subscription('default')->cancel();
             return back()->with('success', 'Subscription canceled. You will retain access until the end of the billing period.');
