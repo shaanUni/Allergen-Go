@@ -53,11 +53,8 @@
 
                     {{-- Convert cents to main currency unit (e.g. 500 → 5.00) --}}
                     <td class="px-4 py-2">
-                        @php
-                            $amount = number_format($invoice->total() / 100, 2);
-                            $currency = strtoupper($invoice->currency);
-                        @endphp
-                        {{ ($currency === 'USD' ? '$' : ($currency === 'EUR' ? '€' : '').'') . $amount }}
+                        {{ $invoice->total()}}
+                        {{ $invoice->currency}}
                     </td>
 
                     {{-- Show “Paid” vs. “Pending” --}}
