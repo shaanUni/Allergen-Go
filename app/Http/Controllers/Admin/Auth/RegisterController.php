@@ -32,7 +32,7 @@ class RegisterController extends Controller
         session(['pending_admin_id' => $admin->id]);
 
         // Redirect to Stripe Checkout
-        return $admin->newSubscription('default', 'price_1RVu5hCtfDW7CkKEgj91o3ZK') // 2nd param is price ID
+        return $admin->newSubscription('default', config('services.stripe.price_id')) // 2nd param is price ID
             ->checkout([
                 'success_url' => route('admin.subscription.success'),
                 'cancel_url' => route('admin.register'),
