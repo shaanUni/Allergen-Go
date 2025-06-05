@@ -12,9 +12,6 @@ use Carbon\Carbon;
 
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\Request;
-use Illuminate\Notifications\Notifiable;
-
-use App\Notifications\accountCreated;
 
 
 class DashboardController extends Controller
@@ -33,10 +30,6 @@ class DashboardController extends Controller
     {
         // get exsisting code
         $restaurantCode = $this->getRestaurantCode();
-        $admin = Auth::guard('admin')->user();
-
-        $admin->notify(new accountCreated());
-
 
         //Double check it is null, (double check because the front end only shows the button if it is null, so this is an extra precaution)
         if ($restaurantCode == null) {
