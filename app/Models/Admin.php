@@ -27,6 +27,12 @@ class Admin extends Authenticatable
         'remember_token',
     ];
 
+    public function stripe()
+{
+    return app(\Stripe\StripeClient::class);
+}
+
+
     //one to many relationship with dishes (one restaurant can have many dishes)
     public function dishes()
     {
