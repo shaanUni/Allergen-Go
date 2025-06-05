@@ -17,7 +17,7 @@ class SubscriptionController extends Controller
     {
         $admin = Auth::guard('admin')->user();
 
-        return $admin->newSubscription('default', 'price_1RVu5hCtfDW7CkKEgj91o3ZK')
+        return $admin->newSubscription('default', config('services.stripe.price_id'))
             ->checkout([
                 'success_url' => route('admin.dashboard') . '?subscribed=1',
                 'cancel_url' => route('user.search'),
