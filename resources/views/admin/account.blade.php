@@ -26,7 +26,7 @@
 
                 </div>
             @endif
-    @if ($cancelled != 'true')
+    @if ($cancelled == '')
 
         <p>Next payment: </p>
         <p>£30 on {{ $date }}</p>
