@@ -52,8 +52,10 @@ class RegisterController extends Controller
             Auth::guard('admin')->loginUsingId($adminId);  
             session()->forget('pending_admin_id');
             //welcome email
-            $admin = Auth::guard('admin')->user();
+            $admin = Auth::guard('admin')->user()->fresh();
             $subscription = $admin->subscription('default');
+            dd($subscription);
+
             $date = Carbon::parse($subscription->trial_ends_at)->format('F j, Y');
             
             $admin->notify(new accountCreated($date));

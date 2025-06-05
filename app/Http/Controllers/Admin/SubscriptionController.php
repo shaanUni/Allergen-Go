@@ -49,7 +49,8 @@ class SubscriptionController extends Controller
             'cancel_at_period_end' => true,
         ]);
 
-        $periodEnd = Carbon::createFromTimestamp($stripeSub->current_period_end);
+        $periodEnd = Carbon::createFromTimestamp($stripeSub->ends_at);
+
         //gooodbye email
         $date = Carbon::parse($stripeSub->current_period_end)->format('F j, Y');
         $admin->notify(new accountDeleted($periodEnd));
