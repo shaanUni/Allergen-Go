@@ -24,9 +24,15 @@ class SubscriptionController extends Controller
 
     public function cancelSubscription()
     {
-        $admin = Auth::guard('admin')->user();
+        $admin = Auth::guard('admin')->user()->fresh();
 
-        
+        $subscription = $admin->subscription('default');
+
+        if (!$subscription) {
+            dd('Subscription object is NULL', $admin->subscriptions()->get());
+        }
+
+        dd('Subscription found', $subscription->toArray());
         if ($admin->subscribed('default')) {
             $admin->subscription('default')->cancel();
             return back()->with('success', 'Subscription canceled. You will retain access until the end of the billing period.');
