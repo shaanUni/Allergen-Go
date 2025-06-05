@@ -17,6 +17,7 @@
         <div class="admin-navbar__right">
             @auth('admin')
                 <span class="admin-navbar__greeting">Hi, {{ auth('admin')->user()->name }}</span>
+                <a href="{{ route('admin.account') }}">asd</a>
                 <form method="POST" action="{{ route('admin.logout') }}">
                     @csrf
                     <button type="submit" class="btn-logout">Logout</button>
