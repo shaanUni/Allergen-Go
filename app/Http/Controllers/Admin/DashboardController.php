@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\URL;
 use Carbon\Carbon;
 
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Http\Request;
 
 
 class DashboardController extends Controller
@@ -70,11 +71,12 @@ class DashboardController extends Controller
         //Grab the local Subscription record 
         $subscription = $admin->subscription('default');
         $status = $subscription->stripe_status;
-        $date = Carbon::parse($subscription->ends_at)->format('F j, Y');;
+        $date = Carbon::parse($subscription->ends_at)->format('F j, Y');
+        ;
 
         $cancelled = "";
 
-        if($status == 'canceled'){
+        if ($status == 'canceled') {
             $cancelled = "true";
         }
 
@@ -82,7 +84,28 @@ class DashboardController extends Controller
 
         return view('admin.account', ['cancelled' => $cancelled, 'date' => $date, 'invoices' => $invoices]);
     }
+    public function updateCard(Request $request)
+    {
+        $request->validate([
+            'payment_method' => 'required|string',
+        ]);
 
+        $admin = Auth::guard('admin')->user();
+        $paymentMethodId = $request->input('payment_method');
+
+        // Tell Cashier to update the default payment method on Stripe
+        $admin->updateDefaultPaymentMethod($paymentMethodId);
+
+        // Optionally: If you want to bill them immediately (e.g. for an invoice),
+        // you could create an invoice here. But most of the time you just update the card
+        // and let the next subscription renewal or invoice hit this new card.
+        //
+        // Example (if you have an open invoice you want to immediately pay):
+        // $invoice = $admin->invoice(); // invoices any pending balance
+        //
+        // Flash a success message and redirect back to the account page:
+        return back()->with('success', 'Your card has been updated successfully.');
+    }
     private function getRestaurantCode()
     {
         //Get the unique restaurant code of the restaurant currently logged in
