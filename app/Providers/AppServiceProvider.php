@@ -6,7 +6,6 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Cashier\Cashier;
 use App\Models\Admin;
 
-Cashier::useCustomerModel(Admin::class);
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +23,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
-        Cashier::useCustomerModel(\App\Models\Admin::class);
+        Cashier::useCustomerModel(Admin::class);
     }
 }
