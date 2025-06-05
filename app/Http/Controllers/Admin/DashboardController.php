@@ -78,7 +78,9 @@ class DashboardController extends Controller
             $cancelled = "true";
         }
 
-        return view('admin.account', ['cancelled' => $cancelled, 'date' => $date]);
+        $invoices = $admin->invoices();
+
+        return view('admin.account', ['cancelled' => $cancelled, 'date' => $date, 'invoices' => $invoices]);
     }
 
     private function getRestaurantCode()
