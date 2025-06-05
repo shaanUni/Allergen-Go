@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Cashier\Cashier;
 use App\Models\Admin;
 use Stripe\StripeClient;
+use App\Models\Subscription;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -25,8 +26,6 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         Cashier::useCustomerModel(Admin::class);
-        //app()->singleton(StripeClient::class, function () {
-          //  return new StripeClient(config('services.stripe.secret'));
-        //});
+        Cashier::useSubscriptionModel(Subscription::class);
     }
 }
