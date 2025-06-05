@@ -25,14 +25,15 @@ class SubscriptionController extends Controller
     public function cancelSubscription()
     {
         $admin = Auth::guard('admin')->user();
-
-        
-        if ($admin->subscribed('default')) {
-            $admin->subscription('default')->cancel();
+        $subscription = $admin->subscription('default');
+    
+        if ($subscription && $subscription->active()) {
+            $subscription->cancel();
             return back()->with('success', 'Subscription canceled. You will retain access until the end of the billing period.');
         }
-
+    
         return back()->with('error', 'No active subscription found.');
     }
+    
 
 }
