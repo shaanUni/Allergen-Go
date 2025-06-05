@@ -14,11 +14,15 @@
                 {{ session('error') }}
             </div>
         @endif
-
-        <form method="POST" action="{{ route('admin.subscription.cancel') }}">
+    @if ($cancelled == 'true')
+    <p>You cancelled your subscription.<p>
+    @else
+    
+    <form method="POST" action="{{ route('admin.subscription.cancel') }}">
             @csrf
             <button type="submit" class="btn-logout">Cancel subscription</button>
         </form>
 
     </div>
+    @endif
 @endsection

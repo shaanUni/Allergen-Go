@@ -69,8 +69,14 @@ class DashboardController extends Controller
 
         //Grab the local Subscription record 
         $subscription = $admin->subscription('default');
-        dd($subscription);
-        return view('admin.account');
+        $status = $subscription->stripe_status;
+        $cancelled = "";
+
+        if($status == 'canceled'){
+            $cancelled = "true";
+        }
+
+        return view('admin.account', ['cancelled' => $cancelled]);
     }
 
     private function getRestaurantCode()
