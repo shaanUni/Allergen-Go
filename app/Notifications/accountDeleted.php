@@ -7,11 +7,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class accountCreated extends Notification
+class accountDeleted extends Notification
 {
     use Queueable;
     public $date;
-
     /**
      * Create a new notification instance.
      */
@@ -37,8 +36,8 @@ class accountCreated extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line('You are now registered.')
-            ->line('You will be billed £30 on ' . $this->date)
+            ->line('Sorry to see you go.')
+            ->line('You have acsess till '. $this->date)
             ->line('Thank you for using our application!');
     }
 
