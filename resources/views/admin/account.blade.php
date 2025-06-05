@@ -25,4 +25,7 @@
 
     </div>
     @endif
+
+    <p>Next payment: </p>
+    <p>£30 on {{ $date }}</p>
 @endsection

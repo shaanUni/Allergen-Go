@@ -19,7 +19,6 @@ class DashboardController extends Controller
     {
         //get the unique code
         $restaurantCode = $this->getRestaurantCode();
-
         return view(
             'admin.dashboard',
             ['restaurant_code' => $restaurantCode,]

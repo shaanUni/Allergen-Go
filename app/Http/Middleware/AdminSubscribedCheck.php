@@ -11,6 +11,11 @@ class AdminSubscribedCheck
 {
     public function handle(Request $request, Closure $next)
     {
+        //Dont enforce on local environments
+        if(app()->environment('local')){
+            return $next($request);
+        }
+
         $admin = Auth::guard('admin')->user();
 
         if (!$admin || !$admin->subscribed('default')) {
