@@ -70,7 +70,7 @@ class DashboardController extends Controller
         //Grab the local Subscription record 
         $subscription = $admin->subscription('default');
         $status = $subscription->stripe_status;
-        $date = Carbon::parse($subscription->ends_at);
+        $date = Carbon::parse($subscription->ends_at)->format('F j, Y');;
 
         $cancelled = "";
 

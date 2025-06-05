@@ -14,18 +14,22 @@
                 {{ session('error') }}
             </div>
         @endif
-    @if ($cancelled == 'true')
-    <p>You cancelled your subscription. {{ $date }}<p>
-    @else
-    
-    <form method="POST" action="{{ route('admin.subscription.cancel') }}">
-            @csrf
-            <button type="submit" class="btn-logout">Cancel subscription</button>
-        </form>
+        @if ($cancelled == 'true')
+            <p>You cancelled your subscription. {{ $date }}
+            <p>
+        @else
 
-    </div>
+                    <form method="POST" action="{{ route('admin.subscription.cancel') }}">
+                        @csrf
+                        <button type="submit" class="btn-logout">Cancel subscription</button>
+                    </form>
+
+                </div>
+            @endif
+    @if ($cancelled != 'true')
+
+        <p>Next payment: </p>
+        <p>£30 on {{ $date }}</p>
     @endif
 
-    <p>Next payment: </p>
-    <p>£30 on {{ $date }}</p>
 @endsection
