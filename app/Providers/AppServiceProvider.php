@@ -27,5 +27,8 @@ class AppServiceProvider extends ServiceProvider
         //
         Cashier::useCustomerModel(Admin::class);
         Cashier::useSubscriptionModel(Subscription::class);
+        app()->singleton(StripeClient::class, function () {
+            return new StripeClient(config('services.stripe.secret'));
+        });
     }
 }
