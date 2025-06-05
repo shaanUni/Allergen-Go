@@ -15,7 +15,7 @@
             </div>
         @endif
     @if ($cancelled == 'true')
-    <p>You cancelled your subscription.<p>
+    <p>You cancelled your subscription. {{ $date }}<p>
     @else
     
     <form method="POST" action="{{ route('admin.subscription.cancel') }}">

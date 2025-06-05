@@ -8,6 +8,7 @@ use App\Models\Admin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\URL;
+use Carbon\Carbon;
 
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -70,13 +71,15 @@ class DashboardController extends Controller
         //Grab the local Subscription record 
         $subscription = $admin->subscription('default');
         $status = $subscription->stripe_status;
+        $date = Carbon::parse($subscription->ends_at);
+
         $cancelled = "";
 
         if($status == 'canceled'){
             $cancelled = "true";
         }
 
-        return view('admin.account', ['cancelled' => $cancelled]);
+        return view('admin.account', ['cancelled' => $cancelled, 'date' => $date]);
     }
 
     private function getRestaurantCode()
