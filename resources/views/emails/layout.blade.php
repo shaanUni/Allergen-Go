@@ -75,7 +75,7 @@
 
   <div class="container">
     <div class="header">
-      <h1>{{ config('app.name') }}</h1>
+      <h1>AllergenGo</h1>
     </div>
 
     <div class="content">
