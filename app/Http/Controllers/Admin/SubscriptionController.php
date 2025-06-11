@@ -9,6 +9,9 @@ use App\Models\Admin;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Stripe\StripeClient;
+use Illuminate\Notifications\Notifiable;
+
+use App\Notifications\accountDeleted;
 
 class SubscriptionController extends Controller
 {
@@ -48,6 +51,10 @@ class SubscriptionController extends Controller
 
         $periodEnd = Carbon::createFromTimestamp($stripeSub->current_period_end);
 
+        //gooodbye email
+        $date = Carbon::parse($stripeSub->current_period_end)->format('F j, Y');
+        $admin->notify(new accountDeleted($date));
+
         //update local record to reflect period end
         $subscription->fill([
             'ends_at' => $periodEnd,
@@ -61,3 +68,9 @@ class SubscriptionController extends Controller
     }
 
 }
+/*
+
+$admin = Admin::findOrFail(12);
+$subscription = $admin->subscription('default');
+dd($subscription);
+*/

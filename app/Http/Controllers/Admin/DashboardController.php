@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\URL;
 use Carbon\Carbon;
+use Illuminate\Notifications\Notifiable;
 
+use App\Notifications\accountCreated;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\Request;
 
@@ -18,6 +20,19 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        //This is in memory when a new user was just created, so send them a welcome email with details about their trial
+        if (session('new_user')) {
+            //This should onyl ever happen once
+            session()->forget('new_user');
+
+            $admin = Auth::guard('admin')->user()->fresh();
+            $subscription = $admin->subscription('default');
+
+            $date = Carbon::parse($subscription->trial_ends_at)->format('F j, Y');
+
+            $admin->notify(new accountCreated($date));
+        }
+
         //get the unique code
         $restaurantCode = $this->getRestaurantCode();
         return view(
@@ -71,7 +86,7 @@ class DashboardController extends Controller
         //Grab the local Subscription record 
         $subscription = $admin->subscription('default');
         $status = $subscription->stripe_status;
-        $date = Carbon::parse($subscription->ends_at)->format('F j, Y');
+        $date = Carbon::parse($subscription->current_period_end)->format('F j, Y');
 
         // Create a SetupIntent for this user. Cashier will set up the Stripe customer automatically if needed.
         // The SetupIntent’s client_secret is used by Stripe.js on the front-end.
@@ -124,3 +139,4 @@ class DashboardController extends Controller
         return Admin::find(Auth::guard('admin')->id())->restaurant_code;
     }
 }
+
