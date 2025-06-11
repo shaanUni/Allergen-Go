@@ -37,9 +37,8 @@ class accountCreated extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line('You are now registered.')
-            ->line('You will be billed £30 on ' . $this->date)
-            ->line('Thank you for using our application!');
+            ->subject('Account Created')
+            ->view('emails.account-created', ['date' => $this->date]);
     }
 
     /**

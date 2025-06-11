@@ -36,9 +36,10 @@ class accountDeleted extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line('Sorry to see you go.')
-            ->line('You have acsess till '. $this->date)
-            ->line('Thank you for using our application!');
+            ->subject('Your Account Was Deleted')
+            ->view('emails.account-deleted', [
+                'date' => $this->date,
+            ]);
     }
 
     /**
