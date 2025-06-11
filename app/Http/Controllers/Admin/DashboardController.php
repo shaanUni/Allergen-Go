@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\URL;
 use Carbon\Carbon;
+use Illuminate\Notifications\Notifiable;
 
+use App\Notifications\accountCreated;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\Request;
 
@@ -18,6 +20,18 @@ class DashboardController extends Controller
 {
     public function index()
     {
+
+        if (session('new_user')) {
+            session()->forget('new_user');
+            $admin = Auth::guard('admin')->user()->fresh();
+            $subscription = $admin->subscription('default');
+            //dd($subscription);
+
+            $date = Carbon::parse($subscription->trial_ends_at)->format('F j, Y');
+
+            $admin->notify(new accountCreated($date));
+        }
+
         //get the unique code
         $restaurantCode = $this->getRestaurantCode();
         return view(
@@ -124,3 +138,4 @@ class DashboardController extends Controller
         return Admin::find(Auth::guard('admin')->id())->restaurant_code;
     }
 }
+
