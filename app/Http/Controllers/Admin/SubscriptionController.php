@@ -49,7 +49,7 @@ class SubscriptionController extends Controller
             'cancel_at_period_end' => true,
         ]);
 
-        $periodEnd = Carbon::createFromTimestamp($stripeSub->ends_at);
+        $periodEnd = Carbon::createFromTimestamp($stripeSub->current_period_end);
 
         //gooodbye email
         $date = Carbon::parse($stripeSub->current_period_end)->format('F j, Y');
