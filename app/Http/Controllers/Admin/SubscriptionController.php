@@ -53,7 +53,7 @@ class SubscriptionController extends Controller
 
         //gooodbye email
         $date = Carbon::parse($stripeSub->current_period_end)->format('F j, Y');
-        $admin->notify(new accountDeleted($periodEnd));
+        $admin->notify(new accountDeleted($date));
 
         //update local record to reflect period end
         $subscription->fill([
