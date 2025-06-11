@@ -54,7 +54,7 @@ class RegisterController extends Controller
             //welcome email
             $admin = Auth::guard('admin')->user()->fresh();
             $subscription = $admin->subscription('default');
-            dd($subscription);
+            //dd($subscription);
 
             $date = Carbon::parse($subscription->trial_ends_at)->format('F j, Y');
             
