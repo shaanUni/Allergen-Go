@@ -58,10 +58,10 @@
 
                     {{-- Show “Paid” vs. “Pending” --}}
                     <td class="px-4 py-2">
-                        @if ($invoice->paid)
-                            <span class="text-green-600">Paid</span>
-                        @elseif($invoice->total() == "£0.00")
+                        @if ($invoice->total() == "£0.00" )
                         trial
+                        @elseif($invoice->paid)
+                        <span class="text-green-600">Paid</span>
                         @else
                             <span class="text-yellow-600">Pending</span>
                         @endif
