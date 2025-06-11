@@ -20,12 +20,13 @@ class DashboardController extends Controller
 {
     public function index()
     {
-
+        //This is in memory when a new user was just created, so send them a welcome email with details about their trial
         if (session('new_user')) {
+            //This should onyl ever happen once
             session()->forget('new_user');
+
             $admin = Auth::guard('admin')->user()->fresh();
             $subscription = $admin->subscription('default');
-            //dd($subscription);
 
             $date = Carbon::parse($subscription->trial_ends_at)->format('F j, Y');
 
