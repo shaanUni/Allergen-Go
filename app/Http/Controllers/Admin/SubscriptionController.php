@@ -49,12 +49,14 @@ class SubscriptionController extends Controller
             'cancel_at_period_end' => true,
         ]);
 
+        //This will go in the admin table, so they can se when subscription expires, so convert to correct format
+        $dateForDb = Carbon::parse($stripeSub->current_period_end)->toDateString();
         $periodEnd = Carbon::createFromTimestamp($stripeSub->current_period_end);
 
         //gooodbye email
         $date = Carbon::parse($stripeSub->current_period_end)->format('F j, Y');
         $admin->notify(new accountDeleted($date));
-        $admin->account_delete_date = $date;
+        $admin->account_delete_date = $dateForDb;
 
         //update local record to reflect period end
         $subscription->fill([
