@@ -31,7 +31,7 @@ class DashboardController extends Controller
 
             //Format date for when free trial ends
             $date = Carbon::parse($subscription->trial_ends_at)->format('F j, Y');
-            
+
             //welcome email
             $admin->notify(new accountCreated($date));
         }
@@ -89,21 +89,23 @@ class DashboardController extends Controller
         //Grab the local Subscription record 
         $subscription = $admin->subscription('default');
         $status = $subscription->stripe_status;
-        
+
         $stripe = new StripeClient(config('services.stripe.secret'));
+        //Find subscription
+        $stripeSub = $stripe->subscriptions->retrieve($subscription->stripe_id, []);
 
         //When the admin next has to pay
-        $date = Carbon::createFromTimestamp($stripe->subscriptions->current_period_end);
+        $date = Carbon::createFromTimestamp($stripeSub->subscriptions->current_period_end);
 
         //If the account has been cancelled
-        if($admin->account_delete_date != null){
+        if ($admin->account_delete_date != null) {
             $date = Carbon::parse($admin->account_delete_date)->format('F j, Y');
         }
 
         /*
             We need to store the next billing date in the DB. get rid off trial date, see DB fields
         */
-      
+
         // Create a SetupIntent for this user. Cashier will set up the Stripe customer automatically if needed.
         // The SetupIntent’s client_secret is used by Stripe.js on the front-end.
         $intent = $admin->createSetupIntent();
