@@ -89,7 +89,7 @@ class DashboardController extends Controller
         $subscription = $admin->subscription('default');
         $status = $subscription->stripe_status;
         $date = Carbon::parse($admin->account_delete_date)->format('F j, Y');
-
+        dump($date);
         // Create a SetupIntent for this user. Cashier will set up the Stripe customer automatically if needed.
         // The SetupIntent’s client_secret is used by Stripe.js on the front-end.
         $intent = $admin->createSetupIntent();
