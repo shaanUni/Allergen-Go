@@ -15,18 +15,6 @@ use App\Notifications\accountDeleted;
 
 class SubscriptionController extends Controller
 {
-    //
-    public function checkout()
-    {
-        $admin = Auth::guard('admin')->user();
-
-        return $admin->newSubscription('default', config('services.stripe.price_id'))
-            ->trialDays(30)
-            ->checkout([
-                'success_url' => route('admin.dashboard') . '?subscribed=1',
-                'cancel_url' => route('user.search'),
-            ]);
-    }
 
     public function cancelSubscription()
     {
@@ -68,7 +56,7 @@ class SubscriptionController extends Controller
 
         
         return back()->with('success', 'Subscription canceled. You will retain access until '
-            . $periodEnd->toDayDateTimeString() . '.');
+            . Carbon::parse($stripeSub->current_period_end)->format('F j, Y'));
 
     }
 
