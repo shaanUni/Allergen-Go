@@ -88,10 +88,15 @@ class DashboardController extends Controller
         //Grab the local Subscription record 
         $subscription = $admin->subscription('default');
         $status = $subscription->stripe_status;
-        $date = Carbon::parse($admin->account_delete_date)->format('F j, Y');
+        
+        $date = 0;
+        
+        if($admin->account_delete_date != null){
+            $date = Carbon::parse($admin->account_delete_date)->format('F j, Y');
+        }
 
         /*
-            We need to store the next billing date in the DB.
+            We need to store the next billing date in the DB. get rid off trial date, see DB fields
         */
         dump($admin->account_delete_date);
         dump($date);
