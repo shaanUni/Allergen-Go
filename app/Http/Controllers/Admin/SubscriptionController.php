@@ -59,7 +59,8 @@ class SubscriptionController extends Controller
         //check if account_delete_date is set, if yes it means they deleted the account. Check if the date is set, if yes, check if it is today.
         //$admin->account_delete_date = $dateForDb; //make this today
         $admin->account_delete_date = Carbon::now()->toDateString();
-
+        $admin->save();
+        
         //update local record to reflect period end
         $subscription->fill([
             'ends_at' => $periodEnd,
