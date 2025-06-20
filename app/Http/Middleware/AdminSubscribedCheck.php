@@ -27,7 +27,10 @@ class AdminSubscribedCheck
             }
         }
 
-        if (!$admin || !$admin->subscribed('default')) {
+        //If the account was just created, this will be true
+        $newUserStatus = session('new_user');
+
+        if ($newUserStatus == 'true' && (!$admin || !$admin->subscribed('default'))) {
             return redirect()->route('admin.register')->with('error', 'You must be subscribed to access this area.');
         }
 
