@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\URL;
 use Carbon\Carbon;
+use Stripe\StripeClient;
 use Illuminate\Notifications\Notifiable;
 
 use App\Notifications\accountCreated;
@@ -89,9 +90,10 @@ class DashboardController extends Controller
         $subscription = $admin->subscription('default');
         $status = $subscription->stripe_status;
         
-        $stripe = $subscription->asStripeSubscription();
+        $stripe = new StripeClient(config('services.stripe.secret'));
+
         //When the admin next has to pay
-        $date = Carbon::createFromTimestamp($stripe->current_period_end);
+        $date = Carbon::createFromTimestamp($stripe->subscriptions->current_period_end);
 
         //If the account has been cancelled
         if($admin->account_delete_date != null){
