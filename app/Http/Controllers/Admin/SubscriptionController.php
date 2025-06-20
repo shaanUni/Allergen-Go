@@ -45,9 +45,10 @@ class SubscriptionController extends Controller
         $stripeSub = $stripe->subscriptions->retrieve($subscription->stripe_id, []);
 
         //tell stripe to cancel at the end of the period
-        $stripe->subscriptions->update($subscription->stripe_id, [
-            'cancel_at_period_end' => false,
-        ]);
+        //$stripe->subscriptions->update($subscription->stripe_id, [
+         //   'cancel_at_period_end' => true,
+        //]);
+        $stripe->subscriptions->cancel($subscription->stripe_id);
 
         //This will go in the admin table, so they can se when subscription expires, so convert to correct format
         $dateForDb = Carbon::parse($stripeSub->current_period_end)->toDateString();
