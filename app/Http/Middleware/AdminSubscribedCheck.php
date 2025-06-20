@@ -23,13 +23,14 @@ class AdminSubscribedCheck
         if($admin->account_delete_date != null){
             //If the date is LTE (less than or equal) to today, they can not acsess the app
             if(Carbon::parse($admin->account_delete_date)->lte(Carbon::today())){
+                dd("here boy");
                 return redirect()->route('admin.register')->with('error', 'You unsubscribed.');
             }
         }
 
         //If the account was just created, this will be true
         $newUserStatus = session('new_user');
-
+        dd($newUserStatus);
         if ($newUserStatus == 'true' && (!$admin || !$admin->subscribed('default'))) {
             return redirect()->route('admin.register')->with('error', 'You must be subscribed to access this area.');
         }
