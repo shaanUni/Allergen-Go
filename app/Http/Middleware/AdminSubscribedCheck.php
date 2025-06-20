@@ -19,8 +19,10 @@ class AdminSubscribedCheck
 
         $admin = Auth::guard('admin')->user();
         
+        //If this date is set, it means the user cancelled their subscription
         if($admin->account_delete_date != null){
-            if(Carbon::parse($admin->account_delete_date)->isToday()){//if today is greater than or == to the cancelation date
+            //If the date is LTE (less than or equal) to today, they can not acsess the app
+            if(Carbon::parse($admin->account_delete_date)->lte(Carbon::today())){
                 return redirect()->route('admin.register')->with('error', 'You unsubscribed.');
             }
         }

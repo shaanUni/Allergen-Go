@@ -21,7 +21,7 @@ class SubscriptionController extends Controller
         $admin = Auth::guard('admin')->user();
 
         return $admin->newSubscription('default', config('services.stripe.price_id'))
-            //->trialDays(30)
+            ->trialDays(30)
             ->checkout([
                 'success_url' => route('admin.dashboard') . '?subscribed=1',
                 'cancel_url' => route('user.search'),
@@ -56,9 +56,8 @@ class SubscriptionController extends Controller
         //gooodbye email
         $date = Carbon::parse($stripeSub->current_period_end)->format('F j, Y');
         $admin->notify(new accountDeleted($date));
-        //check if account_delete_date is set, if yes it means they deleted the account. Check if the date is set, if yes, check if it is today.
-        //$admin->account_delete_date = $dateForDb; //make this today
-        $admin->account_delete_date = Carbon::now()->toDateString();
+        
+        $admin->account_delete_date = $dateForDb; 
         $admin->save();
         
         //update local record to reflect period end
