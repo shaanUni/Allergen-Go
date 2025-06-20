@@ -89,8 +89,11 @@ class DashboardController extends Controller
         $subscription = $admin->subscription('default');
         $status = $subscription->stripe_status;
         
-        $date = 0;
-        
+        $stripe = $subscription->asStripeSubscription();
+        //When the admin next has to pay
+        $date = Carbon::createFromTimestamp($stripe->current_period_end);
+
+        //If the account has been cancelled
         if($admin->account_delete_date != null){
             $date = Carbon::parse($admin->account_delete_date)->format('F j, Y');
         }
@@ -98,8 +101,7 @@ class DashboardController extends Controller
         /*
             We need to store the next billing date in the DB. get rid off trial date, see DB fields
         */
-        dump($admin->account_delete_date);
-        dump($date);
+      
         // Create a SetupIntent for this user. Cashier will set up the Stripe customer automatically if needed.
         // The SetupIntent’s client_secret is used by Stripe.js on the front-end.
         $intent = $admin->createSetupIntent();
