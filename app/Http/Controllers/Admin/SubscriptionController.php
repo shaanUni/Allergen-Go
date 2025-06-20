@@ -46,7 +46,7 @@ class SubscriptionController extends Controller
 
         //tell stripe to cancel at the end of the period
         $stripe->subscriptions->update($subscription->stripe_id, [
-            'cancel_at_period_end' => true,
+            'cancel_at_period_end' => false,
         ]);
 
         //This will go in the admin table, so they can se when subscription expires, so convert to correct format
