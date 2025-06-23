@@ -35,7 +35,6 @@ class StripeWebhookController extends Controller
                 Log::info('Stripe invoice.payment_succeeded', $invoice);
 
                 // TODO: Optionally update user status if needed
-
                 break;
 
             case 'customer.subscription.deleted':
