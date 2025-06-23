@@ -28,7 +28,6 @@ class DashboardController extends Controller
 
             $admin = Auth::guard('admin')->user()->fresh();
             $subscription = $admin->subscription('default');
-
             //Format date for when free trial ends
             $date = Carbon::parse($subscription->trial_ends_at)->format('F j, Y');
 
