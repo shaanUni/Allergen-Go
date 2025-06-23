@@ -59,6 +59,7 @@ class ChargeFailed
             //if this admin currently has a failed payment, change the status to paid
             if ($admin->payment_failed) {
                 $admin->payment_failed = false;
+                $admin->save();
             }
 
         }
