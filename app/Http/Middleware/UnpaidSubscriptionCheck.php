@@ -21,7 +21,11 @@ class UnpaidSubscriptionCheck
         if(app()->environment('local')){
             return $next($request);
         }
-
+        
+        if ($request->routeIs('admin.account')) {
+            return $next($request); // Don't redirect loop into itself
+        }
+        
         $admin = Auth::guard('admin')->user();
 
         //If they missed a payment
