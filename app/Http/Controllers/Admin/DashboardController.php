@@ -119,10 +119,6 @@ class DashboardController extends Controller
             $date = Carbon::parse($admin->account_delete_date)->format('F j, Y');
         }
 
-        /*
-            We need to store the next billing date in the DB. get rid off trial date, see DB fields
-        */
-
         // Create a SetupIntent for this user. Cashier will set up the Stripe customer automatically if needed.
         // The SetupIntent’s client_secret is used by Stripe.js on the front-end.
         $intent = $admin->createSetupIntent();
