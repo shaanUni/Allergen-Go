@@ -33,7 +33,7 @@ class DashboardController extends Controller
             $date = Carbon::parse($subscription->trial_ends_at)->format('F j, Y');
 
             //welcome email
-            $admin->notify(new accountCreated($date));
+            //$admin->notify(new accountCreated($date));
         }
 
         //get the unique code

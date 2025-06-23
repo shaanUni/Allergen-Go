@@ -37,7 +37,7 @@ class RegisterController extends Controller
 
         // Redirect to Stripe Checkout
         return $admin->newSubscription('default', config('services.stripe.price_id')) // 2nd param is price ID
-            //->trialDays(30)
+            ->trialDays(30)
             ->checkout([
                 'success_url' => route('admin.subscription.success'),
                 'cancel_url' => route('admin.register'),

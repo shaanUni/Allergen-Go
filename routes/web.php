@@ -14,6 +14,10 @@ use App\Http\Controllers\Admin\Auth\ResetPasswordController;
 use App\Http\Controllers\User\SearchController;
 use PhpParser\Node\Expr\FuncCall;
 use App\Http\Middleware\AdminSubscribedCheck;
+use App\Http\Controllers\StripeWebhookController;
+
+
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
 
 Route::get('/', function () {
     return view('welcome');
