@@ -48,7 +48,7 @@ class ChargeFailed
             Log::info("payment failed");
             Log::info($email);
             Log::warning($admin->email);
-            /*
+            */
         }
 
         //If a payment fails
