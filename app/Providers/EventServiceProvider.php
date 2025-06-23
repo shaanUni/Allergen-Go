@@ -12,8 +12,9 @@ class EventServiceProvider extends ServiceProvider
      * The event listener mappings for the application.
      */
     protected $listen = [
-        InvoicePaymentFailed::class => [
-            HandleInvoicePaymentFailed::class,
+        \Laravel\Cashier\Events\WebhookReceived::class => [
+            \App\Listeners\ChargeFailed::class,
         ],
     ];
+    
 }
