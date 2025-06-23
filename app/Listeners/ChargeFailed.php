@@ -13,39 +13,50 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Admin;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\FailedPayment;
+use Carbon\Carbon;
+
 
 //for when card is declined
 class ChargeFailed
 {
     public function handle(WebhookReceived $event)
     {
-        
+
+        //If a payment failed
         if ($event->payload['type'] === 'charge.failed') {
-            $data = $event->payload['data']['object'];
             $email = $data['billing_details']['email'] ?? 'unknown';
-            $amount = $data['amount'] ?? 0;
-
+            //get the admin who's payment failed
             $admin = Admin::where('email', $email)->first();
-            $admin->payment_failed = true;
-            $admin->save();
+            //if it has not failed yet - we need this, as if it has failed beforem the failed payment date would keep getting pushed back
+            if (!$admin->payment_failed) {
+                $admin->payment_failed = true;
+                $admin->failed_payment_date = Carbon::parse(Carbon::now())->toDateString();
+                $admin->save();
+                
+                //The account will be closed on this date
+                $emailDate = Carbon::parse($admin->failed_payment_date)->addDays(7);
+                $emailDate = Carbon::parse($emailDate)->format('F j, Y');
 
-            $admin->notify(new FailedPayment());
 
+                $admin->notify(new FailedPayment($emailDate));
+            }
             Log::info("payment failed");
             Log::warning($admin->email);
         }
 
+        //If a payment fails
         if ($event->payload['type'] === 'invoice.payment_succeeded') {
             $invoice = $event->payload['data']['object'];
-            $customerId = $invoice['customer'];
-            
+
             $email = $invoice['customer_email'];
-            $amountPaid = $invoice['amount_paid'] ?? 0;
-            
+
             $admin = Admin::where('email', $email)->first();
-            
-            Log::info("payment worked");
-            Log::warning($admin->email);
+
+            //if this admin currently has a failed payment, change the status to paid
+            if ($admin->payment_failed) {
+                $admin->payment_failed = false;
+            }
+
         }
     }
 }

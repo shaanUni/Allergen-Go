@@ -13,6 +13,8 @@ use Stripe\StripeClient;
 use Illuminate\Notifications\Notifiable;
 
 use App\Notifications\accountCreated;
+use App\Notifications\FailedPayment;
+
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -22,19 +24,32 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        Log::info("jiasmdop");
+        $admin = Auth::guard('admin')->user()->fresh();
+
         //This is in memory when a new user was just created, so send them a welcome email with details about their trial
         if (session('new_user')) {
             //This should onyl ever happen once
             session()->forget('new_user');
 
-            $admin = Auth::guard('admin')->user()->fresh();
             $subscription = $admin->subscription('default');
             //Format date for when free trial ends
             $date = Carbon::parse($subscription->trial_ends_at)->format('F j, Y');
 
             //welcome email
             //$admin->notify(new accountCreated($date));
+        }
+
+        //If the admin has failed a payment
+        if($admin->payment_failed){
+            //If 3 or more days elapsed since they failed, send the final reminder email
+            $thresholdDate = Carbon::parse($admin->failed_payment_date)->addDays(3);
+            //The date when the account will be closed
+            $emailDate = Carbon::parse($admin->failed_payment_date)->addDays(7);
+            $emailDate = Carbon::parse($emailDate)->format('F j, Y');
+
+            if(now()->greaterThanOrEqualTo($thresholdDate)){
+                $admin->notify(new FailedPayment($emailDate));
+            }
         }
 
         //get the unique code

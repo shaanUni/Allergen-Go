@@ -10,13 +10,15 @@ use Illuminate\Notifications\Notification;
 class FailedPayment extends Notification
 {
     use Queueable;
+    public $date;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct($date)
     {
         //
+        $this->date = $date;
     }
 
     /**
@@ -35,9 +37,8 @@ class FailedPayment extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+            ->subject('Failed Payment - Action Needed')
+            ->view('emails.payment-failed', ['date' => $this->date]);
     }
 
     /**
