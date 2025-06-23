@@ -24,11 +24,12 @@ class ChargeFailed
 
         //If a payment failed
         if ($event->payload['type'] === 'charge.failed') {
-            $email = $data['billing_details']['email'] ?? 'unknown';
+            $email = $data['email'] ?? 'unknown';
+            
             //get the admin who's payment failed
-            //$admin = Admin::where('email', $email)->first();
+            $admin = Admin::where('email', $email)->first();
+            
             //if it has not failed yet - we need this, as if it has failed beforem the failed payment date would keep getting pushed back
-            /*
             if (!$admin->payment_failed) {
                 $admin->payment_failed = true;
                 $admin->failed_payment_date = Carbon::parse(Carbon::now())->toDateString();
@@ -41,10 +42,9 @@ class ChargeFailed
 
                 $admin->notify(new FailedPayment($emailDate));
             }
-            */
             Log::info("payment failed");
             Log::info($email);
-           // Log::warning($admin->email);
+            Log::warning($admin->email);
         }
 
         //If a payment fails
