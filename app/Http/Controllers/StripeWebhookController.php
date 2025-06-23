@@ -11,12 +11,20 @@ class StripeWebhookController extends Controller
     public function handle(Request $request)
     {
         $payload = $request->all();
+        Log::info('Received payload', $payload);
 
         switch ($payload['type']) {
             case 'invoice.payment_failed':
                 $invoice = $payload['data']['object'];
                 Log::info('Stripe invoice.payment_failed', $invoice);
-                
+
+                // TODO: Find user by customer ID and mark their subscription as past due, notify them, etc.
+
+                break;
+            case 'charge.failed':
+                $invoice = $payload['data']['object'];
+                Log::info('Stripe invoice.payment_failed', $invoice);
+
                 // TODO: Find user by customer ID and mark their subscription as past due, notify them, etc.
 
                 break;
