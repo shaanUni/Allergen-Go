@@ -10,6 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Laravel\Cashier\Events\WebhookReceived;
 use Illuminate\Support\Facades\Log;
 
+//for when card is declined
 class ChargeFailed
 {
     public function handle(WebhookReceived $event)

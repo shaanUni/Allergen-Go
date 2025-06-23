@@ -11,6 +11,8 @@ class EventServiceProvider extends ServiceProvider
     /**
      * The event listener mappings for the application.
      */
+
+    //We want to add the custom listner here, for when the charge fails.
     protected $listen = [
         \Laravel\Cashier\Events\WebhookReceived::class => [
             \App\Listeners\ChargeFailed::class,
