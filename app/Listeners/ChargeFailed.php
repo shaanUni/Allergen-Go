@@ -6,10 +6,6 @@ use Laravel\Cashier\Events\InvoicePaymentFailed;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Log;
-
-// app/Listeners/Stripe/ChargeFailed.php
-namespace App\Listeners\Stripe;
 
 use Laravel\Cashier\Events\WebhookReceived;
 use Illuminate\Support\Facades\Log;
