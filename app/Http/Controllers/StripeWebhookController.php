@@ -10,6 +10,8 @@ class StripeWebhookController extends Controller
 {
     public function handle(Request $request)
     {
+        Log::info(' Stripe webhook received');
+
         $payload = $request->all();
         dd("asd 123");
         Log::info('Received payload', $payload);
