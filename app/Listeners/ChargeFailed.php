@@ -22,9 +22,9 @@ class ChargeFailed
             $email = $data['billing_details']['email'] ?? 'unknown';
             $amount = $data['amount'] ?? 0;
 
-            $admin = Admin::where('email', $email);
+            $admin = Admin::where('email', $email)->first();
             Log::info("hiere");
-            Log::warning($admin);
+            Log::warning($admin->email);
         }
     }
 }
