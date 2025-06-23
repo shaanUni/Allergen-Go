@@ -10,6 +10,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Laravel\Cashier\Events\WebhookReceived;
 use Illuminate\Support\Facades\Log;
 
+use App\Models\Admin;
+
 //for when card is declined
 class ChargeFailed
 {
@@ -20,7 +22,9 @@ class ChargeFailed
             $email = $data['billing_details']['email'] ?? 'unknown';
             $amount = $data['amount'] ?? 0;
 
-            Log::warning("Charge failed for $email — amount: £" . ($amount / 100));
+            $admin = Admin::where('email', $email);
+            Log::info("hiere");
+            Log::warning($admin);
         }
     }
 }
