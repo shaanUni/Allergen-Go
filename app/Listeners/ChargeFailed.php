@@ -24,7 +24,7 @@ class ChargeFailed
 
         //If a payment failed
         if ($event->payload['type'] === 'charge.failed') {
-            $email = $data['email'] ?? 'unknown';
+            $email = $event->payload['email'] ?? 'unknown';
             
             //get the admin who's payment failed
             $admin = Admin::where('email', $email)->first();
