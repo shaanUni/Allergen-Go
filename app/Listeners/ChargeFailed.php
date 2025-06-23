@@ -26,7 +26,7 @@ class ChargeFailed
         if ($event->payload['type'] === 'charge.failed') {
             $email = $data['billing_details']['email'] ?? 'unknown';
             //get the admin who's payment failed
-            $admin = Admin::where('email', $email)->first();
+            //$admin = Admin::where('email', $email)->first();
             //if it has not failed yet - we need this, as if it has failed beforem the failed payment date would keep getting pushed back
             /*
             if (!$admin->payment_failed) {
@@ -44,7 +44,7 @@ class ChargeFailed
             */
             Log::info("payment failed");
             Log::info($email);
-            Log::warning($admin->email);
+           // Log::warning($admin->email);
         }
 
         //If a payment fails
