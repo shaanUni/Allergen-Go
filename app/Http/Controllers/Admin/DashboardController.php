@@ -15,12 +15,14 @@ use Illuminate\Notifications\Notifiable;
 use App\Notifications\accountCreated;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 
 class DashboardController extends Controller
 {
     public function index()
     {
+        Log::info("jiasmdop");
         //This is in memory when a new user was just created, so send them a welcome email with details about their trial
         if (session('new_user')) {
             //This should onyl ever happen once
