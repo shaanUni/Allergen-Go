@@ -36,6 +36,11 @@ class Admin extends Authenticatable
         return app(\Stripe\StripeClient::class);
     }
 
+    public function getMorphClass()
+    {
+        return 'admin';
+    }
+
 
     //one to many relationship with dishes (one restaurant can have many dishes)
     public function dishes()
