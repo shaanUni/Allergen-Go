@@ -97,6 +97,8 @@ class SubscriptionController extends Controller
 
         if ($defaultMethod) {
             Log::info('kong');
+            Log::info($admin->name);
+
 
             // Create subscription using existing payment method (no checkout)
             $admin->newSubscription('default', config('services.stripe.price_id'))
