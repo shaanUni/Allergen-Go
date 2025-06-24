@@ -23,7 +23,7 @@ class AdminSubscribedCheck
         if($admin->account_delete_date != null){
             //If the date is LTE (less than or equal) to today, they can not acsess the app
             if(Carbon::parse($admin->account_delete_date)->lte(Carbon::today())){
-                return redirect()->route('admin.register')->with('error', 'You unsubscribed.');
+                return redirect()->route('admin.unsubscribed')->with('error', 'You unsubscribed.');
             }
         }
 
