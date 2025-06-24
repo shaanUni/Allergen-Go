@@ -79,6 +79,9 @@ class SubscriptionController extends Controller
             Log::info($admin->account_delete_date);
             return back()->with('info', 'You already have an active subscription.');
         }
+        
+        $admin->account_delete_date = null;
+        $admin->save();
 
         return $admin->newSubscription('default', config('services.stripe.price_id')) // 2nd param is price ID
         ->checkout([
