@@ -73,10 +73,10 @@ class SubscriptionController extends Controller
     public function resubscribe(Request $request)
     {
         $admin = Auth::guard('admin')->user()->fresh();
-        Log::info('made it');
+        Log::info('skb');
 
         if ($admin->account_delete_date != null) {
-            Log::info('here');
+            Log::info($admin->account_delete_date);
             return back()->with('info', 'You already have an active subscription.');
         }
 
