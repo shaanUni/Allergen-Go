@@ -102,55 +102,90 @@ class SubscriptionController extends Controller
 
             $paymentMethodId = $defaultMethod;
 
-            session(['pending_admin_id' => $admin->id]);
-            $stripe = new StripeClient(config('services.stripe.secret'));
-
-            $stripe->paymentMethods->attach(
-                $paymentMethodId,
-                ['customer' => $admin->stripe_id]
-            );
-    
-            // 2. Make it the default invoice‐payment method
-            $stripe->customers->update(
-                $admin->stripe_id,
-                ['invoice_settings' => [
-                    'default_payment_method' => $paymentMethodId,
-                ]]
-            );
-    
-            // 3. Create the Subscription
-            $sub = $stripe->subscriptions->create([
-                'customer'            => $admin->stripe_id,
-                'items'               => [
-                    ['price' => config('services.stripe.price_id')],
-                ],
-                // save the payment method for future invoices:
-                'payment_settings'    => [
-                    'save_default_payment_method' => 'on_subscription',
-                ],
-                // require first‐invoice confirmation if needed (SCA)
-                'expand'              => ['latest_invoice.payment_intent'],
-                'payment_behavior'    => 'default_incomplete',
-                // optional: metadata, trial days, etc.
-                'metadata'            => [
-                    'owner_model' => get_class($admin),
-                    'owner_id'    => $admin->id,
-                ],
-            ]);
-    
-            // 4. Handle payment actions (e.g. 3D Secure)
-            $pi = $sub->latest_invoice->payment_intent;
-            if ($pi && $pi->status === 'requires_action') {
-                // return client_secret so your JS can call stripe.confirmCardPayment()
-                return response()->json([
-                    'requires_action'  => true,
-                    'payment_intent'   => $pi->id,
-                    'client_secret'    => $pi->client_secret,
+            $admin   = Auth::guard('admin')->user()->fresh();
+            $stripe  = new StripeClient(config('services.stripe.secret'));
+            $priceId = config('services.stripe.price_id');
+        
+            // 1) If there is an existing 'default' sub in stripe_status = 'incomplete', pay its invoice
+            $localSub = $admin->subscription('default');
+            if ($localSub && $localSub->stripe_status === 'incomplete') {
+                // Retrieve the Stripe invoice + payment_intent
+                $invoice = $stripe->invoices->retrieve(
+                    $localSub->latestInvoice()->stripe_id,
+                    ['expand' => ['payment_intent']]
+                );
+                $pi = $invoice->payment_intent;
+        
+                // If SCA required, ask the frontend to confirm
+                if ($pi && $pi->status === 'requires_action') {
+                    return response()->json([
+                        'requires_action'            => true,
+                        'payment_intent_client_secret' => $pi->client_secret,
+                    ]);
+                }
+        
+                // Otherwise, try to pay server-side:
+                $paidInvoice = $stripe->invoices->pay($invoice->id, [
+                    'expand' => ['payment_intent'],
                 ]);
+        
+                if ($paidInvoice->status === 'paid') {
+                    // subscription is now active
+                    return redirect()->route('admin.subscription.success');
+                }
+        
+                abort(500, 'Unable to pay the pending invoice (status: ' . $paidInvoice->status . ')');
             }
-    
-            // 5. All set
-            return redirect()->route('admin.subscription.success');
+        
+            // 2) No incomplete invoice: are we receiving a new PaymentMethod?
+            $paymentMethodId = $request->input('payment_method_id');
+            if ($paymentMethodId) {
+                // Attach & make default
+                $stripe->paymentMethods->attach($paymentMethodId, [
+                    'customer' => $admin->stripe_id,
+                ]);
+                $stripe->customers->update($admin->stripe_id, [
+                    'invoice_settings' => [
+                        'default_payment_method' => $paymentMethodId,
+                    ],
+                ]);
+        
+                // Create the new subscription
+                $sub = $stripe->subscriptions->create([
+                    'customer'         => $admin->stripe_id,
+                    'items'            => [['price' => $priceId]],
+                    'payment_settings' => [
+                        'save_default_payment_method' => 'on_subscription',
+                    ],
+                    'expand'           => ['latest_invoice.payment_intent'],
+                    'payment_behavior' => 'default_incomplete',
+                    'metadata'         => [
+                        'owner_model' => get_class($admin),
+                        'owner_id'    => $admin->id,
+                    ],
+                ]);
+        
+                // Handle SCA if needed
+                $pi = $sub->latest_invoice->payment_intent;
+                if ($pi && $pi->status === 'requires_action') {
+                    return response()->json([
+                        'requires_action'            => true,
+                        'payment_intent_client_secret' => $pi->client_secret,
+                    ]);
+                }
+        
+                return redirect()->route('admin.subscription.success');
+            }
+        
+            // 3) Fallback: no PM yet → Stripe Checkout
+            session(['pending_admin_id' => $admin->id]);
+        
+            return $admin
+                ->newSubscription('default', $priceId)
+                ->checkout([
+                    'success_url' => route('admin.subscription.success'),
+                    'cancel_url'  => route('admin.unsubscribed'),
+                ]);
         }
 
         // No payment methods found – fallback to Stripe Checkout
