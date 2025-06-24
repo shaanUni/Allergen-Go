@@ -116,6 +116,24 @@
             <p class="text-gray-600">No card on file.</p>
         @endif
     </div>
+    <div class="mb-6">
+    <h2 class="text-xl font-semibold">Saved Payment Methods</h2>
+
+    @if($paymentMethods->isEmpty())
+        <p class="text-gray-600">No card on file.</p>
+    @else
+        <ul>
+            @foreach($paymentMethods as $method)
+                <li class="mb-2">
+                    Card ending in <strong>{{ $method->card->last4 }}</strong><br>
+                    Expires {{ $method->card->exp_month }}/{{ $method->card->exp_year }}<br>
+                    Brand: {{ ucfirst($method->card->brand) }}
+                </li>
+            @endforeach
+        </ul>
+    @endif
+</div>
+
 
     {{-- 2) “Update Card” Form --}}
     <div class="bg-white p-6 rounded-lg shadow-sm">

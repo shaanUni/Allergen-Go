@@ -126,6 +126,8 @@ class DashboardController extends Controller
         // Optionally, you can pass in the current default payment method (so the user sees “Current card: **** 4242”).
         $defaultMethod = $admin->defaultPaymentMethod();
 
+        $paymentMethods = $admin->paymentMethods();
+
         $cancelled = "";
 
         if ($status == 'canceled') {
@@ -140,6 +142,7 @@ class DashboardController extends Controller
             'invoices' => $invoices,
             'intent' => $intent,
             'defaultMethod' => $defaultMethod,
+            'paymentMethods' => $paymentMethods,
         ]);
     }
     public function updateCard(Request $request)
