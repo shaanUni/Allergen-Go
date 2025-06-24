@@ -137,12 +137,15 @@ class SubscriptionController extends Controller
             if ($paid->status !== 'paid') {
                 abort(500, "Unable to pay invoice (status: {$paid->status})");
             }
-        
+            
+            session(['pending_admin_id' => $admin->id]);
+            $admin->account_delete_date = null;
+            $admin->save();
+
             // 5) Success!
             return redirect()->route('admin.subscription.success');
         }
 
-        // No payment methods found – fallback to Stripe Checkout
         session(['pending_admin_id' => $admin->id]);
 
         return $admin->newSubscription('default', config('services.stripe.price_id'))
