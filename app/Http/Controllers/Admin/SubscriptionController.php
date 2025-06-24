@@ -73,7 +73,6 @@ class SubscriptionController extends Controller
     public function resubscribe(Request $request)
     {
         $admin = Auth::guard('admin')->user()->fresh();
-        dd("jko");
         Log::info('made it');
 
         if ($admin->subscribed('default')) {

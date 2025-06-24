@@ -18,6 +18,11 @@ class AdminSubscribedCheck
         }
 
         $admin = Auth::guard('admin')->user();
+
+        //allow these routes
+        if ($request->routeIs('admin.unsubscribed') || $request->routeIs('admin.subscription.buy')) {
+            return $next($request); 
+        }
         
         //If this date is set, it means the user cancelled their subscription
         if($admin->account_delete_date != null){
