@@ -98,7 +98,7 @@ class SubscriptionController extends Controller
             $admin          = Auth::guard('admin')->user()->fresh();
             $stripe         = new StripeClient(config('services.stripe.secret'));
             $priceId        = config('services.stripe.price_id');
-            $paymentMethod  = $request->input('payment_method_id');
+            $paymentMethod  = $admin->default_payment_method;
         
             // 1) Attach & set default (as before)…
             $stripe->paymentMethods->attach($paymentMethod, [
