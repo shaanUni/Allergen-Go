@@ -30,6 +30,8 @@
             </div>
         </div>
     </nav>
+    @auth('admin')
+
     @php
         $admin = Auth::guard('admin')->user()->fresh();
         $failedPayment = false;
@@ -37,6 +39,8 @@
             $failedPayment = true;
         }
     @endphp
+    @endauth
+
 
     @if($failedPayment)
     <div>You have a payment that failed. If you do not resolve this soon, your account will be locked until you pay. Please go here to update your card details.</div>
