@@ -30,26 +30,25 @@
             </div>
         </div>
     </nav>
-    
-    @php
-        $failedPayment = false;
-    @endphp
 
+ 
     @auth('admin')
 
     @php
+        $failedPayment = false;
+
         $admin = Auth::guard('admin')->user()->fresh();
         if ($admin->payment_failed) {
             $failedPayment = true;
         }
     @endphp
+        @if($failedPayment)
+            <div>You have a payment that failed. If you do not resolve this soon, your account will be locked until you pay. Please go <a href="{{ route('admin.account') }}">here</a> to update your card details.</div>
+        @endif
     @endauth
 
 
-    @if($failedPayment)
-    <div>You have a payment that failed. If you do not resolve this soon, your account will be locked until you pay. Please go here to update your card details.</div>
-    @endif
-
+   
     <div class="container py-4">
         @yield('content')
     </div>
