@@ -80,6 +80,7 @@ class SubscriptionController extends Controller
 
         $admin->account_delete_date = null;
         $admin->save();
+        $admin->createOrGetStripeCustomer();
 
         // Use default or fallback payment method
         $defaultMethod = $admin->defaultPaymentMethod();
