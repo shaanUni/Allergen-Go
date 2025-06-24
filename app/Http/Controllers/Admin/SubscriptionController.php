@@ -95,7 +95,9 @@ class SubscriptionController extends Controller
         if ($defaultMethod) { 
             Log::info("here");
             self::reSubscribeWithExistingPayment($admin);
-        } else{ 
+            return redirect()->route('admin.subscription.success');
+
+        } 
 
         session(['pending_admin_id' => $admin->id]);
 
@@ -105,7 +107,6 @@ class SubscriptionController extends Controller
                 'cancel_url' => route('admin.unsubscribed'),
             ]);
 
-        }
     }
 
     public function makeDefault($paymentMethod)
@@ -182,7 +183,6 @@ class SubscriptionController extends Controller
         $admin->save();
         Log::info("end");
 
-        return redirect()->route('admin.subscription.success');
     }
 
 
