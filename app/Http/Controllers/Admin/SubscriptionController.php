@@ -97,7 +97,7 @@ class SubscriptionController extends Controller
 
         if ($defaultMethod) {
             Log::info('kong');
-            Log::info($admin->name);
+            Log::info($defaultMethod);
 
 
             // Create subscription using existing payment method (no checkout)
