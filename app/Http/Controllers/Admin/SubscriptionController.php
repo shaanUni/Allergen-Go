@@ -81,9 +81,6 @@ class SubscriptionController extends Controller
 
             return back()->with('info', 'You already have an active subscription.');
         }
-
-        $admin->account_delete_date = null;
-        $admin->save();
         $admin->createOrGetStripeCustomer();
 
         // Use default or fallback payment method
