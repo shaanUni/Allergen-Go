@@ -38,7 +38,8 @@ class SubscriptionController extends Controller
         //]);
         $stripe->subscriptions->cancel($subscription->stripe_id);
         //This will go in the admin table, so they can se when subscription expires, so convert to correct format
-        $dateForDb = Carbon::parse($stripeSub->current_period_end)->toDateString();
+        //$dateForDb = Carbon::parse($stripeSub->current_period_end)->toDateString();
+        $dateForDb = Carbon::parse(now())->toDateString();
         $periodEnd = Carbon::createFromTimestamp($stripeSub->current_period_end);
 
         //gooodbye email
@@ -53,6 +54,14 @@ class SubscriptionController extends Controller
             'ends_at' => $periodEnd,
             'stripe_status' => 'canceled',
         ])->save();
+
+        //If they are cancelling with a failed payment, reset the fact they have a failed payment.
+        //This can prevent the second email from being sent
+        if($admin->payment_failed){
+            $admin->payment_failed = false;
+            $admin->failed_payment_date = null;
+            $admin->save();
+        }
 
         
         return back()->with('success', 'Subscription canceled. You will retain access until '
