@@ -51,7 +51,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 
     Route::get('unsubscribed', function () {
-        return view('admin.unsubscribed');
+        return view('admin.auth.unsubscribed');
     })->name('unsubscribed');
 
     // Stripe success callback
