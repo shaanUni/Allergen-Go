@@ -30,11 +30,15 @@
             </div>
         </div>
     </nav>
+    
+    @php
+        $failedPayment = false;
+    @endphp
+
     @auth('admin')
 
     @php
         $admin = Auth::guard('admin')->user()->fresh();
-        $failedPayment = false;
         if ($admin->payment_failed) {
             $failedPayment = true;
         }
