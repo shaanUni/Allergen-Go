@@ -79,7 +79,7 @@ class SubscriptionController extends Controller
             Log::info($admin->account_delete_date);
             return back()->with('info', 'You already have an active subscription.');
         }
-        
+
         $admin->account_delete_date = null;
         $admin->save();
 
@@ -87,11 +87,35 @@ class SubscriptionController extends Controller
         session(['pending_admin_id' => $admin->id]);
 
         return $admin->newSubscription('default', config('services.stripe.price_id')) // 2nd param is price ID
-        ->checkout([
-            'success_url' => route('admin.subscription.success'),
-            'cancel_url' => route('admin.unsubscribed'),
-        ]);
+            ->checkout([
+                'success_url' => route('admin.subscription.success'),
+                'cancel_url' => route('admin.unsubscribed'),
+            ]);
     }
+    public function makeDefault($paymentMethod)
+    {
+        $admin = Auth::guard('admin')->user()->fresh();
+
+        try {
+            $admin->updateDefaultPaymentMethod($paymentMethod);
+            return back()->with('success', 'Default payment method updated.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to set default: ' . $e->getMessage());
+        }
+    }
+
+    public function deletePaymentMethod($paymentMethod)
+    {
+        $admin = Auth::guard('admin')->user()->fresh();
+
+        try {
+            $admin->deletePaymentMethod($paymentMethod);
+            return back()->with('success', 'Payment method deleted.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to delete: ' . $e->getMessage());
+        }
+    }
+
 
 
 }

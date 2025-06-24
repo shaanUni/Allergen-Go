@@ -33,139 +33,157 @@
     @endif
     <h1>Billing History</h1>
 
-@if ($invoices->isEmpty())
-    <p>You have no invoices yet.</p>
-@else
-    <table class="table-auto w-full">
-        <thead>
-            <tr class="bg-gray-100">
-                <th class="px-4 py-2 text-left">Date</th>
-                <th class="px-4 py-2 text-left">Amount</th>
-                <th class="px-4 py-2 text-left">Status</th>
-                <th class="px-4 py-2 text-left">View PDF</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($invoices as $invoice)
-                <tr class="border-b">
-                    {{-- Format the date --}}
-                    <td class="px-4 py-2">{{ $invoice->date()->format('d M Y') }}</td>
-
-                    {{-- Convert cents to main currency unit (e.g. 500 → 5.00) --}}
-                    <td class="px-4 py-2">
-                        {{ $invoice->total()}}
-                    </td>
-
-                    {{-- Show “Paid” vs. “Pending” --}}
-                    <td class="px-4 py-2">
-                        @if ($invoice->total() == "£0.00" )
-                        trial
-                        @elseif($invoice->paid)
-                        <span class="text-green-600">Paid</span>
-                        @else
-                            <span class="text-yellow-600">Pending</span>
-                        @endif
-                    </td>
-
-                    {{-- Link to Stripe’s PDF (hosted) --}}
-                    <td class="px-4 py-2">
-                        @if ($invoice->invoice_pdf)
-                            <a href="{{ $invoice->invoice_pdf }}" target="_blank" class="text-blue-600 underline">
-                                Download
-                            </a>
-                        @else
-                            —
-                        @endif
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-@endif
-
-
-
-
-
-
-
-<div class="max-w-lg mx-auto mt-8">
-    <h1 class="text-2xl font-bold mb-4">Account & Billing</h1>
-
-    {{-- Display flash messages --}}
-    @if(session('success'))
-        <div class="mb-4 p-3 bg-green-100 text-green-800 rounded">
-            {{ session('success') }}
-        </div>
-    @endif
-    @if(session('error'))
-        <div class="mb-4 p-3 bg-red-100 text-red-800 rounded">
-            {{ session('error') }}
-        </div>
-    @endif
-
-    {{-- 1) Show Current Card (if exists) --}}
-    <div class="mb-6">
-        <h2 class="text-xl font-semibold">Current Payment Method</h2>
-        @if($defaultMethod)
-            <p>
-                Card ending in <strong>{{ $defaultMethod->card->last4 }}</strong><br>
-                Expires {{ $defaultMethod->card->exp_month }}/{{ $defaultMethod->card->exp_year }}
-            </p>
-        @else
-            <p class="text-gray-600">No card on file.</p>
-        @endif
-    </div>
-    <div class="mb-6">
-    <h2 class="text-xl font-semibold">Saved Payment Methods</h2>
-
-    @if($paymentMethods->isEmpty())
-        <p class="text-gray-600">No card on file.</p>
+    @if ($invoices->isEmpty())
+        <p>You have no invoices yet.</p>
     @else
-        <ul>
-            @foreach($paymentMethods as $method)
-                <li class="mb-2">
-                    Card ending in <strong>{{ $method->card->last4 }}</strong><br>
-                    Expires {{ $method->card->exp_month }}/{{ $method->card->exp_year }}<br>
-                    Brand: {{ ucfirst($method->card->brand) }}
-                </li>
-            @endforeach
-        </ul>
+        <table class="table-auto w-full">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="px-4 py-2 text-left">Date</th>
+                    <th class="px-4 py-2 text-left">Amount</th>
+                    <th class="px-4 py-2 text-left">Status</th>
+                    <th class="px-4 py-2 text-left">View PDF</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($invoices as $invoice)
+                    <tr class="border-b">
+                        {{-- Format the date --}}
+                        <td class="px-4 py-2">{{ $invoice->date()->format('d M Y') }}</td>
+
+                        {{-- Convert cents to main currency unit (e.g. 500 → 5.00) --}}
+                        <td class="px-4 py-2">
+                            {{ $invoice->total()}}
+                        </td>
+
+                        {{-- Show “Paid” vs. “Pending” --}}
+                        <td class="px-4 py-2">
+                            @if ($invoice->total() == "£0.00")
+                                trial
+                            @elseif($invoice->paid)
+                                <span class="text-green-600">Paid</span>
+                            @else
+                                <span class="text-yellow-600">Pending</span>
+                            @endif
+                        </td>
+
+                        {{-- Link to Stripe’s PDF (hosted) --}}
+                        <td class="px-4 py-2">
+                            @if ($invoice->invoice_pdf)
+                                <a href="{{ $invoice->invoice_pdf }}" target="_blank" class="text-blue-600 underline">
+                                    Download
+                                </a>
+                            @else
+                                —
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     @endif
-</div>
 
 
-    {{-- 2) “Update Card” Form --}}
-    <div class="bg-white p-6 rounded-lg shadow-sm">
-        <h2 class="text-xl font-semibold mb-2">Update Card Details</h2>
-        <p class="text-sm text-gray-600 mb-4">
-            Enter a new card below and click “Save” to replace your existing payment method.
-        </p>
 
-        {{-- This form does NOT contain any real card inputs. Stripe.js will mount the element. --}}
-        <form id="update-card-form" action="{{ route('admin.account.updateCard') }}" method="POST">
-            @csrf
 
-            {{-- Placeholder for Stripe.js Card Element --}}
-            <div id="card-element" class="mb-4 border rounded p-3">
-                <!-- A Stripe Element will be inserted here. -->
+
+
+
+    <div class="max-w-lg mx-auto mt-8">
+        <h1 class="text-2xl font-bold mb-4">Account & Billing</h1>
+
+        {{-- Display flash messages --}}
+        @if(session('success'))
+            <div class="mb-4 p-3 bg-green-100 text-green-800 rounded">
+                {{ session('success') }}
             </div>
+        @endif
+        @if(session('error'))
+            <div class="mb-4 p-3 bg-red-100 text-red-800 rounded">
+                {{ session('error') }}
+            </div>
+        @endif
 
-            {{-- Hidden input to store the returned PaymentMethod ID --}}
-            <input type="hidden" name="payment_method" id="payment_method_input">
+        {{-- 1) Show Current Card (if exists) --}}
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold">Current Payment Method</h2>
+            @if($defaultMethod)
+                <p>
+                    Card ending in <strong>{{ $defaultMethod->card->last4 }}</strong><br>
+                    Expires {{ $defaultMethod->card->exp_month }}/{{ $defaultMethod->card->exp_year }}
+                </p>
+            @else
+                <p class="text-gray-600">No card on file.</p>
+            @endif
+        </div>
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold">Saved Payment Methods</h2>
 
-            <button
-                id="submit-btn"
-                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-            >
-                Save New Card
-            </button>
-        </form>
+            @if($paymentMethods->isEmpty())
+                <p class="text-gray-600">No card on file.</p>
+            @else
+                <ul>
+                    @foreach($paymentMethods as $method)
+                        <li class="mb-4 border p-3 rounded">
+                            <div>
+                                Card ending in <strong>{{ $method->card->last4 }}</strong><br>
+                                Expires {{ $method->card->exp_month }}/{{ $method->card->exp_year }}<br>
+                                Brand: {{ ucfirst($method->card->brand) }}
+                            </div>
 
-        {{-- Display any errors from Stripe.js --}}
-        <div id="card-errors" role="alert" class="mt-3 text-red-600"></div>
+                            @if($method->id === $admin->default_payment_method)
+                                <span class="text-green-600 font-semibold">Default</span>
+                            @else
+                                <form action="{{ route('admin.payment-methods.default', $method->id) }}" method="POST"
+                                    class="inline-block mt-2 mr-2">
+                                    @csrf
+                                    <button type="submit" class="text-blue-600 underline">Make Default</button>
+                                </form>
+                            @endif
+
+                            <form action="{{ route('admin.payment-methods.delete', $method->id) }}" method="POST"
+                                class="inline-block mt-2">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-600 underline"
+                                    onclick="return confirm('Are you sure you want to delete this card?')">Delete</button>
+                            </form>
+                        </li>
+                    @endforeach
+                </ul>
+
+            @endif
+        </div>
+
+
+        {{-- 2) “Update Card” Form --}}
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+            <h2 class="text-xl font-semibold mb-2">Update Card Details</h2>
+            <p class="text-sm text-gray-600 mb-4">
+                Enter a new card below and click “Save” to replace your existing payment method.
+            </p>
+
+            {{-- This form does NOT contain any real card inputs. Stripe.js will mount the element. --}}
+            <form id="update-card-form" action="{{ route('admin.account.updateCard') }}" method="POST">
+                @csrf
+
+                {{-- Placeholder for Stripe.js Card Element --}}
+                <div id="card-element" class="mb-4 border rounded p-3">
+                    <!-- A Stripe Element will be inserted here. -->
+                </div>
+
+                {{-- Hidden input to store the returned PaymentMethod ID --}}
+                <input type="hidden" name="payment_method" id="payment_method_input">
+
+                <button id="submit-btn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    Save New Card
+                </button>
+            </form>
+
+            {{-- Display any errors from Stripe.js --}}
+            <div id="card-errors" role="alert" class="mt-3 text-red-600"></div>
+        </div>
     </div>
-</div>
 @endsection
 
 @section('scripts')
