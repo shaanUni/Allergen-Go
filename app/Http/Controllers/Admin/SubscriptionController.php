@@ -100,12 +100,56 @@ class SubscriptionController extends Controller
             Log::info($defaultMethod);
 
 
-            // Create subscription using existing payment method (no checkout)
-            $admin->newSubscription('default', config('services.stripe.price_id'))
-                ->create($defaultMethod);
+            $paymentMethodId = $defaultMethod;
 
             session(['pending_admin_id' => $admin->id]);
+            $stripe = new StripeClient(config('services.stripe.secret'));
 
+            $stripe->paymentMethods->attach(
+                $paymentMethodId,
+                ['customer' => $admin->stripe_id]
+            );
+    
+            // 2. Make it the default invoice‐payment method
+            $stripe->customers->update(
+                $admin->stripe_id,
+                ['invoice_settings' => [
+                    'default_payment_method' => $paymentMethodId,
+                ]]
+            );
+    
+            // 3. Create the Subscription
+            $sub = $stripe->subscriptions->create([
+                'customer'            => $admin->stripe_id,
+                'items'               => [
+                    ['price' => config('services.stripe.price_id')],
+                ],
+                // save the payment method for future invoices:
+                'payment_settings'    => [
+                    'save_default_payment_method' => 'on_subscription',
+                ],
+                // require first‐invoice confirmation if needed (SCA)
+                'expand'              => ['latest_invoice.payment_intent'],
+                'payment_behavior'    => 'default_incomplete',
+                // optional: metadata, trial days, etc.
+                'metadata'            => [
+                    'owner_model' => get_class($admin),
+                    'owner_id'    => $admin->id,
+                ],
+            ]);
+    
+            // 4. Handle payment actions (e.g. 3D Secure)
+            $pi = $sub->latest_invoice->payment_intent;
+            if ($pi && $pi->status === 'requires_action') {
+                // return client_secret so your JS can call stripe.confirmCardPayment()
+                return response()->json([
+                    'requires_action'  => true,
+                    'payment_intent'   => $pi->id,
+                    'client_secret'    => $pi->client_secret,
+                ]);
+            }
+    
+            // 5. All set
             return redirect()->route('admin.subscription.success');
         }
 
