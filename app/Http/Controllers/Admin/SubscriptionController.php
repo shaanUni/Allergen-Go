@@ -75,7 +75,7 @@ class SubscriptionController extends Controller
         $admin = Auth::guard('admin')->user()->fresh();
         Log::info('made it');
 
-        if ($admin->subscribed('default')) {
+        if ($admin->account_delete_date != null) {
             Log::info('here');
             return back()->with('info', 'You already have an active subscription.');
         }
