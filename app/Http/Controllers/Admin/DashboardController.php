@@ -143,6 +143,7 @@ class DashboardController extends Controller
             'intent' => $intent,
             'defaultMethod' => $defaultMethod,
             'paymentMethods' => $paymentMethods,
+            'admin' => $admin,
         ]);
     }
     public function updateCard(Request $request)
