@@ -100,7 +100,7 @@ class SubscriptionController extends Controller
 
             // Create subscription using existing payment method (no checkout)
             $admin->newSubscription('default', config('services.stripe.price_id'))
-                ->create($defaultMethod->id);
+                ->create($defaultMethod);
 
             session(['pending_admin_id' => $admin->id]);
 
