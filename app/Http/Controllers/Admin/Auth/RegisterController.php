@@ -37,7 +37,7 @@ class RegisterController extends Controller
 
         // Redirect to Stripe Checkout
         return $admin->newSubscription('default', config('services.stripe.price_id')) // 2nd param is price ID
-            ->trialDays(30)
+            //->trialDays(30)
             ->checkout([
                 'success_url' => route('admin.subscription.success'),
                 'cancel_url' => route('admin.register'),
@@ -51,17 +51,7 @@ class RegisterController extends Controller
         if ($adminId) {
             Auth::guard('admin')->loginUsingId($adminId);  
             session()->forget('pending_admin_id');
-            session(['new_user' => 'true']);
-            //welcome email
-            /*
-            $admin = Auth::guard('admin')->user()->fresh();
-            $subscription = $admin->subscription('default');
-            dd($subscription);
-
-            $date = Carbon::parse($subscription->trial_ends_at)->format('F j, Y');
-            
-            $admin->notify(new accountCreated($date));
-            */
+            session(['new_user' => 'true']);           
             return redirect()->route('admin.dashboard')->with('success', 'Account created and subscription active!');
         }
     

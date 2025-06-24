@@ -9,28 +9,47 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\URL;
 use Carbon\Carbon;
+use Stripe\StripeClient;
 use Illuminate\Notifications\Notifiable;
 
 use App\Notifications\accountCreated;
+use App\Notifications\FailedPayment;
+
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 
 class DashboardController extends Controller
 {
     public function index()
     {
+        $admin = Auth::guard('admin')->user()->fresh();
+
         //This is in memory when a new user was just created, so send them a welcome email with details about their trial
         if (session('new_user')) {
             //This should onyl ever happen once
             session()->forget('new_user');
 
-            $admin = Auth::guard('admin')->user()->fresh();
             $subscription = $admin->subscription('default');
-
+            //Format date for when free trial ends
             $date = Carbon::parse($subscription->trial_ends_at)->format('F j, Y');
 
-            $admin->notify(new accountCreated($date));
+            //welcome email
+            //$admin->notify(new accountCreated($date));
+        }
+
+        //If the admin has failed a payment
+        if($admin->payment_failed){
+            //If 3 or more days elapsed since they failed, send the final reminder email
+            $thresholdDate = Carbon::parse($admin->failed_payment_date)->addDays(3);
+            //The date when the account will be closed
+            $emailDate = Carbon::parse($admin->failed_payment_date)->addDays(7);
+            $emailDate = Carbon::parse($emailDate)->format('F j, Y');
+
+            if(now()->greaterThanOrEqualTo($thresholdDate)){
+                $admin->notify(new FailedPayment($emailDate));
+            }
         }
 
         //get the unique code
@@ -86,7 +105,19 @@ class DashboardController extends Controller
         //Grab the local Subscription record 
         $subscription = $admin->subscription('default');
         $status = $subscription->stripe_status;
-        $date = Carbon::parse($admin->account_delete_date)->format('F j, Y');
+
+        $stripe = new StripeClient(config('services.stripe.secret'));
+        //Find subscription
+        $stripeSub = $stripe->subscriptions->retrieve($subscription->stripe_id, []);
+
+        //When the admin next has to pay
+        $date = Carbon::createFromTimestamp($stripeSub->current_period_end);
+        $date = Carbon::parse($date)->format('F j, Y');
+
+        //If the account has been cancelled
+        if ($admin->account_delete_date != null) {
+            $date = Carbon::parse($admin->account_delete_date)->format('F j, Y');
+        }
 
         // Create a SetupIntent for this user. Cashier will set up the Stripe customer automatically if needed.
         // The SetupIntent’s client_secret is used by Stripe.js on the front-end.

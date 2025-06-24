@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 //middleware to ensure admin is subscribed
 class AdminSubscribedCheck
@@ -17,8 +18,19 @@ class AdminSubscribedCheck
         }
 
         $admin = Auth::guard('admin')->user();
+        
+        //If this date is set, it means the user cancelled their subscription
+        if($admin->account_delete_date != null){
+            //If the date is LTE (less than or equal) to today, they can not acsess the app
+            if(Carbon::parse($admin->account_delete_date)->lte(Carbon::today())){
+                return redirect()->route('admin.register')->with('error', 'You unsubscribed.');
+            }
+        }
 
-        if (!$admin || !$admin->subscribed('default')) {
+        //If the account was just created, this will be true
+        $newUserStatus = session('new_user');
+
+        if ($newUserStatus != 'true' && (!$admin || !$admin->subscribed('default'))) {
             return redirect()->route('admin.register')->with('error', 'You must be subscribed to access this area.');
         }
 

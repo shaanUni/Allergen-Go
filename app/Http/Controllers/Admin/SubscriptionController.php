@@ -15,18 +15,6 @@ use App\Notifications\accountDeleted;
 
 class SubscriptionController extends Controller
 {
-    //
-    public function checkout()
-    {
-        $admin = Auth::guard('admin')->user();
-
-        return $admin->newSubscription('default', config('services.stripe.price_id'))
-            ->trialDays(30)
-            ->checkout([
-                'success_url' => route('admin.dashboard') . '?subscribed=1',
-                'cancel_url' => route('user.search'),
-            ]);
-    }
 
     public function cancelSubscription()
     {
@@ -45,19 +33,21 @@ class SubscriptionController extends Controller
         $stripeSub = $stripe->subscriptions->retrieve($subscription->stripe_id, []);
 
         //tell stripe to cancel at the end of the period
-        $stripe->subscriptions->update($subscription->stripe_id, [
-            'cancel_at_period_end' => true,
-        ]);
-
+        //$stripe->subscriptions->update($subscription->stripe_id, [
+         //   'cancel_at_period_end' => true,
+        //]);
+        $stripe->subscriptions->cancel($subscription->stripe_id);
         //This will go in the admin table, so they can se when subscription expires, so convert to correct format
         $dateForDb = Carbon::parse($stripeSub->current_period_end)->toDateString();
         $periodEnd = Carbon::createFromTimestamp($stripeSub->current_period_end);
 
         //gooodbye email
         $date = Carbon::parse($stripeSub->current_period_end)->format('F j, Y');
-        $admin->notify(new accountDeleted($date));
-        $admin->account_delete_date = $dateForDb;
-
+        //$admin->notify(new accountDeleted($date));
+        
+        $admin->account_delete_date = $dateForDb; 
+        $admin->save();
+        
         //update local record to reflect period end
         $subscription->fill([
             'ends_at' => $periodEnd,
@@ -66,7 +56,7 @@ class SubscriptionController extends Controller
 
         
         return back()->with('success', 'Subscription canceled. You will retain access until '
-            . $periodEnd->toDayDateTimeString() . '.');
+            . Carbon::parse($stripeSub->current_period_end)->format('F j, Y'));
 
     }
 
