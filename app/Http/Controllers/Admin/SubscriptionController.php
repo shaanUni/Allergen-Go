@@ -94,9 +94,11 @@ class SubscriptionController extends Controller
         //If we have an exsisting card we can use
         if ($defaultMethod) { 
             Log::info("here");
-            self::reSubscribeWithExistingPayment($admin);
+            $rePurchase = self::reSubscribeWithExistingPayment($admin);
+            if($rePurchase == 'fail'){
+                return back()->with('success', 'Payment method failed.');
+            }
             return redirect()->route('admin.subscription.success');
-
         } 
 
         session(['pending_admin_id' => $admin->id]);
@@ -176,6 +178,10 @@ class SubscriptionController extends Controller
         $paid = $stripe->invoices->pay($invoice->id, [
             'expand' => ['payment_intent'],
         ]);
+
+        if($paid->status != 'paid'){
+            return 'fail';
+        }
         
         //Needed to allow access to app
         session(['pending_admin_id' => $admin->id]); // needed for the subscription success route
