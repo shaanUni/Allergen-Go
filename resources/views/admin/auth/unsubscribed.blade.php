@@ -9,7 +9,8 @@
         </h6>
         <form method="POST" action="{{ route('admin.subscription.buy') }}">
             @csrf
-            <button type="submit" class="btn-logout">Re buy subscription</button>
+            <input type="hidden" name="payment_method" id="payment_method">
+            <button type="submit">Resubscribe</button>
         </form>
 
     </div>
