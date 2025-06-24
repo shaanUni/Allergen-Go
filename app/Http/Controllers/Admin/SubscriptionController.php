@@ -73,8 +73,12 @@ class SubscriptionController extends Controller
     public function resubscribe(Request $request)
     {
         $admin = Auth::guard('admin')->user()->fresh();
+        
+        Log::info('madeit');
 
         if ($admin->account_delete_date == null) {
+        Log::info('this');
+
             return back()->with('info', 'You already have an active subscription.');
         }
 
@@ -83,16 +87,20 @@ class SubscriptionController extends Controller
         $admin->createOrGetStripeCustomer();
 
         // Use default or fallback payment method
-        $defaultMethod = $admin->defaultPaymentMethod();
+        $defaultMethod = $admin->default_payment_method;
 
         if (!$defaultMethod) {
+            Log::info('here');
             $fallbackMethod = $admin->paymentMethods()->first();
             if ($fallbackMethod) {
+            Log::info('eyes');
                 $defaultMethod = $fallbackMethod;
             }
         }
 
         if ($defaultMethod) {
+            Log::info('kong');
+
             // Create subscription using existing payment method (no checkout)
             $admin->newSubscription('default', config('services.stripe.price_id'))
                 ->create($defaultMethod->id);
