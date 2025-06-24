@@ -123,6 +123,12 @@ class DashboardController extends Controller
         // The SetupIntent’s client_secret is used by Stripe.js on the front-end.
         $intent = $admin->createSetupIntent();
 
+        $stripeCustomer = $stripe->customers->retrieve($admin->stripe_id, []);
+
+        // Save it to your local model (optional if your UI depends on it)
+        $admin->default_payment_method = $stripeCustomer->invoice_settings->default_payment_method;
+        $admin->save();
+
         // Optionally, you can pass in the current default payment method (so the user sees “Current card: **** 4242”).
         $defaultMethod = $admin->defaultPaymentMethod();
 
