@@ -34,7 +34,7 @@ class SubscriptionController extends Controller
 
         //tell stripe to cancel at the end of the period
         //$stripe->subscriptions->update($subscription->stripe_id, [
-         //   'cancel_at_period_end' => true,
+        //   'cancel_at_period_end' => true,
         //]);
         $stripe->subscriptions->cancel($subscription->stripe_id);
         //This will go in the admin table, so they can se when subscription expires, so convert to correct format
@@ -45,10 +45,10 @@ class SubscriptionController extends Controller
         //gooodbye email
         $date = Carbon::parse($stripeSub->current_period_end)->format('F j, Y');
         //$admin->notify(new accountDeleted($date));
-        
-        $admin->account_delete_date = $dateForDb; 
+
+        $admin->account_delete_date = $dateForDb;
         $admin->save();
-        
+
         //update local record to reflect period end
         $subscription->fill([
             'ends_at' => $periodEnd,
@@ -57,17 +57,45 @@ class SubscriptionController extends Controller
 
         //If they are cancelling with a failed payment, reset the fact they have a failed payment.
         //This can prevent the second email from being sent
-        if($admin->payment_failed){
+        if ($admin->payment_failed) {
             $admin->payment_failed = false;
             $admin->failed_payment_date = null;
             $admin->save();
         }
 
-        
+
         return back()->with('success', 'Subscription canceled. You will retain access until '
             . Carbon::parse($stripeSub->current_period_end)->format('F j, Y'));
 
     }
+
+    public function resubscribe(Request $request)
+    {
+        $admin = Auth::guard('admin')->user()->fresh();
+
+        if ($admin->subscribed('default')) {
+            return back()->with('info', 'You already have an active subscription.');
+        }
+
+        $paymentMethod = $request->input('payment_method');
+
+        if (!$paymentMethod) {
+            return back()->with('error', 'No payment method provided.');
+        }
+
+        try {
+            $admin->newSubscription('default', config('services.stripe.price_id'))
+                ->create($paymentMethod);
+
+            $admin->account_delete_date = null;
+            $admin->save();
+
+            return back()->with('success', 'You have successfully resubscribed.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error resubscribing: ' . $e->getMessage());
+        }
+    }
+
 
 }
 /*

@@ -66,6 +66,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('auth:admin', 'subscribed')->group(function () {
         Route::get('/checkout', [SubscriptionController::class, 'checkout']);
         Route::post('/admin/subscription/cancel', [SubscriptionController::class, 'cancelSubscription'])->name('subscription.cancel');
+        Route::post('/admin/subscription/buy', [SubscriptionController::class, 'resubscribe'])->name('subscription.buy');
+
 
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('generate', [DashboardController::class, 'generate'])->name('generate');
