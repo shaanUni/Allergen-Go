@@ -99,9 +99,6 @@ class SubscriptionController extends Controller
             Log::info('kong');
             Log::info($defaultMethod);
 
-
-            $paymentMethodId = $defaultMethod;
-
             $admin   = Auth::guard('admin')->user()->fresh();
             $stripe  = new StripeClient(config('services.stripe.secret'));
             $priceId = config('services.stripe.price_id');
@@ -138,7 +135,7 @@ class SubscriptionController extends Controller
             }
         
             // 2) No incomplete invoice: are we receiving a new PaymentMethod?
-            $paymentMethodId = $request->input('payment_method_id');
+            $paymentMethodId = $defaultMethod;
             if ($paymentMethodId) {
                 // Attach & make default
                 $stripe->paymentMethods->attach($paymentMethodId, [
