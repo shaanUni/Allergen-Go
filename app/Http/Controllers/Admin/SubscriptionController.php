@@ -81,8 +81,7 @@ class SubscriptionController extends Controller
 
             return back()->with('info', 'You already have an active subscription.');
         }
-        $admin->createOrGetStripeCustomer();
-
+     
         // Use default or fallback payment method
         $defaultMethod = $admin->default_payment_method;
 
@@ -96,93 +95,51 @@ class SubscriptionController extends Controller
         }
 
         if ($defaultMethod) {
-            Log::info('kong');
-            Log::info($defaultMethod);
-
-            $admin   = Auth::guard('admin')->user()->fresh();
-            $stripe  = new StripeClient(config('services.stripe.secret'));
-            $priceId = config('services.stripe.price_id');
+            $admin          = Auth::guard('admin')->user()->fresh();
+            $stripe         = new StripeClient(config('services.stripe.secret'));
+            $priceId        = config('services.stripe.price_id');
+            $paymentMethod  = $request->input('payment_method_id');
         
-            // 1) If there is an existing 'default' sub in stripe_status = 'incomplete', pay its invoice
-            $localSub = $admin->subscription('default');
-            if ($localSub && $localSub->stripe_status === 'incomplete') {
-                // Retrieve the Stripe invoice + payment_intent
-                $invoice = $stripe->invoices->retrieve(
-                    $localSub->latestInvoice()->stripe_id,
-                    ['expand' => ['payment_intent']]
-                );
-                $pi = $invoice->payment_intent;
+            // 1) Attach & set default (as before)…
+            $stripe->paymentMethods->attach($paymentMethod, [
+                'customer' => $admin->stripe_id,
+            ]);
+            $stripe->customers->update($admin->stripe_id, [
+                'invoice_settings' => ['default_payment_method' => $paymentMethod],
+            ]);
         
-                // If SCA required, ask the frontend to confirm
-                if ($pi && $pi->status === 'requires_action') {
-                    return response()->json([
-                        'requires_action'            => true,
-                        'payment_intent_client_secret' => $pi->client_secret,
-                    ]);
-                }
+            // 2) Create the subscription (leaves you with an “incomplete” invoice)
+            $sub = $stripe->subscriptions->create([
+                'customer'            => $admin->stripe_id,
+                'items'               => [['price' => $priceId]],
+                'payment_behavior'    => 'default_incomplete',
+                'expand'              => ['latest_invoice.payment_intent'],
+                'payment_settings'    => ['save_default_payment_method' => 'on_subscription'],
+            ]);
         
-                // Otherwise, try to pay server-side:
-                $paidInvoice = $stripe->invoices->pay($invoice->id, [
-                    'expand' => ['payment_intent'],
+            // 3) Grab the invoice and its PaymentIntent
+            $invoice = $sub->latest_invoice;              // an Invoice object
+            $pi      = $invoice->payment_intent;          // a PaymentIntent object
+        
+            // 4a) If SCA is required, hand back the client_secret for stripe.js
+            if ($pi && $pi->status === 'requires_action') {
+                return response()->json([
+                    'requires_action'           => true,
+                    'payment_intent_client_secret' => $pi->client_secret,
                 ]);
-        
-                if ($paidInvoice->status === 'paid') {
-                    // subscription is now active
-                    return redirect()->route('admin.subscription.success');
-                }
-        
-                abort(500, 'Unable to pay the pending invoice (status: ' . $paidInvoice->status . ')');
             }
         
-            // 2) No incomplete invoice: are we receiving a new PaymentMethod?
-            $paymentMethodId = $defaultMethod;
-            if ($paymentMethodId) {
-                // Attach & make default
-                $stripe->paymentMethods->attach($paymentMethodId, [
-                    'customer' => $admin->stripe_id,
-                ]);
-                $stripe->customers->update($admin->stripe_id, [
-                    'invoice_settings' => [
-                        'default_payment_method' => $paymentMethodId,
-                    ],
-                ]);
+            // 4b) Otherwise, pay it immediately server-side
+            $paid = $stripe->invoices->pay($invoice->id, [
+                'expand' => ['payment_intent'],
+            ]);
         
-                // Create the new subscription
-                $sub = $stripe->subscriptions->create([
-                    'customer'         => $admin->stripe_id,
-                    'items'            => [['price' => $priceId]],
-                    'payment_settings' => [
-                        'save_default_payment_method' => 'on_subscription',
-                    ],
-                    'expand'           => ['latest_invoice.payment_intent'],
-                    'payment_behavior' => 'default_incomplete',
-                    'metadata'         => [
-                        'owner_model' => get_class($admin),
-                        'owner_id'    => $admin->id,
-                    ],
-                ]);
-        
-                // Handle SCA if needed
-                $pi = $sub->latest_invoice->payment_intent;
-                if ($pi && $pi->status === 'requires_action') {
-                    return response()->json([
-                        'requires_action'            => true,
-                        'payment_intent_client_secret' => $pi->client_secret,
-                    ]);
-                }
-        
-                return redirect()->route('admin.subscription.success');
+            if ($paid->status !== 'paid') {
+                abort(500, "Unable to pay invoice (status: {$paid->status})");
             }
         
-            // 3) Fallback: no PM yet → Stripe Checkout
-            session(['pending_admin_id' => $admin->id]);
-        
-            return $admin
-                ->newSubscription('default', $priceId)
-                ->checkout([
-                    'success_url' => route('admin.subscription.success'),
-                    'cancel_url'  => route('admin.unsubscribed'),
-                ]);
+            // 5) Success!
+            return redirect()->route('admin.subscription.success');
         }
 
         // No payment methods found – fallback to Stripe Checkout
