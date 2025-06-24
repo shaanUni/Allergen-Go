@@ -23,6 +23,7 @@ class Admin extends Authenticatable
         'account_delete_date',
         'payment_failed',
         'failed_payment_date',
+        'default_payment_method',
     ];
 
     protected $hidden = [
