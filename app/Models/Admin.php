@@ -20,8 +20,8 @@ class Admin extends Authenticatable
         'name',
         'email',
         'password',
-        'account_delete_date',
         'payment_failed',
+        'account_delete_date',
         'failed_payment_date',
         'default_payment_method',
     ];
@@ -32,9 +32,9 @@ class Admin extends Authenticatable
     ];
 
     public function stripe()
-{
-    return app(\Stripe\StripeClient::class);
-}
+    {
+        return app(\Stripe\StripeClient::class);
+    }
 
 
     //one to many relationship with dishes (one restaurant can have many dishes)
