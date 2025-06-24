@@ -52,7 +52,7 @@ class RegisterController extends Controller
             Auth::guard('admin')->loginUsingId($adminId);  
             session()->forget('pending_admin_id');
             session(['new_user' => 'true']);   
-            $admin = Admin::where('id', $adminId);        
+            $admin = Admin::where('id', $adminId)->first();        
             $admin->account_delete_date = null;
             $admin->save();
             return redirect()->route('admin.dashboard')->with('success', 'Account created and subscription active!');
