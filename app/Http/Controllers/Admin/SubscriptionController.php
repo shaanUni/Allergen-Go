@@ -80,26 +80,11 @@ class SubscriptionController extends Controller
             return back()->with('info', 'You already have an active subscription.');
         }
 
-        $paymentMethod = $request->input('payment_method');
-
-        if (!$paymentMethod) {
-            Log::info('shady');
-            return back()->with('error', 'No payment method provided.');
-        }
-
-        try {
-            $admin->newSubscription('default', config('services.stripe.price_id'))
-                ->create($paymentMethod);
-
-            $admin->account_delete_date = null;
-            $admin->save();
-            Log::info('konvict');
-
-            return back()->with('success', 'You have successfully resubscribed.');
-        } catch (\Exception $e) {
-            Log::info('up front');
-            return back()->with('error', 'Error resubscribing: ' . $e->getMessage());
-        }
+        return $admin->newSubscription('default', config('services.stripe.price_id')) // 2nd param is price ID
+        ->checkout([
+            'success_url' => route('admin.subscription.success'),
+            'cancel_url' => route('admin.unsubscribed'),
+        ]);
     }
 
 
