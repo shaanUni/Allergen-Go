@@ -93,6 +93,7 @@ class SubscriptionController extends Controller
 
         //If we have an exsisting card we can use
         if ($defaultMethod) { 
+            Log::info("here");
             self::reSubscribeWithExistingPayment($admin);
         }
 
@@ -132,6 +133,7 @@ class SubscriptionController extends Controller
     }
 
     public static function reSubscribeWithExistingPayment($admin){
+        Log::info("jko");
         $stripe         = new StripeClient(config('services.stripe.secret'));
         $priceId        = config('services.stripe.price_id');
         $paymentMethod  = $admin->default_payment_method;
@@ -176,6 +178,7 @@ class SubscriptionController extends Controller
         session(['pending_admin_id' => $admin->id]); // needed for the subscription success route
         $admin->account_delete_date = null; // nullify this so the middleware knows it is no longer cancelled
         $admin->save();
+        Log::info("end");
 
         return redirect()->route('admin.subscription.success');
     }
