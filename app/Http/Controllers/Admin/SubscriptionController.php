@@ -83,6 +83,9 @@ class SubscriptionController extends Controller
         $admin->account_delete_date = null;
         $admin->save();
 
+        //So we can be logged back in str8 away
+        session(['pending_admin_id' => $admin->id]);
+
         return $admin->newSubscription('default', config('services.stripe.price_id')) // 2nd param is price ID
         ->checkout([
             'success_url' => route('admin.subscription.success'),
