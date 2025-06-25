@@ -50,8 +50,8 @@ class ChargeFailed
 
         if ($event->payload['type'] === 'customer.subscription.created') {
             Log::info("here schmeal");
-            //$email = $event->payload['data']['object']['billing_details']['email'];
-            //Log::info($email);
+            $customerID = $event->payload['data']['object']['customer'];
+            Log::info($customerID);
         }
 
         //If a payment fails
