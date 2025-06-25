@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendWelcomeEmail;
 use App\Models\Admin;
 
 use Illuminate\Support\Facades\Auth;
@@ -25,6 +26,11 @@ class DashboardController extends Controller
     public function index()
     {
         $admin = Auth::guard('admin')->user()->fresh();
+
+        if(session('new_user')){
+            SendWelcomeEmail::dispatch($admin)->delay(now()->addMinute());
+            session()->forget('new_user');
+        }
 
         if($admin->payment_failed){
             //If 3 or more days elapsed since they failed, send the final reminder email
@@ -138,28 +144,7 @@ class DashboardController extends Controller
             'admin' => $admin,
         ]);
     }
-    public function updateCard(Request $request)
-    {
-        $request->validate([
-            'payment_method' => 'required|string',
-        ]);
-
-        $admin = Auth::guard('admin')->user();
-        $paymentMethodId = $request->input('payment_method');
-
-        // Tell Cashier to update the default payment method on Stripe
-        $admin->updateDefaultPaymentMethod($paymentMethodId);
-
-        // Optionally: If you want to bill them immediately (e.g. for an invoice),
-        // you could create an invoice here. But most of the time you just update the card
-        // and let the next subscription renewal or invoice hit this new card.
-        //
-        // Example (if you have an open invoice you want to immediately pay):
-        // $invoice = $admin->invoice(); // invoices any pending balance
-        //
-        // Flash a success message and redirect back to the account page:
-        return back()->with('success', 'Your card has been updated successfully.');
-    }
+  
     private function getRestaurantCode()
     {
         //Get the unique restaurant code of the restaurant currently logged in

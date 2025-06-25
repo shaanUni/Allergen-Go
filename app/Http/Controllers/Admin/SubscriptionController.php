@@ -224,7 +224,7 @@ class SubscriptionController extends Controller
 }
 /*
 
-$admin = Admin::findOrFail(12);
+$admin = Admin::findOrFail(88);
 $subscription = $admin->subscription('default');
 dd($subscription);
 */

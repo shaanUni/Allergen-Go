@@ -51,8 +51,10 @@ class ChargeFailed
 
         if ($event->payload['type'] === 'customer.subscription.created') {
             Log::info("here schmeal");
+            
             $stripe_id = $event->payload['data']['object']['customer'];
             $admin = Admin::where('stripe_id', $stripe_id)->first();
+
             $subscription = $admin->subscription('default');
             $date = Carbon::parse($subscription->trial_ends_at)->format('F j, Y');
 

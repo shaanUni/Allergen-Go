@@ -41,7 +41,6 @@ class AdminSubscribedCheck
         $newUserStatus = session('new_user');
 
         if ($newUserStatus != 'true' && (!$admin || !$admin->subscribed('default'))) {
-            session()->forget('new_user');
             return redirect()->route('admin.register')->with('error', 'You must be subscribed to access this area.');
         }
 
