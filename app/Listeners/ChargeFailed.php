@@ -48,6 +48,12 @@ class ChargeFailed
             Log::warning($admin->email);
         }
 
+        if ($event->payload['type'] === 'customer.subscription.created') {
+            Log::info("here schmeal");
+            $email = $event->payload['data']['object']['billing_details']['email'];
+            Log::info($email);
+        }
+
         //If a payment fails
         if ($event->payload['type'] === 'invoice.payment_succeeded') {
             $invoice = $event->payload['data']['object'];

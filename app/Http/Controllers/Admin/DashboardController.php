@@ -32,7 +32,7 @@ class DashboardController extends Controller
         if (session('new_user')) {
             //This should onyl ever happen once
             session()->forget('new_user');
-
+/*
             $subscription = $admin->subscription('default');
             Log::info($subscription->trial_ends_at);
             
@@ -41,6 +41,7 @@ class DashboardController extends Controller
 
             //welcome email
             //$admin->notify(new accountCreated($date));
+            */
         }
 
         //If the admin has failed a payment
