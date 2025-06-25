@@ -99,7 +99,7 @@ class SubscriptionController extends Controller
             Log::info("here");
             $rePurchase = self::reSubscribeWithExistingPayment($admin);
             if ($rePurchase == 'fail') {
-                return back()->with('error', 'Payment method failed.');
+                return back()->with('error', 'Payment method failed. Go to the accounts page to update your card details');
             }
             return redirect()->route('admin.subscription.success');
         }

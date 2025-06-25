@@ -23,6 +23,11 @@ class AdminSubscribedCheck
         if ($request->routeIs('admin.unsubscribed') || $request->routeIs('admin.subscription.buy')) {
             return $next($request); 
         }
+
+        //Also allow access to account pages, so they can update card if needed
+        if ($request->routeIs('admin.account') || $request->routeIs('admin.account.updateCard')) {
+            return $next($request); 
+        }
         
         //If this date is set, it means the user cancelled their subscription
         if($admin->account_delete_date != null){
