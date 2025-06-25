@@ -50,6 +50,7 @@ class ChargeFailed
         }
 
         if ($event->payload['type'] === 'customer.subscription.created') {
+            /*
             Log::info("here schmeal");
             
             $stripe_id = $event->payload['data']['object']['customer'];
@@ -60,6 +61,7 @@ class ChargeFailed
 
             //welcome email
             $admin->notify(new accountCreated($date));
+            */
         }
 
         //If a payment fails
