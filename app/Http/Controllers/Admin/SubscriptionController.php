@@ -99,7 +99,7 @@ class SubscriptionController extends Controller
             Log::info("here");
             $rePurchase = self::reSubscribeWithExistingPayment($admin);
             if ($rePurchase == 'fail') {
-                return back()->with('success', 'Payment method failed.');
+                return back()->with('error', 'Payment method failed.');
             }
             return redirect()->route('admin.subscription.success');
         }
@@ -199,9 +199,7 @@ class SubscriptionController extends Controller
 
         } catch (ApiErrorException $e) {
             // Any other Stripe API problem
-            return back()->withErrors([
-                'stripe' => 'There was an error processing your payment. Please try again later.',
-            ]);
+            return 'fail';
         }
 
     }
