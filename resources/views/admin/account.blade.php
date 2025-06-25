@@ -164,7 +164,7 @@
             </p>
 
             {{-- This form does NOT contain any real card inputs. Stripe.js will mount the element. --}}
-            <form id="update-card-form" action="{{ route('admin.account.updateCard') }}" method="POST">
+            <form id="update-card-form" action="{{ route('admin.payment-methods.update-card') }}" method="POST">
                 @csrf
 
                 {{-- Placeholder for Stripe.js Card Element --}}

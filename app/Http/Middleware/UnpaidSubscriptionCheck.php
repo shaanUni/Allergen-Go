@@ -22,7 +22,7 @@ class UnpaidSubscriptionCheck
             return $next($request);
         }
         
-        if ($request->routeIs('admin.account') || $request->routeIs('admin.account.updateCard')) {
+        if ($request->routeIs('admin.account') || $request->routeIs('admin.payment-methods.update-card')) {
             return $next($request); // Don't redirect loop into itself
         }
         

@@ -116,6 +116,21 @@ class SubscriptionController extends Controller
             ]);
 
     }
+    public function updateCard(Request $request)
+    {
+        $request->validate([
+            'payment_method' => 'required|string',
+        ]);
+
+        $admin = Auth::guard('admin')->user();
+        $paymentMethodId = $request->input('payment_method');
+
+        // Tell Cashier to update the default payment method on Stripe
+        $admin->updateDefaultPaymentMethod($paymentMethodId);
+
+        return back()->with('success', 'Your card has been updated successfully.');
+    }
+
 
     public function makeDefault($paymentMethod)
     {
