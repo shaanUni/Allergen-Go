@@ -9,9 +9,10 @@ use Illuminate\Queue\InteractsWithQueue;
 
 use Laravel\Cashier\Events\WebhookReceived;
 use Illuminate\Support\Facades\Log;
-
-use App\Models\Admin;
 use Illuminate\Notifications\Notifiable;
+
+use App\Notifications\accountCreated;
+use App\Models\Admin;
 use App\Notifications\FailedPayment;
 use Carbon\Carbon;
 
@@ -50,8 +51,13 @@ class ChargeFailed
 
         if ($event->payload['type'] === 'customer.subscription.created') {
             Log::info("here schmeal");
-            $customerID = $event->payload['data']['object']['customer'];
-            Log::info($customerID);
+            $stripe_id = $event->payload['data']['object']['customer'];
+            $admin = Admin::where('stripe_id', $stripe_id);
+            $subscription = $admin->subscription('default');
+            $date = Carbon::parse($subscription->trial_ends_at)->format('F j, Y');
+
+            //welcome email
+            $admin->notify(new accountCreated($date));
         }
 
         //If a payment fails

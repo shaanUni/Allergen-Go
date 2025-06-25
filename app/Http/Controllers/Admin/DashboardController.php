@@ -25,26 +25,7 @@ class DashboardController extends Controller
     public function index()
     {
         $admin = Auth::guard('admin')->user()->fresh();
-        Log::info('here des');
-        Log::info($admin->email);
 
-        //This is in memory when a new user was just created, so send them a welcome email with details about their trial
-        if (session('new_user')) {
-            //This should onyl ever happen once
-            session()->forget('new_user');
-/*
-            $subscription = $admin->subscription('default');
-            Log::info($subscription->trial_ends_at);
-            
-            //Format date for when free trial ends
-            $date = Carbon::parse($subscription->trial_ends_at)->format('F j, Y');
-
-            //welcome email
-            //$admin->notify(new accountCreated($date));
-            */
-        }
-
-        //If the admin has failed a payment
         if($admin->payment_failed){
             //If 3 or more days elapsed since they failed, send the final reminder email
             $thresholdDate = Carbon::parse($admin->failed_payment_date)->addDays(3);
@@ -157,7 +138,28 @@ class DashboardController extends Controller
             'admin' => $admin,
         ]);
     }
+    public function updateCard(Request $request)
+    {
+        $request->validate([
+            'payment_method' => 'required|string',
+        ]);
 
+        $admin = Auth::guard('admin')->user();
+        $paymentMethodId = $request->input('payment_method');
+
+        // Tell Cashier to update the default payment method on Stripe
+        $admin->updateDefaultPaymentMethod($paymentMethodId);
+
+        // Optionally: If you want to bill them immediately (e.g. for an invoice),
+        // you could create an invoice here. But most of the time you just update the card
+        // and let the next subscription renewal or invoice hit this new card.
+        //
+        // Example (if you have an open invoice you want to immediately pay):
+        // $invoice = $admin->invoice(); // invoices any pending balance
+        //
+        // Flash a success message and redirect back to the account page:
+        return back()->with('success', 'Your card has been updated successfully.');
+    }
     private function getRestaurantCode()
     {
         //Get the unique restaurant code of the restaurant currently logged in
