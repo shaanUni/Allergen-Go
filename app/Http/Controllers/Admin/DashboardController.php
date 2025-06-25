@@ -25,6 +25,8 @@ class DashboardController extends Controller
     public function index()
     {
         $admin = Auth::guard('admin')->user()->fresh();
+        Log::info('here des');
+        Log::info($admin->email);
 
         //This is in memory when a new user was just created, so send them a welcome email with details about their trial
         if (session('new_user')) {
@@ -32,6 +34,8 @@ class DashboardController extends Controller
             session()->forget('new_user');
 
             $subscription = $admin->subscription('default');
+            Log::info($subscription->trial_ends_at);
+            
             //Format date for when free trial ends
             $date = Carbon::parse($subscription->trial_ends_at)->format('F j, Y');
 

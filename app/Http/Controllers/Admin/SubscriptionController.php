@@ -75,34 +75,37 @@ class SubscriptionController extends Controller
 
     public function resubscribe(Request $request)
     {
+
         $admin = Auth::guard('admin')->user()->fresh();
 
-
+        //Check if the user is still subscribed 
         if ($admin->account_delete_date == null) {
-            Log::info('this');
+            return back()->with('error', 'You already have a valid subscribtion.');
         }
 
         // Use default or fallback payment method
         $defaultMethod = $admin->default_payment_method;
 
+        //If no default method, use the first payment method found from the user
         if (!$defaultMethod) {
-            Log::info('here');
             $fallbackMethod = $admin->paymentMethods()->first();
             if ($fallbackMethod) {
-                Log::info('eyes');
                 $defaultMethod = $fallbackMethod;
             }
         }
 
         //If we have an exsisting card we can use
         if ($defaultMethod) {
-            Log::info("here");
             $rePurchase = self::reSubscribeWithExistingPayment($admin);
+            //Declined
             if ($rePurchase == 'fail') {
                 return back()->with('error', 'Payment method failed. Go to the accounts page to update your card details');
             }
             return redirect()->route('admin.subscription.success');
         }
+
+
+        //Below code is when no cards are linked to the user, so they have to enter one
 
         session(['pending_admin_id' => $admin->id]);
 
@@ -142,7 +145,6 @@ class SubscriptionController extends Controller
 
     public static function reSubscribeWithExistingPayment($admin)
     {
-        Log::info("jko");
         $stripe = new StripeClient(config('services.stripe.secret'));
         $priceId = config('services.stripe.price_id');
         $paymentMethod = $admin->default_payment_method;
@@ -189,7 +191,6 @@ class SubscriptionController extends Controller
             session(['pending_admin_id' => $admin->id]); // needed for the subscription success route
             $admin->account_delete_date = null; // nullify this so the middleware knows it is no longer cancelled
             $admin->save();
-            Log::info("end");
         } catch (CardException $e) {
             // A declined card — inspect $e->getError() if you want more detail
             $declineCode = $e->getError()->decline_code;
