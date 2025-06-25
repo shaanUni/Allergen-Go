@@ -72,8 +72,8 @@ class ChargeFailed
 
             $admin = Admin::where('email', $email)->first();
 
-            //if this admin currently has a failed payment, change the status to paid
-            if ($admin->payment_failed) {
+            //if this admin currently has a failed payment and they have an active subscription, change the status to paid
+            if ($admin->payment_failed && $admin->account_delete_date == null) {
                 $admin->payment_failed = false;
                 $admin->save();
             }

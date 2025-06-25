@@ -32,6 +32,7 @@ class DashboardController extends Controller
             session()->forget('new_user');
         }
 
+        //  needs to go inJob
         if($admin->payment_failed){
             //If 3 or more days elapsed since they failed, send the final reminder email
             $thresholdDate = Carbon::parse($admin->failed_payment_date)->addDays(3);
