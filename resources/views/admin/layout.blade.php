@@ -42,7 +42,7 @@
             $failedPayment = true;
         }
     @endphp
-        @if($failedPayment)
+        @if($failedPayment && $admin->account_delete_date == null)
             <div>You have a payment that failed. If you do not resolve this soon, your account will be locked until you pay. Please go <a href="{{ route('admin.account') }}">here</a> to update your card details.</div>
         @endif
     @endauth
