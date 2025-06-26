@@ -27,11 +27,13 @@ class DashboardController extends Controller
     {
 
         $admins = Admin::where('payment_failed')->get();
+        Log::info("psycho");
 
         foreach ($admins as $admin) {
             Log::info($admin->name);
+            Log::info("killer");
         }
-        
+
         $admin = Auth::guard('admin')->user()->fresh();
 
         if(session('new_user')){
