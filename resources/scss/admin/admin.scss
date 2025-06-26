@@ -180,3 +180,10 @@ $white: #ffffff;
   margin-bottom: 1.5rem;
 }
 
+.subscription-page {
+  .stats-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 2rem;
+  }
+}

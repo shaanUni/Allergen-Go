@@ -2,8 +2,7 @@
 
 @section('content')
     <div class="container py-4">
-
-        {{-- Back --}}
+        {{-- Back to Dashboard --}}
         <form action="{{ route('admin.dashboard') }}" method="get" style="display:inline;" class="mb-4">
             <button type="submit" class="back-button btn btn-secondary">
                 Back to Dashboard
@@ -11,7 +10,9 @@
         </form>
 
         <div class="subscription-page">
+            {{-- 2×2 grid --}}
             <div class="stats-grid">
+
                 {{-- 1) Subscription --}}
                 <div class="stats-card">
                     <h2 class="stats-title">Subscription</h2>
@@ -90,7 +91,7 @@
                 <div class="stats-card">
                     <h2 class="stats-title">Account &amp; Billing</h2>
 
-                    {{-- Current Method --}}
+                    {{-- Current Payment Method --}}
                     <div class="mb-3">
                         <h3 class="font-semibold">Current Payment Method</h3>
                         @if($defaultMethod)
@@ -103,7 +104,7 @@
                         @endif
                     </div>
 
-                    {{-- Saved Methods --}}
+                    {{-- Saved Payment Methods --}}
                     <div class="mb-3">
                         <h3 class="font-semibold">Saved Payment Methods</h3>
                         @if($paymentMethods->isEmpty())
@@ -120,6 +121,9 @@
 
                                         @if($method->id === $admin->default_payment_method)
                                             <span class="text-green-600 font-semibold">Default</span>
+                                            <button class="btn btn-outline-danger btn-sm ms-2">
+                                                Delete
+                                            </button>
                                         @else
                                             <form action="{{ route('admin.payment-methods.default', $method->id) }}"
                                                   method="POST"
@@ -130,19 +134,18 @@
                                                     Make Default
                                                 </button>
                                             </form>
+                                            <form action="{{ route('admin.payment-methods.delete', $method->id) }}"
+                                                  method="POST"
+                                                  class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                        class="btn btn-outline-danger btn-sm"
+                                                        onclick="return confirm('Are you sure you want to delete this card?')">
+                                                    Delete
+                                                </button>
+                                            </form>
                                         @endif
-
-                                        <form action="{{ route('admin.payment-methods.delete', $method->id) }}"
-                                              method="POST"
-                                              class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                    class="btn btn-outline-danger btn-sm"
-                                                    onclick="return confirm('Are you sure you want to delete this card?')">
-                                                Delete
-                                            </button>
-                                        </form>
                                     </li>
                                 @endforeach
                             </ul>
@@ -166,6 +169,7 @@
                             <!-- Stripe Element mounts here -->
                         </div>
 
+                        {{-- Stripe.js needs this hidden field --}}
                         <input type="hidden" name="payment_method" id="payment_method_input">
 
                         <button id="submit-btn"
@@ -180,6 +184,7 @@
                          class="mt-2 text-danger small">
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
