@@ -84,7 +84,6 @@ class DashboardController extends Controller
 
         //Grab the local Subscription record 
         $subscription = $admin->subscription('default');
-        $status = $subscription->stripe_status;
 
         $stripe = new StripeClient(config('services.stripe.secret'));
         //Find subscription
@@ -116,7 +115,7 @@ class DashboardController extends Controller
 
         $cancelled = "";
 
-        if ($status == 'canceled') {
+        if ($admin->account_delete_date != null) {
             $cancelled = "true";
         }
 
