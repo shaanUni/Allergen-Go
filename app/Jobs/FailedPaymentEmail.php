@@ -30,12 +30,11 @@ class FailedPaymentEmail implements ShouldQueue
      */
     public function handle(): void
     {
-        //
-        $admins = Admin::where('payment_failed')->get();
+
+        //Get all the admins who have a payment failed date, and an active subscription
+        $admins = Admin::whereNotNull('payment_failed')->whereNull('account_delete_date')->get();
 
         foreach ($admins as $admin) {
-            Log::info($admin->name);
-            /*
             //  needs to go inJob
             if ($admin->payment_failed) {
                 //If 3 or more days elapsed since they failed, send the final reminder email
@@ -48,7 +47,7 @@ class FailedPaymentEmail implements ShouldQueue
                     $admin->notify(new FailedPayment($emailDate));
                 }
             }
-            */
+            
         }
     }
 }
