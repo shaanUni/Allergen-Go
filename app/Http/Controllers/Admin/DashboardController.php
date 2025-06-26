@@ -26,12 +26,13 @@ class DashboardController extends Controller
     public function index()
     {
 
-        $admins = Admin::whereNotNull('payment_failed')->whereNull('account_delete_date')->get();
-        Log::info("psycho");
+        $admins = Admin::where('payment_failed', true)->whereNull('account_delete_date')->get();
 
         foreach ($admins as $admin) {
+            Log::info("---------------------------");
             Log::info($admin->name);
-            Log::info("killer");
+            Log::info($admin->id);
+            Log::info("---------------------------");
         }
 
         $admin = Auth::guard('admin')->user()->fresh();
