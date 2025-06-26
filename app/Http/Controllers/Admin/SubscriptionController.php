@@ -92,13 +92,13 @@ class SubscriptionController extends Controller
         if (!$defaultMethod) {
             $fallbackMethod = $admin->paymentMethods()->first();
             if ($fallbackMethod) {
-                $defaultMethod = $fallbackMethod;
+                $defaultMethod = $fallbackMethod->id;
             }
         }
 
         //If we have an exsisting card we can use
         if ($defaultMethod) {
-            $rePurchase = self::reSubscribeWithExistingPayment($admin, $defaultMethod->id);
+            $rePurchase = self::reSubscribeWithExistingPayment($admin, $defaultMethod);
             //Declined
             if ($rePurchase == 'fail') {
                 return back()->with('error', 'Payment method failed. Go to the accounts page to update your card details');
