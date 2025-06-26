@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\FailedPaymentEmailJob;
 use Illuminate\Console\Command;
 
 class FailedPaymentEmail extends Command
@@ -26,5 +27,6 @@ class FailedPaymentEmail extends Command
     public function handle()
     {
         //
+        FailedPaymentEmailJob::dispatch();
     }
 }
