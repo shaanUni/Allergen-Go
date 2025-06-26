@@ -32,20 +32,6 @@ class DashboardController extends Controller
             SendWelcomeEmail::dispatch($admin)->delay(now()->addMinute());
             session()->forget('new_user');
         }
-
-        //  needs to go inJob
-        if($admin->payment_failed){
-            //If 3 or more days elapsed since they failed, send the final reminder email
-            $thresholdDate = Carbon::parse($admin->failed_payment_date)->addDays(3);
-            //The date when the account will be closed
-            $emailDate = Carbon::parse($admin->failed_payment_date)->addDays(7);
-            $emailDate = Carbon::parse($emailDate)->format('F j, Y');
-
-            if(now()->greaterThanOrEqualTo($thresholdDate)){
-                $admin->notify(new FailedPayment('follow up'));
-            }
-        }
-
         //get the unique code
         $restaurantCode = $this->getRestaurantCode();
         return view(
