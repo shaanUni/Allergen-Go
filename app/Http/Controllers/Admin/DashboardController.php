@@ -26,15 +26,6 @@ class DashboardController extends Controller
     public function index()
     {
 
-        $admins = Admin::where('payment_failed', true)->whereNull('account_delete_date')->get();
-
-        foreach ($admins as $admin) {
-            Log::info("---------------------------");
-            Log::info($admin->name);
-            Log::info($admin->id);
-            Log::info("---------------------------");
-        }
-
         $admin = Auth::guard('admin')->user()->fresh();
 
         if(session('new_user')){

@@ -46,12 +46,12 @@ class FailedPaymentEmailJob implements ShouldQueue
             $emailDate = Carbon::parse($admin->failed_payment_date)->addDays(7);
             $emailDate = Carbon::parse($emailDate)->format('F j, Y');
 
-            if (now()->greaterThanOrEqualTo($thresholdDate)) {
+            //if (now()->greaterThanOrEqualTo($thresholdDate)) {
                 $admin->reminder_email_sent = true;
                 Log::info('imhere');
                 $admin->save();
                 $admin->notify(new FailedPayment($emailDate));
-            }
+            //}
 
         }
     }
