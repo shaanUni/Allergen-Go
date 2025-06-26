@@ -26,7 +26,7 @@ class DashboardController extends Controller
     public function index()
     {
 
-        $admins = Admin::where('payment_failed')->get();
+        $admins = Admin::whereNotNull('payment_failed')->get();
         Log::info("psycho");
 
         foreach ($admins as $admin) {
