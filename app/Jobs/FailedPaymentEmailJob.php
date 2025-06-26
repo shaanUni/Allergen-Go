@@ -32,7 +32,10 @@ class FailedPaymentEmailJob implements ShouldQueue
     {
 
         //Get all the admins who have a payment failed date, have an active subscription, and haven't been sent the email yet
-        $admins = Admin::where('payment_failed', true)->whereNull('account_delete_date')->where('reminder_email_sent', false)->get();
+        $admins = Admin::where('payment_failed', true)
+        ->whereNull('account_delete_date')
+        ->where('reminder_email_sent', false)
+        ->get();
 
 
         foreach ($admins as $admin) {
@@ -46,6 +49,7 @@ class FailedPaymentEmailJob implements ShouldQueue
             if (now()->greaterThanOrEqualTo($thresholdDate)) {
                 $admin->notify(new FailedPayment($emailDate));
                 $admin->reminder_email_sent = true;
+                Log::info('imhere');
                 $admin->save();
             }
 
