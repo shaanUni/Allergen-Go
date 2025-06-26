@@ -42,19 +42,19 @@ class FailedPaymentEmailJob implements ShouldQueue
         foreach ($admins as $admin) {
             //  needs to go inJob
             //If 3 or more days elapsed since they failed, send the final reminder email
-            //$thresholdDate = Carbon::parse($admin->failed_payment_date)->addDays(3);
-            $thresholdDate = Carbon::parse($admin->failed_payment_date)->addHours(1);
+            $thresholdDate = Carbon::parse($admin->failed_payment_date)->addDays(3);
+            //for testing - $thresholdDate = Carbon::parse($admin->failed_payment_date)->addHours(1);
             
             //The date when the account will be closed
             $emailDate = Carbon::parse($admin->failed_payment_date)->addDays(7);
             $emailDate = Carbon::parse($emailDate)->format('F j, Y');
 
-            //if (now()->greaterThanOrEqualTo($thresholdDate)) {
+            if (now()->greaterThanOrEqualTo($thresholdDate)) {
                 $admin->reminder_email_sent = true;
                 Log::info('imhere');
                 $admin->save();
-                $admin->notify(new FailedPayment('follow up'));
-            //}
+                $admin->notify(new FailedPayment($emailDate));
+            }
 
         }
     }
