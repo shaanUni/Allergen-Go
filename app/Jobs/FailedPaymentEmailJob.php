@@ -45,6 +45,8 @@ class FailedPaymentEmailJob implements ShouldQueue
 
             if (now()->greaterThanOrEqualTo($thresholdDate)) {
                 $admin->notify(new FailedPayment($emailDate));
+                $admin->reminder_email_sent = true;
+                $admin->save();
             }
 
         }
