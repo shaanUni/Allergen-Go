@@ -50,7 +50,7 @@ class FailedPaymentEmailJob implements ShouldQueue
                 $admin->reminder_email_sent = true;
                 Log::info('imhere');
                 $admin->save();
-                //$admin->notify(new FailedPayment($emailDate));
+                $admin->notify(new FailedPayment($emailDate));
             }
 
         }
