@@ -9,9 +9,10 @@
       </button>
     </form>
 
-    {{-- Subscription (full width) --}}
+    {{-- SUBSCRIPTION – full width, outside the grid --}}
     <div class="stats-card mb-6">
       <h2 class="stats-title">Subscription</h2>
+
       @if($cancelled === 'true')
         <p class="stat-info">
           You cancelled your subscription on <strong>{{ $date }}</strong>.
@@ -27,9 +28,10 @@
       @endif
     </div>
 
+    {{-- 2×2 GRID FOR THE FOUR DYNAMIC SECTIONS --}}
     <div class="subscription-page">
       <div class="stats-grid">
-        {{-- 1) Saved Payment Methods (top-left) --}}
+        {{-- TOP LEFT: Saved Payment Methods --}}
         <div class="stats-card">
           <h2 class="stats-title">Saved Payment Methods</h2>
           @if($paymentMethods->isEmpty())
@@ -78,7 +80,7 @@
           @endif
         </div>
 
-        {{-- 2) Billing History (top-right) --}}
+        {{-- TOP RIGHT: Billing History --}}
         <div class="stats-card">
           <h2 class="stats-title">Billing History</h2>
           @if($invoices->isEmpty())
@@ -127,7 +129,7 @@
           @endif
         </div>
 
-        {{-- 3) Account & Billing (bot-left) --}}
+        {{-- BOTTOM LEFT: Account & Billing (current method) --}}
         <div class="stats-card">
           <h2 class="stats-title">Account &amp; Billing</h2>
           <h3 class="font-semibold">Current Payment Method</h3>
@@ -141,7 +143,7 @@
           @endif
         </div>
 
-        {{-- 4) Update Card Details (bot-right) --}}
+        {{-- BOTTOM RIGHT: Update Card Details --}}
         <div class="stats-card">
           <h2 class="stats-title">Update Card Details</h2>
           <p class="stat-info mb-3">
@@ -169,7 +171,6 @@
 @endsection
 
 @section('scripts')
-  {{-- Load Stripe.js --}}
   <script src="https://js.stripe.com/v3/"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
