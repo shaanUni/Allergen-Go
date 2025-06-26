@@ -2,7 +2,8 @@
 
 @section('content')
     <div class="container py-4">
-        {{-- Back to Dashboard --}}
+
+        {{-- Back --}}
         <form action="{{ route('admin.dashboard') }}" method="get" style="display:inline;" class="mb-4">
             <button type="submit" class="back-button btn btn-secondary">
                 Back to Dashboard
@@ -10,10 +11,8 @@
         </form>
 
         <div class="subscription-page">
-            {{-- 2-column grid, gap between cards --}}
-            <div class="grid grid-cols-2 gap-6">
-
-                {{-- 1) Subscription Status --}}
+            <div class="stats-grid">
+                {{-- 1) Subscription --}}
                 <div class="stats-card">
                     <h2 class="stats-title">Subscription</h2>
 
@@ -37,8 +36,8 @@
                     @endif
                 </div>
 
-                {{-- 2) Billing History (spans both columns) --}}
-                <div class="stats-card col-span-2">
+                {{-- 2) Billing History --}}
+                <div class="stats-card">
                     <h2 class="stats-title">Billing History</h2>
 
                     @if ($invoices->isEmpty())
@@ -91,7 +90,7 @@
                 <div class="stats-card">
                     <h2 class="stats-title">Account &amp; Billing</h2>
 
-                    {{-- Current Payment Method --}}
+                    {{-- Current Method --}}
                     <div class="mb-3">
                         <h3 class="font-semibold">Current Payment Method</h3>
                         @if($defaultMethod)
@@ -104,7 +103,7 @@
                         @endif
                     </div>
 
-                    {{-- Saved Payment Methods --}}
+                    {{-- Saved Methods --}}
                     <div class="mb-3">
                         <h3 class="font-semibold">Saved Payment Methods</h3>
                         @if($paymentMethods->isEmpty())
@@ -167,7 +166,6 @@
                             <!-- Stripe Element mounts here -->
                         </div>
 
-                        {{-- Stripe.js needs this hidden field --}}
                         <input type="hidden" name="payment_method" id="payment_method_input">
 
                         <button id="submit-btn"
@@ -182,7 +180,6 @@
                          class="mt-2 text-danger small">
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -191,7 +188,6 @@
 @section('scripts')
     {{-- Load Stripe.js --}}
     <script src="https://js.stripe.com/v3/"></script>
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const stripe = Stripe("{{ config('services.stripe.key') }}");
