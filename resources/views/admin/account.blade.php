@@ -10,7 +10,8 @@
         </form>
 
         <div class="subscription-page">
-            <div class="stats-grid">
+            {{-- 2-column grid, gap between cards --}}
+            <div class="grid grid-cols-2 gap-6">
 
                 {{-- 1) Subscription Status --}}
                 <div class="stats-card">
@@ -36,15 +37,15 @@
                     @endif
                 </div>
 
-                {{-- 2) Billing History --}}
-                <div class="stats-card">
+                {{-- 2) Billing History (spans both columns) --}}
+                <div class="stats-card col-span-2">
                     <h2 class="stats-title">Billing History</h2>
 
                     @if ($invoices->isEmpty())
                         <p class="stat-info">You have no invoices yet.</p>
                     @else
                         <div class="table-wrapper mt-2">
-                            <table class="dish-counts-table">
+                            <table class="dish-counts-table w-full">
                                 <thead>
                                     <tr>
                                         <th>Date</th>
@@ -166,6 +167,9 @@
                             <!-- Stripe Element mounts here -->
                         </div>
 
+                        {{-- Stripe.js needs this hidden field --}}
+                        <input type="hidden" name="payment_method" id="payment_method_input">
+
                         <button id="submit-btn"
                                 type="submit"
                                 class="btn btn-primary w-100">
@@ -178,6 +182,7 @@
                          class="mt-2 text-danger small">
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
