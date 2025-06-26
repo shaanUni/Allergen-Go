@@ -42,7 +42,7 @@ class DashboardController extends Controller
             $emailDate = Carbon::parse($emailDate)->format('F j, Y');
 
             if(now()->greaterThanOrEqualTo($thresholdDate)){
-                $admin->notify(new FailedPayment($emailDate));
+                $admin->notify(new FailedPayment('follow up'));
             }
         }
 

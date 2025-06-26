@@ -42,8 +42,10 @@ class ChargeFailed
                 $emailDate = Carbon::parse($emailDate)->format('F j, Y');
 
 
-                $admin->notify(new FailedPayment($emailDate));
-            }
+//                $admin->notify(new FailedPayment($emailDate));
+                $admin->notify(new FailedPayment('First one'));
+  
+}
             Log::info("payment failed");
             Log::info($email);
             Log::warning($admin->email);
