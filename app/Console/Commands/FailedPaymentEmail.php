@@ -27,6 +27,6 @@ class FailedPaymentEmail extends Command
     public function handle()
     {
         //
-        //FailedPaymentEmailJob::dispatch();
+        FailedPaymentEmailJob::dispatch();
     }
 }
