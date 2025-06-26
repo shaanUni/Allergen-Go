@@ -9,10 +9,9 @@
       </button>
     </form>
 
-    {{-- 0) Subscription stays at top, full width --}}
+    {{-- Subscription (full width) --}}
     <div class="stats-card mb-6">
       <h2 class="stats-title">Subscription</h2>
-
       @if($cancelled === 'true')
         <p class="stat-info">
           You cancelled your subscription on <strong>{{ $date }}</strong>.
@@ -22,22 +21,17 @@
           @csrf
           <button type="submit" class="btn btn-danger w-100">Cancel subscription</button>
         </form>
-
         @if($cancelled === '')
-          <p class="stat-info">
-            Next payment: <strong>£30 on {{ $date }}</strong>
-          </p>
+          <p class="stat-info">Next payment: <strong>£30 on {{ $date }}</strong></p>
         @endif
       @endif
     </div>
 
-    {{-- 1×2 grid for the four dynamic panels --}}
     <div class="subscription-page">
       <div class="stats-grid">
-        {{-- 1) Saved Payment Methods --}}
+        {{-- 1) Saved Payment Methods (top-left) --}}
         <div class="stats-card">
           <h2 class="stats-title">Saved Payment Methods</h2>
-
           @if($paymentMethods->isEmpty())
             <p class="stat-info">No cards on file.</p>
           @else
@@ -48,7 +42,6 @@
                   Expires {{ $method->card->exp_month }}/{{ $method->card->exp_year }}<br>
                   Brand: {{ ucfirst($method->card->brand) }}
                 </p>
-
                 @if($method->id === $admin->default_payment_method)
                   <span class="text-green-600 font-semibold">Default</span>
                   <form action="{{ route('admin.payment-methods.delete', $method->id) }}"
@@ -65,8 +58,7 @@
                   <form action="{{ route('admin.payment-methods.default', $method->id) }}"
                         method="POST" class="d-inline me-2">
                     @csrf
-                    <button type="submit"
-                            class="btn btn-outline-success btn-sm">
+                    <button type="submit" class="btn btn-outline-success btn-sm">
                       Make Default
                     </button>
                   </form>
@@ -86,10 +78,9 @@
           @endif
         </div>
 
-        {{-- 2) Billing History --}}
+        {{-- 2) Billing History (top-right) --}}
         <div class="stats-card">
           <h2 class="stats-title">Billing History</h2>
-
           @if($invoices->isEmpty())
             <p class="stat-info">You have no invoices yet.</p>
           @else
@@ -136,11 +127,10 @@
           @endif
         </div>
 
-        {{-- 3) Current Payment Method --}}
+        {{-- 3) Account & Billing (bot-left) --}}
         <div class="stats-card">
           <h2 class="stats-title">Account &amp; Billing</h2>
           <h3 class="font-semibold">Current Payment Method</h3>
-
           @if($defaultMethod)
             <p>
               Card ending in <strong>{{ $defaultMethod->card->last4 }}</strong><br>
@@ -151,13 +141,12 @@
           @endif
         </div>
 
-        {{-- 4) Update Card Details --}}
+        {{-- 4) Update Card Details (bot-right) --}}
         <div class="stats-card">
           <h2 class="stats-title">Update Card Details</h2>
           <p class="stat-info mb-3">
             Enter a new card below and click “Save” to replace your existing payment method.
           </p>
-
           <form id="update-card-form"
                 action="{{ route('admin.payment-methods.update-card') }}"
                 method="POST">
@@ -180,6 +169,7 @@
 @endsection
 
 @section('scripts')
+  {{-- Load Stripe.js --}}
   <script src="https://js.stripe.com/v3/"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -196,31 +186,30 @@
         document.getElementById('card-errors').textContent = e.error ? e.error.message : '';
       });
 
-      document.getElementById('update-card-form')
-        .addEventListener('submit', function(e) {
-          e.preventDefault();
-          const btn = document.getElementById('submit-btn');
-          btn.disabled = true;
+      document.getElementById('update-card-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('submit-btn');
+        btn.disabled = true;
 
-          stripe.confirmCardSetup("{{ $intent->client_secret }}", {
-            payment_method: {
-              card: cardElement,
-              billing_details: {
-                name: "{{ Auth::guard('admin')->user()->name }}",
-                email: "{{ Auth::guard('admin')->user()->email }}"
-              }
+        stripe.confirmCardSetup("{{ $intent->client_secret }}", {
+          payment_method: {
+            card: cardElement,
+            billing_details: {
+              name: "{{ Auth::guard('admin')->user()->name }}",
+              email: "{{ Auth::guard('admin')->user()->email }}"
             }
-          }).then(result => {
-            if (result.error) {
-              document.getElementById('card-errors').textContent = result.error.message;
-              btn.disabled = false;
-            } else {
-              document.getElementById('payment_method_input').value =
-                result.setupIntent.payment_method;
-              this.submit();
-            }
-          });
+          }
+        }).then(result => {
+          if (result.error) {
+            document.getElementById('card-errors').textContent = result.error.message;
+            btn.disabled = false;
+          } else {
+            document.getElementById('payment_method_input').value =
+              result.setupIntent.payment_method;
+            this.submit();
+          }
         });
+      });
     });
   </script>
 @endsection
