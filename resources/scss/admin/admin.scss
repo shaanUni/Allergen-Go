@@ -127,3 +127,56 @@ $white: #ffffff;
   }
   
 }
+
+.subscription-page {
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+  }
+}
+
+.stats-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+
+  h2.stats-title {
+    font-size: 1.35rem;
+    color: #40945c;
+    margin-bottom: 1rem;
+  }
+
+  .stat-info {
+    font-size: 0.95rem;
+    color: #555;
+  }
+
+  .table-wrapper {
+    margin-top: 0.5rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+  }
+
+  .dish-counts-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    th {
+      font-weight: 600;
+    }
+  }
+}
+
+/* Ensure Back button has nice bottom margin */
+.back-button {
+  margin-bottom: 1.5rem;
+}
+
