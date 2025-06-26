@@ -98,7 +98,7 @@ class SubscriptionController extends Controller
 
         //If we have an exsisting card we can use
         if ($defaultMethod) {
-            $rePurchase = self::reSubscribeWithExistingPayment($admin);
+            $rePurchase = self::reSubscribeWithExistingPayment($admin, $defaultMethod);
             //Declined
             if ($rePurchase == 'fail') {
                 return back()->with('error', 'Payment method failed. Go to the accounts page to update your card details');
@@ -160,11 +160,11 @@ class SubscriptionController extends Controller
         }
     }
 
-    public static function reSubscribeWithExistingPayment($admin)
+    public static function reSubscribeWithExistingPayment($admin, $defaultMethod)
     {
         $stripe = new StripeClient(config('services.stripe.secret'));
         $priceId = config('services.stripe.price_id');
-        $paymentMethod = $admin->default_payment_method;
+        $paymentMethod = $defaultMethod;
 
 
         $stripe->paymentMethods->attach($paymentMethod, [
