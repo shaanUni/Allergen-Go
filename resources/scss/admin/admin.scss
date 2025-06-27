@@ -187,3 +187,30 @@ $white: #ffffff;
     gap: 2rem;
   }
 }
+
+/* make every card use flex so we can let its body grow/shrink */
+.stats-card {
+  display: flex;
+  flex-direction: column;
+}
+
+/* pull everything below the <h2> out into a scrollable region */
+.stats-card > .table-wrapper,
+.stats-card > .mb-3 > .list-unstyled {
+  /* choose whatever max-height fits your layout */
+  max-height: 300px;
+  overflow-y: auto;
+  /* if you want a little inner padding so the scrollbar doesn’t sit flush: */
+  padding-right: 0.5rem;
+}
+
+/* Optional: hide default scrollbar in WebKit and give a thin one everywhere else */
+.stats-card > .table-wrapper::-webkit-scrollbar,
+.stats-card > .mb-3 > .list-unstyled::-webkit-scrollbar {
+  width: 6px;
+}
+.stats-card > .table-wrapper::-webkit-scrollbar-thumb,
+.stats-card > .mb-3 > .list-unstyled::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,.2);
+  border-radius: 3px;
+}
