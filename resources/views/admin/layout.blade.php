@@ -19,7 +19,7 @@
             <div class="admin-navbar__right">
                 @auth('admin')
                     <span class="admin-navbar__greeting">Hi, {{ auth('admin')->user()->name }}</span>
-                    <a href="{{ route('admin.account') }}" class="admin-navbar__link">My Account</a>
+                    <a href="{{ route('admin.account') }}" class="admin-navbar__link">Account</a>
                     <form method="POST" action="{{ route('admin.logout') }}" class="admin-navbar__logout-form">
                         @csrf
                         <button type="submit" class="admin-navbar__logout-btn">Logout</button>
