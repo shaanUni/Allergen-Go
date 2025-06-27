@@ -15,7 +15,6 @@
                 {{-- only this wrapper should flex/center --}}
                 <div class="unsubscribe-wrapper">
                     <div class="card mx-auto shadow-sm" style="max-width: 600px;">
-                        <div class="card-body text-center py-5">
                             {{-- Optional “unsubscribed” icon --}}
                             <div class="mb-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#dc3545"
@@ -39,7 +38,6 @@
                                     Resubscribe
                                 </button>
                             </form>
-                        </div>
                     </div>
                 </div>
             </div>
