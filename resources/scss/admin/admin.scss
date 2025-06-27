@@ -214,3 +214,45 @@ $white: #ffffff;
   background-color: rgba(0,0,0,.2);
   border-radius: 3px;
 }
+
+.admin-navbar__right {
+  display: flex;
+  align-items: center;
+}
+
+.admin-navbar__greeting {
+  color: #fff;
+  margin-right: 1rem;
+  font-weight: 500;
+}
+
+.admin-navbar__link {
+  color: #fff;
+  margin-right: 1rem;
+  text-decoration: none;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  transition: background 150ms, border-color 150ms;
+}
+.admin-navbar__link:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.3);
+}
+
+.admin-navbar__logout-form {
+  margin: 0; /* remove extra spacing around the form */
+}
+.admin-navbar__logout-btn {
+  background: transparent;
+  color: #fff;
+  border: 1px solid #fff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 150ms, color 150ms;
+}
+.admin-navbar__logout-btn:hover {
+  background: #fff;
+  color: #2d6a4f; /* match your green tone */
+}
