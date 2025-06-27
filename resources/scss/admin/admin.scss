@@ -274,6 +274,11 @@ $white: #ffffff;
       min-height: calc(100vh - 80px);
     }
   }
+
+  .unsubscribe-wrapper .card {
+    border: none !important;
+    box-shadow: none !important;
+  }
   
   /* (keep your existing .btn-success hover, etc.) */
   
