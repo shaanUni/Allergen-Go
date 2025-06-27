@@ -266,7 +266,9 @@ $white: #ffffff;
   color: #856404;                 // warning text
   font-size: 0.95rem;
   line-height: 1.4;
-  text-align: left;
+  justify-content: center;
+
+  text-align: center;
 
   // make it span the full width beneath your navbar
   width: 100%;
@@ -296,9 +298,6 @@ $white: #ffffff;
   }
 }
 
-.payment-banner__message{
-  text-align: center;
-}
 
 ///////////////////////////////////////////////////
 /// 
