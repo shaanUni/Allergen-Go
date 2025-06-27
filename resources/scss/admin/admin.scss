@@ -11,7 +11,7 @@ $white: #ffffff;
 }
 
 .local{
-  background-color: red !important;
+//  background-color: red !important;
 }
 
 .back-button {
@@ -232,7 +232,6 @@ $white: #ffffff;
   margin-right: 1rem;
   text-decoration: none;
   padding: 0.4rem 0.8rem;
-  border: 1px solid transparent;
   border-radius: 4px;
   transition: background 150ms, border-color 150ms;
 }
@@ -254,6 +253,24 @@ $white: #ffffff;
   transition: background 150ms, color 150ms;
 }
 .admin-navbar__logout-btn:hover {
-  background: #fff;
-  color: #2d6a4f; /* match your green tone */
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.3);
+}
+
+///////////////////////////////////////////////////
+/// 
+/* center the card’s container vertically on taller screens */
+@media (min-height: 700px) {
+  .container.mt-5 {
+    display: flex;
+    align-items: center;
+    min-height: calc(100vh - 80px); /* minus your nav height */
+  }
+}
+
+/* Give the “Resubscribe” button a little lift on hover */
+.btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: all 150ms ease-in-out;
 }
