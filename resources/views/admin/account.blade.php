@@ -2,7 +2,8 @@
 
 @section('content')
     <div class="container py-4">
-        {{-- Back to Dashboard --}}
+
+        {{-- Back --}}
         <form action="{{ route('admin.dashboard') }}" method="get" style="display:inline;" class="mb-4">
             <button type="submit" class="back-button btn btn-secondary">
                 Back to Dashboard
@@ -10,56 +11,29 @@
         </form>
 
         <div class="subscription-page">
-            {{-- 2×2 grid --}}
             <div class="stats-grid">
-
                 {{-- 1) Subscription --}}
-                <div class="mb-3">
-                        <h3 class="font-semibold">Saved Payment Methods</h3>
-                        @if($paymentMethods->isEmpty())
-                            <p class="text-gray-600">No card on file.</p>
-                        @else
-                            <ul class="list-unstyled">
-                                @foreach($paymentMethods as $method)
-                                    <li class="border p-3 rounded mb-2">
-                                        <p>
-                                            Card ending in <strong>{{ $method->card->last4 }}</strong><br>
-                                            Expires {{ $method->card->exp_month }}/{{ $method->card->exp_year }}<br>
-                                            Brand: {{ ucfirst($method->card->brand) }}
-                                        </p>
+                <div class="stats-card">
+                    <h2 class="stats-title">Subscription</h2>
 
-                                        @if($method->id === $admin->default_payment_method)
-                                            <span class="text-green-600 font-semibold">Default</span>
-                                            <button class="btn btn-outline-danger btn-sm ms-2">
-                                                Delete
-                                            </button>
-                                        @else
-                                            <form action="{{ route('admin.payment-methods.default', $method->id) }}"
-                                                  method="POST"
-                                                  class="d-inline me-2">
-                                                @csrf
-                                                <button type="submit"
-                                                        class="btn btn-outline-success btn-sm">
-                                                    Make Default
-                                                </button>
-                                            </form>
-                                            <form action="{{ route('admin.payment-methods.delete', $method->id) }}"
-                                                  method="POST"
-                                                  class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                        class="btn btn-outline-danger btn-sm"
-                                                        onclick="return confirm('Are you sure you want to delete this card?')">
-                                                    Delete
-                                                </button>
-                                            </form>
-                                        @endif
-                                    </li>
-                                @endforeach
-                            </ul>
+                    @if ($cancelled === 'true')
+                        <p class="stat-info">
+                            You cancelled your subscription on <strong>{{ $date }}</strong>.
+                        </p>
+                    @else
+                        <form method="POST" action="{{ route('admin.subscription.cancel') }}" class="mb-3">
+                            @csrf
+                            <button type="submit" class="btn btn-danger w-100">
+                                Cancel subscription
+                            </button>
+                        </form>
+
+                        @if ($cancelled === '')
+                            <p class="stat-info">
+                                Next payment: <strong>£30 on {{ $date }}</strong>
+                            </p>
                         @endif
-                    </div>
+                    @endif
                 </div>
 
                 {{-- 2) Billing History --}}
@@ -116,7 +90,7 @@
                 <div class="stats-card">
                     <h2 class="stats-title">Account &amp; Billing</h2>
 
-                    {{-- Current Payment Method --}}
+                    {{-- Current Method --}}
                     <div class="mb-3">
                         <h3 class="font-semibold">Current Payment Method</h3>
                         @if($defaultMethod)
@@ -129,28 +103,51 @@
                         @endif
                     </div>
 
-                    {{-- Saved Payment Methods --}}
-                    <div class="stats-card">
-                    <h2 class="stats-title">Subscription</h2>
+                    {{-- Saved Methods --}}
+                    <div class="mb-3">
+                        <h3 class="font-semibold">Saved Payment Methods</h3>
+                        @if($paymentMethods->isEmpty())
+                            <p class="text-gray-600">No card on file.</p>
+                        @else
+                            <ul class="list-unstyled">
+                                @foreach($paymentMethods as $method)
+                                    <li class="border p-3 rounded mb-2">
+                                        <p>
+                                            Card ending in <strong>{{ $method->card->last4 }}</strong><br>
+                                            Expires {{ $method->card->exp_month }}/{{ $method->card->exp_year }}<br>
+                                            Brand: {{ ucfirst($method->card->brand) }}
+                                        </p>
 
-                    @if ($cancelled === 'true')
-                        <p class="stat-info">
-                            You cancelled your subscription on <strong>{{ $date }}</strong>.
-                        </p>
-                    @else
-                        <form method="POST" action="{{ route('admin.subscription.cancel') }}" class="mb-3">
-                            @csrf
-                            <button type="submit" class="btn btn-danger w-100">
-                                Cancel subscription
-                            </button>
-                        </form>
+                                        @if($method->id === $admin->default_payment_method)
+                                            <span class="text-green-600 font-semibold">Default</span>
+                                        @else
+                                            <form action="{{ route('admin.payment-methods.default', $method->id) }}"
+                                                  method="POST"
+                                                  class="d-inline me-2">
+                                                @csrf
+                                                <button type="submit"
+                                                        class="btn btn-outline-success btn-sm">
+                                                    Make Default
+                                                </button>
+                                            </form>
+                                        @endif
 
-                        @if ($cancelled === '')
-                            <p class="stat-info">
-                                Next payment: <strong>£30 on {{ $date }}</strong>
-                            </p>
+                                        <form action="{{ route('admin.payment-methods.delete', $method->id) }}"
+                                              method="POST"
+                                              class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                    class="btn btn-outline-danger btn-sm"
+                                                    onclick="return confirm('Are you sure you want to delete this card?')">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </li>
+                                @endforeach
+                            </ul>
                         @endif
-                    @endif
+                    </div>
                 </div>
 
                 {{-- 4) Update Card Details --}}
@@ -169,7 +166,6 @@
                             <!-- Stripe Element mounts here -->
                         </div>
 
-                        {{-- Stripe.js needs this hidden field --}}
                         <input type="hidden" name="payment_method" id="payment_method_input">
 
                         <button id="submit-btn"
@@ -184,7 +180,6 @@
                          class="mt-2 text-danger small">
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
