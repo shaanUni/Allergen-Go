@@ -29,6 +29,7 @@
           Send Reset Link
         </button>
       </form>
+      
     </div>
   </div>
 @endsection

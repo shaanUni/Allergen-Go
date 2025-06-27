@@ -386,6 +386,7 @@ $white: #ffffff;
 
 
 //register
+@media (min-width: 992px){
 
 .register-page {
   .register-card {
@@ -462,6 +463,8 @@ $white: #ffffff;
   }
 }
 
+ 
+}
 
 //reset
 
@@ -531,10 +534,10 @@ $white: #ffffff;
   }
 }
 
-@media (max-width: 1402px){
+@media (max-width: 769px){
 .reset-card {
-
   //left: 150px;
-
+  max-width: 100%;
+  left: 0%;
 }
 }
