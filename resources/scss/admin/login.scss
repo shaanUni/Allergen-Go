@@ -65,3 +65,25 @@ $danger-color: #b22222;
     }
   }
 }
+
+
+.admin-login {
+
+  .login-links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+
+    a {
+      font-size: 0.9rem;
+      color: $accent-color;
+      text-decoration: none;
+      transition: color 0.2s, text-decoration 0.2s;
+
+      &:hover {
+        color: darken($accent-color, 10%);
+        text-decoration: underline;
+      }
+    }
+  }
+}
