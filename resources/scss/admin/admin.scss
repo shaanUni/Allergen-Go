@@ -260,13 +260,23 @@ $white: #ffffff;
 ///////////////////////////////////////////////////
 /// 
 /* center the card’s container vertically on taller screens */
-@media (min-height: 700px) {
-  .container.mt-5 {
-    display: flex;
-    align-items: center;
-    min-height: calc(100vh - 80px); /* minus your nav height */
+/* resources/css/app.css */
+/* ==================================
+   Only center the unsubscribe-card,
+   leave all other .container.mt-5 alone
+   ================================== */
+   @media (min-height: 700px) {
+    .unsubscribe-wrapper {
+      display: flex;
+      flex-direction: column;    /* stack alert+card vertically */
+      align-items: center;       /* center horizontally */
+      justify-content: center;   /* center vertically */
+      min-height: calc(100vh - 80px);
+    }
   }
-}
+  
+  /* (keep your existing .btn-success hover, etc.) */
+  
 
 /* Give the “Resubscribe” button a little lift on hover */
 .btn-success:hover {
