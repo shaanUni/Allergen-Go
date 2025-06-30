@@ -10,6 +10,13 @@
             </button>
         </form>
 
+        @if ($errors->any())
+        <div class="alert-box alert-danger">
+            @foreach ($errors->all() as $error)
+                <div>{{ $error }}</div>
+            @endforeach
+        </div>
+    @endif
         <div class="subscription-page">
             <div class="stats-grid">
                 {{-- 1) Subscription --}}
