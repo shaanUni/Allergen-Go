@@ -605,3 +605,14 @@ $white: #ffffff;
     padding-left: 0 !important;
   }
 }
+
+.admin-navbar .navbar-toggler {
+  border: none !important;
+  background: transparent !important;
+}
+
+.admin-navbar .navbar-toggler:focus,
+.admin-navbar .navbar-toggler:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
