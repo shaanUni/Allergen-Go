@@ -117,7 +117,6 @@
                                             Expires {{ $method->card->exp_month }}/{{ $method->card->exp_year }}<br>
                                             Brand: {{ ucfirst($method->card->brand) }}
                                         </p>
-                                        <p>{{ count($paymentMethods) }}</p>
                                         @if($method->id === $admin->default_payment_method)
                                             <span class="text-green-600 font-semibold">Default</span>
                                         @else
@@ -131,7 +130,8 @@
                                                 </button>
                                             </form>
                                         @endif
-
+                                        @if (count($paymentMethods) > 1)
+                                        
                                         <form action="{{ route('admin.payment-methods.delete', $method->id) }}"
                                               method="POST"
                                               class="d-inline">
@@ -143,6 +143,8 @@
                                                 Delete
                                             </button>
                                         </form>
+                                        @endif
+
                                     </li>
                                 @endforeach
                             </ul>
