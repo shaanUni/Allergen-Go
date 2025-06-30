@@ -219,6 +219,42 @@ $white: #ffffff;
   border-radius: 3px;
 }
 
+// ──────────────────────────────────────────────────────────────
+// Mobile Overrides for Subscription Page (<768px)
+@media (max-width: 767.98px) {
+  .container.py-4 {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  /* Stack cards into one column */
+  .subscription-page {
+    .stats-grid {
+      grid-template-columns: 1fr !important;
+      gap: 1.5rem !important;
+    }
+  }
+
+  /* Make each card a bit more compact */
+  .stats-card {
+    padding: 1rem !important;
+  }
+
+  /* Full-width Back button */
+  .back-button {
+    display: block !important;
+    width: 100% !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  /* Shrink scrollable areas a little if needed */
+  .stats-card > .table-wrapper,
+  .stats-card > .mb-3 > .list-unstyled {
+    max-height: 200px !important;
+  }
+}
+
+
 .admin-navbar__right {
   display: flex;
   align-items: center;
