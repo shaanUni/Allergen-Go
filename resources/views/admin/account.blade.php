@@ -117,7 +117,7 @@
                                             Expires {{ $method->card->exp_month }}/{{ $method->card->exp_year }}<br>
                                             Brand: {{ ucfirst($method->card->brand) }}
                                         </p>
-
+                                        <p>{{ count($paymentMethods) }}</p>
                                         @if($method->id === $admin->default_payment_method)
                                             <span class="text-green-600 font-semibold">Default</span>
                                         @else
