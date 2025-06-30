@@ -650,6 +650,8 @@ $white: #ffffff;
 .admin-navbar .navbar-toggler {
   border: none !important;
   background: transparent !important;
+  position: relative;
+  bottom: 5px;
 }
 
 .admin-navbar .navbar-toggler:focus,
