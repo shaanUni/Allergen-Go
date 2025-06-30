@@ -4,14 +4,15 @@ $font-primary: 'Inter', sans-serif;
 $green-nav: #40945c;
 $green-hover: darken($green-nav, 5%);
 $white: #ffffff;
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.local{
-  background-color: red !important;
+.local {
+  //  background-color: red !important;
 }
 
 .back-button {
@@ -30,7 +31,8 @@ $white: #ffffff;
 .back-button:hover,
 .back-button:focus,
 .back-button:active {
-  background-color: #006400; /* darker green */
+  background-color: #006400;
+  /* darker green */
   color: white;
 }
 
@@ -119,11 +121,541 @@ $white: #ffffff;
     &:hover {
       color: #ffffff;
     }
-  
+
     &:active {
       background-color: #f9caca;
       color: #ffffff;
     }
   }
-  
+
+}
+
+.subscription-page {
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+  }
+}
+
+.stats-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+
+  h2.stats-title {
+    font-size: 1.35rem;
+    color: #40945c;
+    margin-bottom: 1rem;
+  }
+
+  .stat-info {
+    font-size: 0.95rem;
+    color: #555;
+  }
+
+  .table-wrapper {
+    margin-top: 0.5rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+  }
+
+  .dish-counts-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    th {
+      font-weight: 600;
+    }
+  }
+}
+
+/* Ensure Back button has nice bottom margin */
+.back-button {
+  margin-bottom: 1.5rem;
+}
+
+.subscription-page {
+  .stats-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 2rem;
+  }
+}
+
+/* make every card use flex so we can let its body grow/shrink */
+.stats-card {
+  display: flex;
+  flex-direction: column;
+}
+
+/* pull everything below the <h2> out into a scrollable region */
+.stats-card>.table-wrapper,
+.stats-card>.mb-3>.list-unstyled {
+  /* choose whatever max-height fits your layout */
+  max-height: 300px;
+  overflow-y: auto;
+  /* if you want a little inner padding so the scrollbar doesn’t sit flush: */
+  padding-right: 0.5rem;
+}
+
+/* Optional: hide default scrollbar in WebKit and give a thin one everywhere else */
+.stats-card>.table-wrapper::-webkit-scrollbar,
+.stats-card>.mb-3>.list-unstyled::-webkit-scrollbar {
+  width: 6px;
+}
+
+.stats-card>.table-wrapper::-webkit-scrollbar-thumb,
+.stats-card>.mb-3>.list-unstyled::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, .2);
+  border-radius: 3px;
+}
+
+// ──────────────────────────────────────────────────────────────
+// Mobile Overrides for Subscription Page (<768px)
+// ──────────────────────────────────────────────────────────────
+// Mobile Overrides for Subscription Page (<768px)
+@media (max-width: 767.98px) {
+  /* Make the container full-width on phones */
+  .container.py-4 {
+    max-width: 100% !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  /* Stack cards in one column and force them to fill the container */
+  .subscription-page .stats-grid {
+    display: block !important;
+  }
+  .subscription-page .stats-card {
+    width: 100% !important;
+    max-width: none !important;
+    margin-bottom: 1.5rem !important;
+    padding: 1rem !important;
+    box-sizing: border-box;
+  }
+
+  /* Ensure scrollable sections only scroll internally */
+  .stats-card > .table-wrapper,
+  .stats-card > .mb-3 > .list-unstyled {
+    max-height: 200px !important;
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+  }
+
+  /* And for extra-wide tables, wrap in the existing table-wrapper */
+  .stats-card table {
+    width: auto !important;         /* let it size to content */
+    max-width: 100% !important;     /* but never overflow the card */
+  }
+}
+
+
+
+.admin-navbar__right {
+  display: flex;
+  align-items: center;
+}
+
+.admin-navbar__greeting {
+  color: #fff;
+  margin-right: 1rem;
+  font-weight: 500;
+}
+
+.admin-navbar__link {
+  color: #fff;
+  border: 1px solid #fff;
+  margin-right: 1rem;
+  text-decoration: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  transition: background 150ms, border-color 150ms;
+}
+
+.admin-navbar__link:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.admin-navbar__logout-form {
+  margin: 0;
+  /* remove extra spacing around the form */
+}
+
+.admin-navbar__logout-btn {
+  background: transparent;
+  color: #fff;
+  border: 1px solid #fff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 150ms, color 150ms;
+}
+
+.admin-navbar__logout-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.payment-banner {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: #fff3cd; // light yellow (Bootstrap warning-bg)
+  border: 1px solid #ffeeba; // darker warning border
+  color: #856404; // warning text
+  font-size: 0.95rem;
+  line-height: 1.4;
+  justify-content: center;
+
+  text-align: center;
+
+  // make it span the full width beneath your navbar
+  width: 100%;
+  box-sizing: border-box;
+
+  &__icon {
+    flex-shrink: 0;
+    margin-right: 0.5rem;
+    color: #856404;
+  }
+
+  &__message {
+    a {
+      color: #856404;
+      font-weight: 500;
+      text-decoration: underline;
+
+      &:hover {
+        color: darken(#856404, 10%);
+        text-decoration: none;
+      }
+    }
+
+    strong {
+      color: #663c00;
+    }
+  }
+}
+
+
+///////////////////////////////////////////////////
+/// 
+/* center the card’s container vertically on taller screens */
+/* resources/css/app.css */
+/* ==================================
+   Only center the unsubscribe-card,
+   leave all other .container.mt-5 alone
+   ================================== */
+.unsubscribe-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  // Make it fill the viewport (minus nav height)
+
+  .unsubscribed-card {
+    // sizing
+    width: 100%;
+    max-width: 600px;
+
+    // remove all borders/shadows/rounding
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+
+  .card-body {
+    // keep the default Bootstrap padding or tweak as you like
+    padding: 2.5rem;
+    text-align: center;
+  }
+
+  .unsubscribed-icon {
+    margin-bottom: 1.5rem;
+
+    svg {
+      width: 48px;
+      height: 48px;
+      color: #dc3545; // Bootstrap “danger” red
+    }
+  }
+
+  .card-title {
+    margin-bottom: 1rem;
+    font-size: 1.75rem;
+    font-weight: 500;
+    color: #dc3545;
+  }
+
+  .card-text {
+    margin-bottom: 2rem;
+    color: #6c757d; // Bootstrap text-muted
+    line-height: 1.5;
+  }
+
+  .btn-resubscribe {
+    // base Bootstrap button resets
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.375rem;
+    transition: all 150ms ease-in-out;
+
+    // colors
+    color: #fff;
+    background-color: #198754; // Bootstrap “success”
+    border-color: #198754;
+
+    &:hover {
+      background-color: #157347;
+      border-color: #146c43;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+
+
+//register
+@media (min-width: 992px) {
+
+  .register-page {
+    .register-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      //max-width: 00px;
+      margin: 3rem auto;
+      padding: 2rem;
+      background: #fff;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .register-info {
+      .register-title {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #2d6a4f;
+        /* dark green */
+      }
+
+      .register-desc {
+        font-size: 1rem;
+        color: #555;
+        line-height: 1.6;
+      }
+    }
+
+    .register-form-wrapper {
+      .alert {
+        margin-bottom: 1.5rem;
+      }
+
+      .register-form {
+        .form-group {
+          margin-bottom: 1rem;
+
+          label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+          }
+
+          .form-control {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+
+            &:focus {
+              outline: none;
+              border-color: #198754;
+              box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+            }
+          }
+        }
+
+        .btn-submit {
+          background-color: #007bff;
+          border: none;
+          padding: 0.75rem;
+          font-size: 1.05rem;
+          font-weight: 500;
+          border-radius: 0.375rem;
+          transition: background 150ms ease-in-out;
+
+          &:hover {
+            background-color: darken(#007bff, 7%);
+          }
+        }
+      }
+    }
+  }
+
+
+}
+
+//reset
+
+
+
+.reset-card {
+  background: #fff;
+  padding: 2.5rem;
+  max-width: 50%;
+  width: 100%;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  position: relative;
+  //left: 300px;
+  left: 25%;
+
+  .reset-title {
+    margin-bottom: 1.5rem;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #2d6a4f; // dark green
+    text-align: center;
+  }
+
+  .alert {
+    font-size: 0.9rem;
+  }
+
+  .reset-form {
+    .form-group {
+      margin-bottom: 1.25rem;
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #ccc;
+        border-radius: 0.375rem;
+        font-size: 1rem;
+        transition: border-color 150ms, box-shadow 150ms;
+
+        &:focus {
+          outline: none;
+          border-color: #198754;
+          box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+        }
+      }
+    }
+
+    .btn-reset {
+      margin-top: 0.5rem;
+      padding: 0.75rem;
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: 0.375rem;
+      transition: background 150ms ease-in-out, transform 150ms;
+
+      &:hover {
+        background-color: darken(#007bff, 7%);
+        transform: translateY(-1px);
+      }
+    }
+  }
+}
+
+@media (max-width: 769px) {
+  .reset-card {
+    //left: 150px;
+    max-width: 100%;
+    left: 0%;
+  }
+}
+
+/* 1) Limit our overrides just to the mobile‐navbar collapse */
+@media (max-width: 767.98px) {
+
+  /* 2) Speed up + ease the collapse transition */
+  .navbar-collapse.collapsing {
+    /* Bootstrap’s JS still drives the height change, we just override the timing */
+    transition: height 0.12s ease-in-out !important;
+  }
+
+  .navbar-collapse {
+    /* Make sure there’s no leftover transitions fighting us when it’s shown */
+    transition: height 0.12s ease-in-out !important;
+    background-color: white;
+    padding: 1.5rem;
+    width: 100vw;
+    margin: 0 0.5rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+  }
+
+  .admin-navbar {
+    .admin-navbar__greeting {
+      color: $green-nav;
+    }
+  }
+
+  .mobile-link{
+    color: $green-nav !important;
+  }
+}
+
+// resources/sass/_navbar-overrides.scss
+@media (max-width: 767.98px) {
+  /* Only when Bootstrap adds .show (i.e. menu is open) do we flex‐column */
+  .admin-navbar__right.collapse.show {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  /* Ensure the closed state stays hidden */
+  .admin-navbar__right.collapse {
+    display: none !important;
+  }
+
+  /* Style links/buttons inside the open menu */
+  .admin-navbar__right.collapse.show .nav-link,
+  .admin-navbar__right.collapse.show .admin-navbar__logout-btn {
+    width: 100% !important;
+    margin: 0.3rem 0 !important;
+    padding-left: 0 !important;
+  }
+}
+
+.admin-navbar .navbar-toggler {
+  border: none !important;
+  background: transparent !important;
+  position: relative;
+  bottom: 5px;
+}
+
+.admin-navbar .navbar-toggler:focus,
+.admin-navbar .navbar-toggler:active {
+  outline: none !important;
+  box-shadow: none !important;
 }

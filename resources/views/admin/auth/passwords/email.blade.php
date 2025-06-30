@@ -1,11 +1,35 @@
 @extends('admin.layout')
 
 @section('content')
-    <h2>Reset Password</h2>
+  <div class="container reset-request-page">
+    <div class="reset-card">
+      <h2 class="reset-title">Reset Password</h2>
 
-    <form method="POST" action="{{ route('admin.password.email') }}">
+      @if (session('status'))
+        <div class="alert alert-success mb-4">
+          {{ session('status') }}
+        </div>
+      @endif
+
+      <form method="POST" action="{{ route('admin.password.email') }}" class="reset-form">
         @csrf
-        <input type="email" name="email" required placeholder="Your email">
-        <button type="submit">Send Reset Link</button>
-    </form>
+
+        <div class="form-group">
+          <input
+            type="email"
+            name="email"
+            class="form-control"
+            placeholder="Your email address"
+            required
+            autofocus
+          >
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 mt-2">
+          Send Reset Link
+        </button>
+      </form>
+      
+    </div>
+  </div>
 @endsection

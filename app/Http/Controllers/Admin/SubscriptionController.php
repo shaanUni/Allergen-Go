@@ -44,8 +44,8 @@ class SubscriptionController extends Controller
         //$stripe->subscriptions->cancel($subscription->stripe_id);
         
         //This will go in the admin table, so they can se when subscription expires, so convert to correct format
-        $dateForDb = Carbon::parse($stripeSub->current_period_end)->toDateString();
-        //$dateForDb = Carbon::parse(now())->toDateString();
+        //+$dateForDb = Carbon::parse($stripeSub->current_period_end)->toDateString();
+        $dateForDb = Carbon::parse(now())->toDateString();
         $periodEnd = Carbon::createFromTimestamp($stripeSub->current_period_end);
 
         //gooodbye email

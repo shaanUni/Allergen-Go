@@ -16,7 +16,7 @@ use PhpParser\Node\Expr\FuncCall;
 use App\Http\Middleware\AdminSubscribedCheck;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('test');
 })->name('home');
 
 Route::get('/restaurant', function () {
