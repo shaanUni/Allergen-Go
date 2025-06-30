@@ -108,3 +108,10 @@ $bg-light: #f9f9f9;
     margin-left: 1.5rem;
   }
 }
+@media (max-width: 768px) {
+
+.create-account-submit{
+  position: relative;
+  top: 25px;
+}
+}

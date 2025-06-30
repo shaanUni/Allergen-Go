@@ -59,7 +59,7 @@
                    required>
           </div>
 
-          <button type="submit" class="btn btn-primary btn-submit w-100">
+          <button type="submit" class="btn btn-primary create-account-submit btn-submit w-100">
             Create Account &amp; Subscribe
           </button>
         </form>

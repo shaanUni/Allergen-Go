@@ -12,7 +12,7 @@
 </head>
 
 <body>
-  <nav class="admin-navbar navbar navbar-expand-md {{ app()->environment('local') ? 'admin-navbar--green local' : 'admin-navbar--green' }}">
+  <nav class="admin-navbar navbar navbar-expand-md navbar-dark {{ app()->environment('local') ? 'admin-navbar--green local' : 'admin-navbar--green' }}">
     <div class="admin-navbar__container container">
       <a class="admin-navbar__brand navbar-brand" href="{{ route('admin.dashboard') }}">
         AllergenGo Admin
@@ -29,18 +29,18 @@
       </button>
 
       <!-- collapsed menu -->
-      <div class="collapse navbar-collapse admin-navbar__right justify-content-end" id="adminNavMenu">
+      <div class="collapse navbar-collapse admin-navbar__right flex-column flex-md-row justify-content-md-end align-items-start align-items-md-center" id="adminNavMenu">
         @auth('admin')
-          <span class="admin-navbar__greeting nav-link mb-0">Hi, {{ auth('admin')->user()->name }}</span>
-          <a href="{{ route('admin.account') }}" class="admin-navbar__link nav-link">Account</a>
+          <span class="admin-navbar__greeting mobile-link nav-link mb-0">Hi, {{ auth('admin')->user()->name }}</span>
+          <a href="{{ route('admin.account') }}" class="admin-navbar__link nav-link mobile-link">Account</a>
           <form method="POST" action="{{ route('admin.logout') }}" class="admin-navbar__logout-form d-inline">
             @csrf
-            <button type="submit" class="admin-navbar__logout-btn btn btn-outline-light btn-sm ms-2">
+            <button type="submit" class="admin-navbar__logout-btn btn btn-outline-light btn-sm ms-md-2 mobile-link">
               Logout
             </button>
           </form>
         @else
-          <a href="{{ route('admin.login') }}" class="admin-navbar__link nav-link">Login</a>
+          <a href="{{ route('admin.login') }}" class="admin-navbar__link nav-link mobile-link">Login</a>
         @endauth
       </div>
     </div>
