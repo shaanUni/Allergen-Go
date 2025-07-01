@@ -10,6 +10,12 @@
             </button>
         </form>
 
+        @if (session('error'))
+    <div class="alert-box alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
         <div class="subscription-page">
             <div class="stats-grid">
                 {{-- 1) Subscription --}}
