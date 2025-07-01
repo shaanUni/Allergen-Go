@@ -36,13 +36,19 @@
 </div>
 
 <div class="mb-3 allergy-form">
-    <label class="form-label">Other dietary needs: </label>
-    <div class="border rounded p-2 mb-2">
-        <div class="form-check">
-            <input type="hidden" name="halal" value="0">
-            <input type="checkbox" class="form-check-input" id="halal" name="halal" value="1">
+    <label class="form-label test">Select your allergies:</label><br>
+    <div class="checkbox-grid">
+        @foreach ($diet as $diet_restriction)
+            <div class="border rounded p-2 mb-2 box">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="allergen-{{ $allergen }}" name="allergens[]"
+                        value="{{ $diet_restriction }}" {{ in_array($allergen, $selectedAllergens ?? []) ? 'checked' : '' }}>
 
-            <label class="form-check-label" for="halal">halal</label>
-        </div>
+                    <label class="form-check-label allergen-{{ $diet_restriction }}" for="allergen-{{ $diet_restriction }}">
+                        {{ ucfirst($diet_restriction) }}
+                    </label>
+                </div>
+            </div>
+        @endforeach
     </div>
 </div>

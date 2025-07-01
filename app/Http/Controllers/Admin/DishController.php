@@ -14,11 +14,16 @@ class DishController extends Controller
     //global variable which contains all allergens
     protected array $allergens;
 
+    //vegan, vegetarian, halal
+    protected array $diet;
+
     public function __construct()
     {
         //We have a file which the whole codebase uses to acsess allergens. This is the single source of truth for whole app/site, which will refer here.
         $this->allergens = config('allergens');
+        $this->diet = config('dietary-restrictions');
     }
+
     public function index(Request $request)
     {
         $request->validate([
@@ -29,15 +34,15 @@ class DishController extends Controller
         $dishes = Dishes::where('admin_id', Auth::guard('admin')->id());
 
         //If admin used searchbar to search for dish by name or description
-        if($request->filled('search_dish')){
+        if ($request->filled('search_dish')) {
             $search = $request->input('search_dish');
             //query
-            $dishes->where(function ($q) use ($search){
+            $dishes->where(function ($q) use ($search) {
                 $q->where('dish_name', 'like', "%{$search}%")
-                ->orWhere('description', 'like', "%{$search}%");
+                    ->orWhere('description', 'like', "%{$search}%");
             });
         }
-        
+
         //paginate dishes, including the query we made if there is one
         $dishes = $dishes->paginate(10);
 
@@ -45,7 +50,7 @@ class DishController extends Controller
     }
     public function create()
     {
-        return view('admin.dishes.create', ['allergens' => $this->allergens]);
+        return view('admin.dishes.create', ['allergens' => $this->allergens, 'diet' => $this->diet]);
     }
 
     public function store(Request $request)
@@ -56,7 +61,7 @@ class DishController extends Controller
             'description' => 'nullable|string',
             'allergens' => 'array',
             'price' => 'required|numeric|min:0',
-            'halal' => 'boolean',
+            'diet' => 'array',
         ]);
 
         $allergenString = AllergenService::restaurantSerialize($request);
@@ -64,8 +69,17 @@ class DishController extends Controller
         //ensure that we are only adding the dish to the correct restaurant
         $validated['admin_id'] = Auth::guard('admin')->id();
         $validated['allergen_string'] = $allergenString;
-        Dishes::create($validated);
 
+        $dish = Dishes::create($validated); 
+
+        //This->diet contains dietary restrictions, halal, vagan.. etc
+        foreach ($this->diet as $key) {
+            if($validated['diet'][$key] == 'true'){ // Use the key to check the value from the form
+                $dish->{$key} = true; //the key can even be used to access the model, as it is $dish->halal, $dish->vegan
+                $dish->save();
+            }
+        }
+        
         return redirect()->route('admin.dishes.index')->with('success', 'Dish created successfully.');
     }
 

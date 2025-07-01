@@ -38,18 +38,33 @@
 </div>
 
 <div class="mb-3">
-    <label class="form-label">Other dietary needs: </label><br>
-    <div class="border rounded p-2 mb-2">
-        <div class="form-check">
-            @if (isset($dish->halal) == true)
-                <input type="hidden" name="halal" value="0">
-            @endif
-            <input type="checkbox" class="form-check-input" id="halal" name="halal" value="1" {{ old('halal', $dish->halal ?? false) ? 'checked' : '' }}>
+    <label class="form-label">Other dietary restrictions: </label><br>
+    @foreach ($diet as $diet_restriction)
+        <div class="border rounded p-2 mb-2">
+            <div class="form-check">
+                <input
+                    type="hidden"
+                    name="diet[{{ $diet_restriction }}]"
+                    value="false"
+                >
 
-            <label class="form-check-label" for="halal">halal</label>
+                <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="diet-{{ $diet_restriction }}"
+                    name="diet[{{ $diet_restriction }}]"
+                    value="true"
+                    {{ (isset($selectedDiet) && ($selectedDiet[$diet_restriction] ?? false) == true) ? 'checked' : '' }}
+                >
+
+                <label class="form-check-label" for="diet-{{ $diet_restriction }}">
+                    {{ ucfirst($diet_restriction) }}
+                </label>
+            </div>
         </div>
-    </div>
+    @endforeach
 </div>
+
 
 
 <div class="mb-3">
