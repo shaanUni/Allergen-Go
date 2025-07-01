@@ -35,20 +35,30 @@
     </div>
 </div>
 
-<div class="mb-3 allergy-form">
-    <label class="form-label test">Select your allergies:</label><br>
-    <div class="checkbox-grid">
-        @foreach ($diet as $diet_restriction)
-            <div class="border rounded p-2 mb-2 box">
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="allergen-{{ $allergen }}" name="allergens[]"
-                        value="{{ $diet_restriction }}" {{ in_array($allergen, $selectedAllergens ?? []) ? 'checked' : '' }}>
+<div class="mb-3">
+    <label class="form-label">Other dietary restrictions: </label><br>
+    @foreach ($diet as $diet_restriction)
+        <div class="border rounded p-2 mb-2">
+            <div class="form-check">
+                <input
+                    type="hidden"
+                    name="diet[{{ $diet_restriction }}]"
+                    value="false"
+                >
 
-                    <label class="form-check-label allergen-{{ $diet_restriction }}" for="allergen-{{ $diet_restriction }}">
-                        {{ ucfirst($diet_restriction) }}
-                    </label>
-                </div>
+                <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="diet-{{ $diet_restriction }}"
+                    name="diet[{{ $diet_restriction }}]"
+                    value="true"
+                    {{ (isset($selectedDiet) && ($selectedDiet[$diet_restriction] ?? false) == true) ? 'checked' : '' }}
+                >
+
+                <label class="form-check-label" for="diet-{{ $diet_restriction }}">
+                    {{ ucfirst($diet_restriction) }}
+                </label>
             </div>
-        @endforeach
-    </div>
+        </div>
+    @endforeach
 </div>

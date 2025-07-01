@@ -44,12 +44,11 @@ class SearchController extends Controller
 
     public function qrCode($code)
     {
-        return view('user.userqrcode', ['code' => $code, 'allergens' => $this->allergens]);
+        return view('user.userqrcode', ['code' => $code, 'allergens' => $this->allergens, 'diet' => $this->diet]);
     }
 
     public function searchCode(Request $request)
     {
-
         //generate new uuid - Before if a user had many tabs open, the app would break. The UUID should fix that.
         $uuid = (string) Str::uuid();
 

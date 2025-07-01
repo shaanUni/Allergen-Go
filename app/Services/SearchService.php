@@ -18,7 +18,7 @@ class SearchService
         $validated = $request->validate([
             'restaurant_code' => 'required|string|max:20|alpha_dash',
             'allergens' => 'array',
-            'halal' => 'boolean'
+            'diet' => 'array',
         ]);
 
         //Here we find the admin (restaurant) where the restaurant_code matches ours, and we eager load it with all of the dishes
@@ -29,12 +29,21 @@ class SearchService
             return "code";
         }
 
+        $dietaryRestrictionArray = $validated['diet'];
+        $restrictionSelectedBool = false;
+
+        //Check if any dietary restrictions were selected
+        foreach ($dietaryRestrictionArray as $status) {
+            if ($status == "true") {
+                $restrictionSelectedBool = true;
+            }
+        }
+
         //If the user entered the form with no info
-        if (isset($validated['allergens']) == 0 && $validated['halal'] == 0) {
+        if (isset($validated['allergens']) == 0 && $restrictionSelectedBool == false) {
             return "empty";
         }
 
-        $halal = $validated['halal'];
 
         $userAllergies = [];
 
@@ -48,7 +57,7 @@ class SearchService
         $restaurantCode = $validated['restaurant_code'];
 
         //Compare user allergies with restaurant dishes allergens
-        $filteredAllergens = self::filterAllergens($userAllergies, $halal, $restaurant, $whoami);
+        $filteredAllergens = self::filterAllergens($userAllergies, $dietaryRestrictionArray, $restaurant, $whoami);
 
         //If the restaurant code was invalid, redirect
         if (!$filteredAllergens && $whoami == "user") {
@@ -69,10 +78,8 @@ class SearchService
     }
 
     //Main function that compares user allergies with dish allergens
-    public static function filterAllergens($userAllergies, $halal, $restaurant, $whoami)
+    public static function filterAllergens($userAllergies, $dietaryRestrictionArray, $restaurant, $whoami)
     {
-
-
         //Get the dishes that where eager loaded
         $dishes = $restaurant->dishes;
 
@@ -87,6 +94,8 @@ class SearchService
 
         //This is where the fun begins - Anakin Skywalker
         foreach ($dishes as $dish) {
+            self::dietaryRestrictionResolver($dish, $dietaryRestrictionArray);
+
             //Parse dish's allergens
             $dishAllergens = AllergenService::parse($dish->allergen_string)['allergens'];
 
@@ -105,7 +114,7 @@ class SearchService
                 if ($removeable == false) {
                     $filteredDishAllergens[] = $dishAllergens[$i];
                     //If it is removeable and the removeable allergen is in the users allergies
-                } else if ($removeable == true && in_array($dishAllergens[$i], $userAllergies) && self::isHalal($dish->halal, $halal)) {
+                } else if ($removeable == true && in_array($dishAllergens[$i], $userAllergies)) {
                     //If the dish has already been added to the array, skip the rest of the iteration
                     if (in_array($dish->id, $existingIds)) {
                         $i++;
@@ -139,7 +148,7 @@ class SearchService
             $commonAllergens = array_intersect($filteredDishAllergens, $userAllergies);
 
             //If the array is empty, this means the dish does not have any allergens the user is allergic to, also ensure that the food is halal if user needs that
-            if (empty($commonAllergens) && self::isHalal($dish->halal, $halal)) {
+            if (empty($commonAllergens) && self::dietaryRestrictionResolver($dish, $dietaryRestrictionArray)) {
                 $edibleDishes[] = $dish; // edibleDishes += dish
             }
         }
@@ -172,7 +181,7 @@ class SearchService
             if (count($edibleDishes) == 0 && count($dishesWithRemoveables) == 0) {
                 $searchFailureStatus = true;
             }
-            if(!session('user_allergy_string')){
+            if (!session('user_allergy_string')) {
                 session(['user_allergy_string' => $userAllergiesString]);
             }
             //Save this search in table
@@ -180,7 +189,9 @@ class SearchService
                 'admin_id' => $restaurantID,
                 'user_allergy_string' => $userAllergiesString,
                 'failure' => $searchFailureStatus,
-                'halal' => $halal,
+                'halal' => $dietaryRestrictionArray['halal'] ? true : false,
+                'vegan' => $dietaryRestrictionArray['vegan'] ? true : false,
+                'vegetarian' => $dietaryRestrictionArray['vegetarian'] ? true : false,
             ]);
         }
 
@@ -191,14 +202,15 @@ class SearchService
         ];
     }
 
-    //behaviour for dealing with halal dishes
-    public static function isHalal($dishHalal, $userHalal)
+    public static function dietaryRestrictionResolver($dish, $userRestrictions)
     {
-        if ($userHalal == true && $dishHalal == true) {
-            return true;
-        } else if ($userHalal == false) {
-            return true;
+        $diet = config('dietary-restrictions');
+        foreach ($diet as $key) {
+            if ($dish->{$key} == false && $userRestrictions[$key] == "true") {
+                return false;
+            }
         }
-        return false;
+        return true;
     }
+
 }
