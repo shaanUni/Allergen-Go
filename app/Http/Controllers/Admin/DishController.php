@@ -94,7 +94,14 @@ class DishController extends Controller
         $combined = $result['combined'];
         $allergens = $result['allergens'];
 
-        return view('admin.dishes.edit', ['allergens' => $this->allergens, 'dish' => $dish, 'combined' => $combined, 'selectedAllergens' => $allergens]);
+        $dietaryRestrictionSelectedArray = [];
+
+        //If they are true in the DB, append it to the array, so the front end knows to keep it checked
+        $dish->vegetarian ? $dietaryRestrictionSelectedArray[] = true: $dietaryRestrictionSelectedArray[] = false;
+        $dish->vegan ? $dietaryRestrictionSelectedArray[] = true: $dietaryRestrictionSelectedArray[] = false; 
+        $dish->halal ? $dietaryRestrictionSelectedArray[] = true: $dietaryRestrictionSelectedArray[] = false; 
+
+        return view('admin.dishes.edit', ['allergens' => $this->allergens, 'dish' => $dish, 'combined' => $combined, 'selectedAllergens' => $allergens, 'diet' => $this->diet,'dietSelected'=> $dietaryRestrictionSelectedArray ]);
     }
 
     public function update(Request $request, $id)

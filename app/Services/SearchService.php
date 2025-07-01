@@ -184,15 +184,17 @@ class SearchService
             if (!session('user_allergy_string')) {
                 session(['user_allergy_string' => $userAllergiesString]);
             }
+
             //Save this search in table
             Searches::create([
                 'admin_id' => $restaurantID,
                 'user_allergy_string' => $userAllergiesString,
                 'failure' => $searchFailureStatus,
-                'halal' => $dietaryRestrictionArray['halal'] ? true : false,
-                'vegan' => $dietaryRestrictionArray['vegan'] ? true : false,
-                'vegetarian' => $dietaryRestrictionArray['vegetarian'] ? true : false,
+                'halal' => $dietaryRestrictionArray['halal'] != 'false' ? true : false,
+                'vegan' => $dietaryRestrictionArray['vegan'] != 'false' ? true : false,
+                'vegetarian' => $dietaryRestrictionArray['vegetarian'] != 'false' ? true : false,
             ]);
+
         }
 
         return [

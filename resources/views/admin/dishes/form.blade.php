@@ -39,6 +39,9 @@
 
 <div class="mb-3">
     <label class="form-label">Other dietary restrictions: </label><br>
+    @php
+     $i = 0;
+    @endphp
     @foreach ($diet as $diet_restriction)
         <div class="border rounded p-2 mb-2">
             <div class="form-check">
@@ -54,7 +57,7 @@
                     id="diet-{{ $diet_restriction }}"
                     name="diet[{{ $diet_restriction }}]"
                     value="true"
-                    {{ (isset($selectedDiet) && ($selectedDiet[$diet_restriction] ?? false) == true) ? 'checked' : '' }}
+                    {{ $dietSelected[$i] ? 'checked' : '' }}
                 >
 
                 <label class="form-check-label" for="diet-{{ $diet_restriction }}">
@@ -62,13 +65,16 @@
                 </label>
             </div>
         </div>
+        @php
+     $i ++;
+    @endphp
     @endforeach
 </div>
 
 
 
 <div class="mb-3">
-    <label for="price" class="form-label">Price</label>
+    <label for="price" class="form-label">£ Price</label>
     <input type="number" name="price" id="price" step="0.01" class="form-control"
         value="{{ old('price', $dish->price ?? '') }}" required>
 </div>

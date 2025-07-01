@@ -166,4 +166,27 @@ $bg-light: #f9f9f9;
       }
     }
   }
-  
+
+
+/* Make every stats‐card vertically scroll its lists/tables */
+.stats-card {
+  display: flex;
+  flex-direction: column;
+
+  /* all the things that can overflow vertically: */
+  .stat-list,
+  .allergen-list,
+  .dish-counts-table {
+    flex: 1;
+    max-height: 250px;
+    overflow-y: auto;
+    overflow-x: auto;
+    padding-right: 0.5rem; /* keep scrollbar inset */
+  }
+
+  /* ensure tables scroll */
+  .dish-counts-table {
+    display: block;
+    width: 100%;
+  }
+}
