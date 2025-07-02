@@ -57,7 +57,7 @@
                     id="diet-{{ $diet_restriction }}"
                     name="diet[{{ $diet_restriction }}]"
                     value="true"
-                    {{ $dietSelected[$i] ? 'checked' : '' }}
+                    {{ isset($dietSelected[$i]) ? 'checked' : '' }}
                 >
 
                 <label class="form-check-label" for="diet-{{ $diet_restriction }}">
