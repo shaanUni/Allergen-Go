@@ -113,8 +113,8 @@ class SearchService
                 //If the allergen is not removeable, then it should remain in the filtered array which will be compared with the users allergens
                 if ($removeable == false) {
                     $filteredDishAllergens[] = $dishAllergens[$i];
-                    //If it is removeable and the removeable allergen is in the users allergies
-                } else if ($removeable == true && in_array($dishAllergens[$i], $userAllergies)) {
+                    //If it is removeable and the removeable allergen is in the users allergies, also compare dietary restirctions
+                } else if ($removeable == true && in_array($dishAllergens[$i], $userAllergies) && self::dietaryRestrictionResolver($dish, $dietaryRestrictionArray)) {
                     //If the dish has already been added to the array, skip the rest of the iteration
                     if (in_array($dish->id, $existingIds)) {
                         $i++;
