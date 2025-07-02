@@ -70,16 +70,16 @@ class DishController extends Controller
         $validated['admin_id'] = Auth::guard('admin')->id();
         $validated['allergen_string'] = $allergenString;
 
-        $dish = Dishes::create($validated); 
+        $dish = Dishes::create($validated);
 
         //This->diet contains dietary restrictions, halal, vagan.. etc
         foreach ($this->diet as $key) {
-            if($validated['diet'][$key] == 'true'){ // Use the key to check the value from the form
+            if ($validated['diet'][$key] == 'true') { // Use the key to check the value from the form
                 $dish->{$key} = true; //the key can even be used to access the model, as it is $dish->halal, $dish->vegan
                 $dish->save();
             }
         }
-        
+
         return redirect()->route('admin.dishes.index')->with('success', 'Dish created successfully.');
     }
 
@@ -97,11 +97,11 @@ class DishController extends Controller
         $dietaryRestrictionSelectedArray = [];
 
         //If they are true in the DB, append it to the array, so the front end knows to keep it checked
-        $dish->vegetarian ? $dietaryRestrictionSelectedArray[] = true: $dietaryRestrictionSelectedArray[] = false;
-        $dish->vegan ? $dietaryRestrictionSelectedArray[] = true: $dietaryRestrictionSelectedArray[] = false; 
-        $dish->halal ? $dietaryRestrictionSelectedArray[] = true: $dietaryRestrictionSelectedArray[] = false; 
+        $dish->vegetarian ? $dietaryRestrictionSelectedArray[] = true : $dietaryRestrictionSelectedArray[] = false;
+        $dish->vegan ? $dietaryRestrictionSelectedArray[] = true : $dietaryRestrictionSelectedArray[] = false;
+        $dish->halal ? $dietaryRestrictionSelectedArray[] = true : $dietaryRestrictionSelectedArray[] = false;
 
-        return view('admin.dishes.edit', ['allergens' => $this->allergens, 'dish' => $dish, 'combined' => $combined, 'selectedAllergens' => $allergens, 'diet' => $this->diet,'dietSelected'=> $dietaryRestrictionSelectedArray ]);
+        return view('admin.dishes.edit', ['allergens' => $this->allergens, 'dish' => $dish, 'combined' => $combined, 'selectedAllergens' => $allergens, 'diet' => $this->diet, 'dietSelected' => $dietaryRestrictionSelectedArray]);
     }
 
     public function update(Request $request, $id)
@@ -117,7 +117,7 @@ class DishController extends Controller
             'description' => 'nullable|string',
             'allergens' => 'array',
             'price' => 'required|numeric|min:0',
-            'halal' => 'boolean',
+            'diet' => 'array',
         ]);
 
         $allergenString = AllergenService::restaurantSerialize($request);
@@ -128,6 +128,17 @@ class DishController extends Controller
 
         //ensure that we are only adding the dish to the correct restaurant
         $validated['admin_id'] = Auth::guard('admin')->id();
+
+        //This->diet contains dietary restrictions, halal, vagan.. etc
+        foreach ($this->diet as $key) {
+            if ($validated['diet'][$key] == 'true') { // Use the key to check the value from the form
+                $dish->{$key} = true; //the key can even be used to access the model, as it is $dish->halal, $dish->vegan
+                $dish->save();
+            } else if ($validated['diet'][$key] == 'false') {
+                $dish->{$key} = false; 
+                $dish->save();
+            }
+        }
 
         $dish->update($validated);
 

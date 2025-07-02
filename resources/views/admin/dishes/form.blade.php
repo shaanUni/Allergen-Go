@@ -50,14 +50,21 @@
                     name="diet[{{ $diet_restriction }}]"
                     value="false"
                 >
-
+                @php
+                    $dietSetBool = false;
+                    if(isset($dietSelected[$i])){
+                        if($dietSelected[$i]){
+                            $dietSetBool = true;
+                        }
+                    }
+                @endphp
                 <input
                     type="checkbox"
                     class="form-check-input"
                     id="diet-{{ $diet_restriction }}"
                     name="diet[{{ $diet_restriction }}]"
                     value="true"
-                    {{ isset($dietSelected[$i]) ? 'checked' : '' }}
+                    {{ $dietSetBool ? 'checked' : '' }}
                 >
 
                 <label class="form-check-label" for="diet-{{ $diet_restriction }}">
