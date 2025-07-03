@@ -26,6 +26,7 @@
 
 <!-- Theme color for address bar (optional) -->
 <meta name="theme-color" content="#ffffff">
+@vite('resources/js/app.js')
 
     <title>AllergenGo — Allergy-Safe Dining Made Simple</title>
 </head>
@@ -74,7 +75,6 @@
     <footer>
         AllergenGo — Allergy-Safe Dining Made Simple
     </footer>
-    @vite('resources/js/app.js')
 
 </body>
 
