@@ -22,13 +22,12 @@
                     @foreach ($failedSearches as $failed)
                         @php
                             $failedAllergens = \App\Services\AllergenService::parse($failed->user_allergy_string)['allergens'];
+                            $halal = $failed->halal == true ? 'halal,' : '';
+                            $vegan = $failed->vegan == true ? 'vegan,' : '';
+                            $vegetarian = $failed->vegetarian == true ? 'vegetarian,' : '';
                         @endphp
-                        @if ($failed->halal == 1)
-                            <p class="stat-item">User wanted a halal dish, and the allergens where -
-                                {{ implode(', ', $failedAllergens) }}</p>
-                        @else
-                            <p class="stat-item">{{ implode(', ', $failedAllergens) }}</p>
-                        @endif
+                                               
+                            <p class="stat-item">  <strong>{{ $halal }} {{ $vegan }} {{ $vegetarian }}</strong> {{ implode(', ', $failedAllergens) }}</p>
                     @endforeach
                 </div>
             </div>

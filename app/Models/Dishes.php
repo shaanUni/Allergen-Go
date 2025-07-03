@@ -8,7 +8,7 @@ class Dishes extends Model
 {
     //
     protected $fillable = [
-        'admin_id', 'dish_name', 'description', 'allergen_string', 'price', 'halal'
+        'admin_id', 'dish_name', 'description', 'allergen_string', 'price', 'halal', 'vegan', 'vegetarian'
     ];
 
     //each dish belongs to an admin (restaurant)

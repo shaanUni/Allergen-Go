@@ -64,6 +64,8 @@ class StatsPageController extends Controller
 
         //List of allergens for the form
         $allergens = config('allergens');
+        $dietaryRestrictions = config('dietary-restrictions');
+
 
         //Restaurant will enter an allergy, to sort all selected dishes where people have had this allergy
         $allergenSearch = $request->input('search_allergen');
@@ -106,6 +108,8 @@ class StatsPageController extends Controller
             //Get dishes from ids
             $filteredDishes = Dishes::findMany($ids);
         }
+
+        
         return view(
             'admin.stats',
             [
@@ -120,7 +124,8 @@ class StatsPageController extends Controller
                 'filteredDishes' => $filteredDishes,
                 'filteredDishesCount' => $filteredDishesCount,
                 'groupedCounts' => $groupedCounts,
-            ],
+                'diet' => $dietaryRestrictions,
+            ], 
         );
     }
 

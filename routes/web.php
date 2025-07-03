@@ -16,12 +16,12 @@ use PhpParser\Node\Expr\FuncCall;
 use App\Http\Middleware\AdminSubscribedCheck;
 
 Route::get('/', function () {
-    return view('test');
-})->name('home');
-
-Route::get('/restaurant', function () {
     return view('restaurant');
 })->name('restaurant');
+
+Route::get('/users', function () {
+    return view('welcome');
+})->name('users');
 
 Route::get('/login', function () {
     return redirect()->route('admin.login');

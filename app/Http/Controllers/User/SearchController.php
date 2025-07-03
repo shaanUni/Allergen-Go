@@ -21,10 +21,16 @@ class SearchController extends Controller
     //global variable which contains all allergens
     protected array $allergens;
 
+    //vegan, vegetarian, halal
+    protected array $diet;
+
+
     public function __construct()
     {
         //We have a file which the whole codebase uses to acsess allergens. This is the single source of truth for whole app/site, which will refer here.
         $this->allergens = config('allergens');
+        $this->diet = config('dietary-restrictions');
+
     }
 
     //
@@ -32,18 +38,17 @@ class SearchController extends Controller
     {
         return view(
             'user.search',
-            ['allergens' => $this->allergens]
+            ['allergens' => $this->allergens, 'diet' => $this->diet]
         );
     }
 
     public function qrCode($code)
     {
-        return view('user.userqrcode', ['code' => $code, 'allergens' => $this->allergens]);
+        return view('user.userqrcode', ['code' => $code, 'allergens' => $this->allergens, 'diet' => $this->diet]);
     }
 
     public function searchCode(Request $request)
     {
-
         //generate new uuid - Before if a user had many tabs open, the app would break. The UUID should fix that.
         $uuid = (string) Str::uuid();
 
