@@ -50,9 +50,9 @@
                         </li>
                         <li class="nav-item">
                         @if (request()->path() == '/')
-                            <a class="btn" href="{{ route('restaurant') }}">For Restaurants</a>
+                        <a class="btn" href="{{ route('users') }}">For Users</a>
                         @else                        
-                            <a class="btn" href="{{ route('home') }}">For Users</a>
+                        <a class="btn" href="{{ route('restaurant') }}">For Restaurants</a>
                         @endif    
                         </li>
                         <li class="nav-item">
