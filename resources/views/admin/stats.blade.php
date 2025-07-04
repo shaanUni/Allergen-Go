@@ -53,7 +53,6 @@
                 <p class="stat-info">
                     Number of times each dish was selected:
                 </p>
-                <ul class="allergen-list">
                     <table class="dish-counts-table">
                         <thead>
                             <tr>
@@ -79,7 +78,6 @@
                     </table>
 
 
-                </ul>
             </div>
 
             <div class="stats-card">

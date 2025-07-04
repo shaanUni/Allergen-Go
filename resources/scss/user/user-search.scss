@@ -1,3 +1,4 @@
+// Variables (same colours/fonts)
 $font-primary: 'Inter', sans-serif;
 $green-nav: #40945c;
 $green-dark: #2f7347;
@@ -5,42 +6,59 @@ $gray-bg: #f8f9fa;
 $border-color: #ddd;
 $danger-bg: #ffe5e5;
 $danger-text: #b22222;
+$radius: 0.75rem;
+$transition: 0.2s ease;
 
+// Base
 body {
   font-family: $font-primary;
   background-color: $gray-bg;
   color: #333;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
 }
 
 .search-page {
-  padding: 2rem 1.5rem;
-  max-width: 500px;
-  margin: 0 auto;
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 0 1rem;
 }
 
-.alert-box {
-  background-color: $danger-bg;
-  color: $danger-text;
+// Card wrapper
+.card {
+  background: #fff;
+  border-radius: $radius;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+// Alert
+.alert {
   padding: 1rem;
-  border-left: 5px solid $danger-text;
-  border-radius: 6px;
+  background: $danger-bg;
+  color: $danger-text;
+  border-left: 4px solid $danger-text;
+  border-radius: $radius;
   margin-bottom: 1.5rem;
-  font-size: 0.95rem;
+
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+  }
 }
 
+// Search Section
 .search-title {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 1.25rem;
-  text-align: center;
   color: $green-dark;
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
 .allergy-form {
-  background: #fff;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -49,63 +67,113 @@ body {
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
+
+  label {
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
 }
 
 .form-control {
-  padding: 0.65rem 1rem;
-  font-size: 1rem;
+  padding: 0.75rem 1rem;
   border: 1px solid $border-color;
   border-radius: 6px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color $transition, box-shadow $transition;
 
   &:focus {
     outline: none;
     border-color: $green-nav;
-    box-shadow: 0 0 0 2px rgba(64, 148, 92, 0.2);
+    box-shadow: 0 0 0 3px rgba(64, 148, 92, 0.2);
   }
 }
 
 .checkbox-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
-  gap: 0.5rem;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
 }
-
-@media (max-width: 455px) {
-  .checkbox-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
-    gap: 0.5rem;
-  }
-}
-
 
 .form-check {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  background: #fff;
+  padding: 0.5rem;
+  background: #fafafa;
   border: 1px solid $border-color;
   border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background $transition;
+  margin-bottom: 1rem;
+
 
   &:hover {
     background: #f1f1f1;
   }
+
+  .form-check-input {
+    width: 1.25rem;
+    height: 1.25rem;
+    accent-color: $green-nav;
+  }
+
+  .form-check-label {
+    margin: 0;
+    font-size: 0.95rem;
+  }
 }
 
-.form-check-input {
-  width: 1.2rem;
-  height: 1.2rem;
-  accent-color: $green-nav;
+.btn-submit {
+  align-self: center;
+  padding: 0.75rem 2rem;
+  background: $green-nav;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background $transition, transform 0.1s ease;
+
+  &:hover {
+    background: darken($green-nav, 5%);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    background: darken($green-nav, 10%);
+    transform: translateY(0);
+  }
 }
 
-.form-check-label {
-  font-size: 0.95rem;
-  font-weight: 500;
+.manual-entry {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+
+  a {
+    color: $green-nav;
+    text-decoration: underline;
+    transition: color $transition;
+
+    &:hover {
+      color: $green-dark;
+    }
+  }
+}
+
+// Info Box
+.info-box {
+  h2 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    color: $green-dark;
+  }
+
+  p {
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+  }
 }
 
 .submit-form-btn {
@@ -129,26 +197,3 @@ body {
     transform: translateY(0);
   }
 }
-
-.info-box {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  background-color: #ffffff;
-  border-left: 5px solid $green-nav;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
-
-  h2 {
-    font-size: 1.25rem;
-    margin-bottom: 0.75rem;
-    color: $green-dark;
-  }
-
-  p {
-    font-size: 0.95rem;
-    line-height: 1.6;
-    margin-bottom: 0.75rem;
-  }
-}
-
-

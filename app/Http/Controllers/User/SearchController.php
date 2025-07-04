@@ -52,6 +52,13 @@ class SearchController extends Controller
         //generate new uuid - Before if a user had many tabs open, the app would break. The UUID should fix that.
         $uuid = (string) Str::uuid();
 
+        //Get the value of the opt in value
+        $opt_in = $request->validate(['opt-in' => 'boolean']);
+        $opt_in_value = $opt_in['opt-in'];
+        
+        //so we know if has been selected, also used in search service
+        session(['opt-in' => $opt_in_value]);
+
         // Grab exsisting UUIDs or create an array
         $uuids = session('uuids', []);
 
@@ -69,7 +76,7 @@ class SearchController extends Controller
 
         //The search service will return false if the user added no data to the form or restaurant code, so redirect
         if ($filteredAllergens == "empty") {
-            return redirect()->route('user.qr', ['code' => $request['restaurant_code']])->with('failure', 'You must select either halal, or one allergen.');
+            return redirect()->route('user.qr', ['code' => $request['restaurant_code']])->with('failure', 'You must select either a dietary restriction (e.g. halal, vegan), or one allergen.');
         } else if ($filteredAllergens == "code") { // if the user entered an invalid code
             return redirect()->route('user.search')->with('failure', 'You must select a valid code.');
         }

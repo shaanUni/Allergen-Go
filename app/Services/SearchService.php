@@ -153,8 +153,17 @@ class SearchService
             }
         }
 
-        //We only want to do all of the logging stuff if it is a user doing the search, not the client themselves
-        if ($whoami == "user") {
+        //Did user opt in? 1=yes, 0=no
+        $optInStatus = session('opt-in');
+        
+        //Convert User allergies array into a string
+        $userAllergiesString = AllergenService::userSerialize($userAllergies);
+        if (!session('user_allergy_string')) {
+            session(['user_allergy_string' => $userAllergiesString]);
+        }
+
+        //We only want to do all of the logging stuff if it is a user doing the search, not the client themselves (they can do from stats page to emulate user flow), and if the user has opted in
+        if ($whoami == "user" && $optInStatus == "1") {
             //Restaurant ID for Searches table
             $restaurantID = $restaurant->id;
 
@@ -171,9 +180,6 @@ class SearchService
                 $allergenCount->save();
             }
 
-            //Convert User allergies array into a string
-            $userAllergiesString = AllergenService::userSerialize($userAllergies);
-
             //Boolean that will go into the DB, to give the status on the search: true => dishes were returned, false => no dishes were returned, the user could not eat any food.
             $searchFailureStatus = false;
 
@@ -181,10 +187,8 @@ class SearchService
             if (count($edibleDishes) == 0 && count($dishesWithRemoveables) == 0) {
                 $searchFailureStatus = true;
             }
-            if (!session('user_allergy_string')) {
-                session(['user_allergy_string' => $userAllergiesString]);
-            }
 
+            //If user did not opt in, do not save their data
             //Save this search in table
             Searches::create([
                 'admin_id' => $restaurantID,

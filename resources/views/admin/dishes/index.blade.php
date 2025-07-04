@@ -37,14 +37,15 @@
                     <td>{{ $dish->description }}</td>
                     <td>{{ $dish->allergen_string }}</td>
                     <td>£{{ number_format($dish->price, 2) }}</td>
-                    <td>
-                        <a href="{{ route('admin.dishes.edit', $dish->id) }}" class="btn-small btn-warning">Edit</a>
-                        <form action="{{ route('admin.dishes.destroy', $dish->id) }}" method="POST" class="inline-form">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn-small btn-danger" onclick="return confirm('Delete this dish?')">Delete</button>
-                        </form>
-                    </td>
+                    <td style="white-space: nowrap;">
+    <a href="{{ route('admin.dishes.edit', $dish->id) }}" class="btn-small btn-warning">Edit</a>
+    <form action="{{ route('admin.dishes.destroy', $dish->id) }}" method="POST" class="inline-form" style="display:inline;">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn-small btn-danger" onclick="return confirm('Delete this dish?')">Delete</button>
+    </form>
+</td>
+
                 </tr>
                 @empty
                 <tr>
