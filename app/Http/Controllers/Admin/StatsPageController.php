@@ -25,25 +25,21 @@ class StatsPageController extends Controller
             'search_allergen' => ['nullable', 'string', 'max:255']
         ]);
 
-        //This variable will be used alot, it is a query getting all the searches and dishes for a restaurant
-        $searchQuery = Searches::with('admin.dishes') // eager loading dishes
-        ->where('admin_id', Auth::guard('admin')->id()); // security, ensure the restaurant can only see its own data
-
         //Get the data from the searches table
-        $searches = $searchQuery->get(); 
+        $searches = self::baseSearchQuery()->get();
 
         //This can give the restaurant an insight into how many people will allergens go to the restaurant. It is just a total of all the searches.
         $totalSearches = count($searches);
 
         //Find all of the failed searches. (failed meaning the user could not have anything to eat)
-        $failedSearches = $searchQuery
+        $failedSearches = self::baseSearchQuery()
             ->where('failure', true)
             ->orderBy('created_at', 'desc') //order by most recent
             ->take(5) // restrict at 5
             ->get();
 
         //Find the total of all the failed searches
-        $failedSearchesCount = $searchQuery
+        $failedSearchesCount = self::baseSearchQuery()
             ->where('failure', true)
             ->orderBy('created_at', 'desc') //order by most recent
             ->count();
@@ -56,11 +52,12 @@ class StatsPageController extends Controller
         $restaurant = Admin::find(Auth::guard('admin')->id());
         $restaurantCode = $restaurant->restaurant_code;
 
-        $halalUsers = $searchQuery
-            ->where('halal', true)
+        $halalUsers = self::baseSearchQuery()
+            ->where('halal', 1)
             ->get();
 
         $totalHalalUsers = count($halalUsers);
+
 
         //List of allergens for the form
         $allergens = config('allergens');
@@ -109,7 +106,7 @@ class StatsPageController extends Controller
             $filteredDishes = Dishes::findMany($ids);
         }
 
-        
+
         return view(
             'admin.stats',
             [
@@ -125,8 +122,15 @@ class StatsPageController extends Controller
                 'filteredDishesCount' => $filteredDishesCount,
                 'groupedCounts' => $groupedCounts,
                 'diet' => $dietaryRestrictions,
-            ], 
+            ],
         );
+    }
+
+    //Get all the searches from the same admin (multi tenancy), and eager load with dishes
+    function baseSearchQuery()
+    {
+        return Searches::with('admin.dishes')
+            ->where('admin_id', Auth::guard('admin')->id());
     }
 
     public function search(Request $request)

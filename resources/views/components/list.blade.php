@@ -12,11 +12,13 @@
                 <button type="submit" class="top-buttons right-btn">Re-select dishes</button>
             </form>
         @endif
-
     </div>
 
     <div class="list-info">
-        <h2>{{ Route::currentRouteName() == 'user.selected' ? 'List of Selected Dishes' : ' List of Edible Dishes' }}
+        <h2>
+            {{ Route::currentRouteName() == 'user.selected'
+                ? 'List of Selected Dishes'
+                : 'List of Edible Dishes' }}
         </h2>
         <h3>Restaurant: <span>{{ $restaurant->name }}</span></h3>
     </div>
@@ -30,12 +32,20 @@
             <div class="list-text">
                 <h4 class="dish-name">{{ $dish->dish_name }}</h4>
                 <p class="dish-description">{{ Str::limit($dish->description, 25, '...') }}</p>
+                <div class="stat-list">
+                    @php
+                        $halal = $dish->halal     ? 'halal,'     : '';
+                        $vegan = $dish->vegan     ? 'vegan,'     : '';
+                        $vegetarian = $dish->vegetarian ? 'vegetarian,' : '';
+                    @endphp
+                    <p class="stat-item">
+                        <strong>{{ $halal }} {{ $vegan }} {{ $vegetarian }}</strong>
+                    </p>
+                </div>
 
                 <p class="dish-allergens">
                     @foreach (array_slice($allergens, 0, 4) as $allergen)
-                        {{ $allergen }}@if (!$loop->last)
-                        , @else...
-                        @endif
+                        {{ $allergen }}@if (! $loop->last), @else...@endif
                     @endforeach
                 </p>
 
@@ -43,28 +53,22 @@
                     <form method="POST" action="{{ route('user.individual', ['id' => $dish->id, 'state' => 1]) }}">
                         @csrf
                         <input type="hidden" name="uuid" value="{{ $uuid }}">
-
                         <button type="submit" class="action-button">View Dish</button>
                     </form>
-                    @php
 
-                        $selectedBool = false;
-                        if (session('selectedDishes' . $uuid)) {
-                            $dishArray = session('selectedDishes' . $uuid);
-                            if (in_array($dish->id, $dishArray)) {
-                                $selectedBool = true;
-                            }
-                        }
+                    @php
+                        $selectedBool = session('selectedDishes'.$uuid, []);
                     @endphp
                     @if (Route::currentRouteName() != 'user.selected')
                         <form method="POST" action="{{ route('user.adddish', ['id' => $dish->id, 'state' => 1]) }}">
-                            <input type="hidden" name="uuid" value="{{ $uuid }}">
                             @csrf
+                            <input type="hidden" name="uuid" value="{{ $uuid }}">
                             <button type="submit"
-                                class="action-button add-button {{ $selectedBool ? 'remove-button' : '' }}">{{ $selectedBool ? 'Remove Dish' : 'Add dish' }}</button>
+                                class="action-button add-button {{ in_array($dish->id, $selectedBool) ? 'remove-button' : '' }}">
+                                {{ in_array($dish->id, $selectedBool) ? 'Remove Dish' : 'Add dish' }}
+                            </button>
                         </form>
                     @endif
-
                 </div>
             </div>
         </div>
@@ -90,7 +94,16 @@
             <div class="list-text">
                 <h4 class="dish-name">{{ $dish->dish_name }}</h4>
                 <p class="dish-description">{{ $dish->description }}</p>
-
+                <div class="stat-list">
+                    @php
+                        $halal = $dish->halal     ? 'halal,'     : '';
+                        $vegan = $dish->vegan     ? 'vegan,'     : '';
+                        $vegetarian = $dish->vegetarian ? 'vegetarian,' : '';
+                    @endphp
+                    <p class="stat-item">
+                        <strong>{{ $halal }} {{ $vegan }} {{ $vegetarian }}</strong>
+                    </p>
+                </div>
                 <ul class="dish-allergens">
                     @foreach ($allergens as $allergen)
                         <li class="removeable-allergen">
@@ -102,47 +115,41 @@
                     @endforeach
                 </ul>
 
-                <p class="removeable-warning">⚠️ This dish contains allergens you marked but they are removable.</p>
-                <div class="list-forms">
+                <p class="removeable-warning">
+                    ⚠️ This dish contains allergens you marked but they are removable.
+                </p>
 
+                <div class="list-forms">
                     <form method="POST" action="{{ route('user.individual', ['id' => $dish->id, 'state' => 0]) }}">
                         @csrf
                         <input type="hidden" name="uuid" value="{{ $uuid }}">
-
                         <button type="submit" class="action-button alert">View</button>
                     </form>
+
                     @php
-                        $selectedBool = false;
-                        if (session('selectedRemoveableDishes' . $uuid)) {
-                            $removeableDishArray = session('selectedRemoveableDishes' . $uuid);
-                            if (in_array($dish->id, $removeableDishArray)) {
-                                $selectedBool = true;
-                            }
-                        }
+                        $selectedBool = session('selectedRemoveableDishes'.$uuid, []);
                     @endphp
                     @if (Route::currentRouteName() != 'user.selected')
                         <form method="POST" action="{{ route('user.adddish', ['id' => $dish->id, 'state' => 0]) }}">
                             @csrf
                             <input type="hidden" name="uuid" value="{{ $uuid }}">
                             <button type="submit"
-                                class="action-button add-button {{ $selectedBool ? 'remove-button' : '' }}">{{ $selectedBool ? 'Remove Dish' : 'Add dish' }}</button>
+                                class="action-button add-button {{ in_array($dish->id, $selectedBool) ? 'remove-button' : '' }}">
+                                {{ in_array($dish->id, $selectedBool) ? 'Remove Dish' : 'Add dish' }}
+                            </button>
                         </form>
                     @endif
-
                 </div>
             </div>
+        </div> {{-- ← added this closing tag --}}
     @endforeach
 
-
-
-    </div>
     @if (Route::currentRouteName() != 'user.selected')
         <div class="list-text finished-btn">
-
             <form method="POST" action="{{ route('user.selected') }}">
                 @csrf
                 <input type="hidden" name="uuid" value="{{ $uuid }}">
-                <button type="submit" class="action-button ">Finished</button>
+                <button type="submit" class="action-button">Finished</button>
             </form>
         </div>
     @endif

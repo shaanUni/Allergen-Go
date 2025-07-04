@@ -36,17 +36,17 @@ class SelectedDishesController extends Controller
 
         //If normal dishes
         if ($state == "1") {
-            $selected = self::selectedDishHandler('selectedDishes'. $uuid, $id);
+            $selected = self::selectedDishHandler('selectedDishes' . $uuid, $id);
         } else { // if dishes with removeable allergens
-            $selectedRemoveable = self::selectedDishHandler('selectedRemoveableDishes'. $uuid, $id);
+            $selectedRemoveable = self::selectedDishHandler('selectedRemoveableDishes' . $uuid, $id);
         }
 
         //reload the list page with the details in memory
-        $edibleDishes = session('dishes'.$uuid); //the session key is dishes + the uuid 
-        $dishesWithRemoveables = session('removeables'.$uuid);
+        $edibleDishes = session('dishes' . $uuid); //the session key is dishes + the uuid 
+        $dishesWithRemoveables = session('removeables' . $uuid);
         $restaurant = session('restaurant');
-        
-        
+
+
         return view(
             'user.list',
             [
@@ -64,9 +64,9 @@ class SelectedDishesController extends Controller
         $uuid = $request->input('uuid');
 
         //convert the array if ids into a collection of dishes
-        $selectedDishes = Dishes::findMany(session('selectedDishes'. $uuid));
-        $removeable = Dishes::findMany(session('selectedRemoveableDishes'. $uuid));
-        
+        $selectedDishes = Dishes::findMany(session('selectedDishes' . $uuid));
+        $removeable = Dishes::findMany(session('selectedRemoveableDishes' . $uuid));
+
         //Merge into one collection and reidnex
         $allDishes = $selectedDishes->merge($removeable)->values();
 
@@ -74,13 +74,19 @@ class SelectedDishesController extends Controller
         $restaurant = session('restaurant');
         $userAllergiesString = session('user_allergy_string');
         
-        //Add info about the dishes that have been selected, for admins stats page
-        foreach($allDishes as $dish){
-            SelectedDishes::Create([
-                'admin_id' => $restaurant->id,
-                'dishes_id' => $dish->id,
-                'user_allergy_string' => $userAllergiesString,
-            ]);
+        //Did user opt in? 1=yes, 0=no
+        $optInStatus = session('opt-in');
+
+        //Falls under GDPR as linked to users allergies
+        if ($optInStatus == "1") {
+            //Add info about the dishes that have been selected, for admins stats page
+            foreach ($allDishes as $dish) {
+                SelectedDishes::Create([
+                    'admin_id' => $restaurant->id,
+                    'dishes_id' => $dish->id,
+                    'user_allergy_string' => $userAllergiesString,
+                ]);
+            }
         }
 
         return view(
@@ -121,12 +127,13 @@ class SelectedDishesController extends Controller
     }
 
     //For when the user wants to re-select dishes
-    public function reset(Request $request){
-        
+    public function reset(Request $request)
+    {
+
         $uuid = $request->input('uuid');
 
-        $edibleDishes = session('dishes'.$uuid);
-        $dishesWithRemoveables = session('removeables'.$uuid);
+        $edibleDishes = session('dishes' . $uuid);
+        $dishesWithRemoveables = session('removeables' . $uuid);
         $restaurant = session('restaurant');
 
         return view(

@@ -25,7 +25,8 @@ body {
 }
 
 .local{
-    background-color: red !important;
+    //background-color: red !important;
+    background-color: $green-nav;
 }
 
 .green{
@@ -49,3 +50,143 @@ nav {
     max-width: 500px;
     margin: 30px auto;
 }
+
+$radius: 1.5rem;
+
+// ============ Consent Modal Styles ============
+// Consent Modal Styles
+#consentModal {
+    .modal-dialog {
+      max-width: 400px;
+    }
+  
+    .modal-content {
+      background: #fff;
+      border: 1px solid #40945c;       // same as $green-nav
+      border-top: 4px solid #40945c;   // top accent
+      border-radius: 1.5rem;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+  
+    .modal-header {
+        
+      background-color: #40945c;
+      color: #fff;
+      border-bottom: none;
+      padding: 1rem 1.5rem;
+  
+      .modal-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin: 0;
+      }
+    }
+  
+    .modal-body {
+      padding: 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #333;
+    }
+  
+    .modal-footer {
+      border-top: none;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+  
+    // Accept (Primary) Button
+    .btn-primary {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      background-color: #40945c;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+  
+      &:hover {
+        background-color: darken(#40945c, 5%);
+        transform: translateY(-1px);
+      }
+      &:active {
+        background-color: darken(#40945c, 10%);
+        transform: translateY(0);
+      }
+    }
+  
+    // Decline (Secondary) Button
+    .btn-secondary {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      background-color: #ffe5e5;
+      color: #b22222;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+  
+      &:hover {
+        background-color: darken(#ffe5e5, 5%);
+        transform: translateY(-1px);
+      }
+      &:active {
+        background-color: darken(#ffe5e5, 10%);
+        transform: translateY(0);
+      }
+    }
+  }
+  
+  // ============================================
+// Consent-only modal & backdrop focus styles
+// ============================================
+
+// ============================================
+// Consent Modal: fixed, centered, front-of-page
+// ============================================
+
+#consentModal {
+    // take out of document flow
+    position: fixed !important;
+    top: 0; right: 0; bottom: 0; left: 0;
+    display: none;  // Bootstrap will switch to .show
+  
+    &.fade.show {
+      display: flex !important;            // override Bootstrap’s display:block
+      align-items: center;                 // vertical centering
+      justify-content: center;             // horizontal centering
+      z-index: 2000 !important;            // above almost everything
+    }
+  
+    .modal-dialog {
+      margin: 0;                           // remove default offset
+      max-width: 400px;
+    }
+  }
+  
+  // scope only the backdrop that follows #consentModal
+  #consentModal.fade.show ~ .modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    z-index: 1500 !important;              // just under the modal
+  }
+  
+  // ============================================
+// Blur & fade everything outside the consent modal
+// ============================================
+
+#consentModal.fade.show ~ .modal-backdrop {
+    // semi-transparent dark overlay
+    background-color: rgba(0, 0, 0, 0.45) !important;
+    // blur the page behind it
+    backdrop-filter: blur(6px) brightness(0.7);
+    -webkit-backdrop-filter: blur(6px) brightness(0.7);
+    // ensure it still sits under the modal itself
+    z-index: 1500 !important;
+  }
+  

@@ -157,62 +157,8 @@ $text-muted: #666;
   }
 }
 
-// ———————————————————————————————————————
-// Mobile Overrides (do not touch desktop above!)
-@media (max-width: 767.98px) {
-  .dishes-page {
-    padding: 1rem;
-
-    .dishes-header {
-      flex-direction: column !important;
-      align-items: flex-start !important;
-      gap: 0.5rem !important;
-    }
-
-    .search-dishes-div {
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: stretch !important;
-
-      .text-box {
-        width: 100% !important;
-        margin-bottom: 0.5rem !important;
-      }
-
-      button.btn.btn-primary {
-        width: 100% !important;
-        margin-bottom: 0.5rem !important;
-      }
-
-      a.btn.btn-primary.red-btn {
-        width: 100% !important;
-        margin-bottom: 0.5rem !important;
-        left: 0 !important; /* reset desktop offset */
-      }
-    }
-
-    .dishes-table-wrapper {
-      padding: 0.5rem !important;
-    }
-
-    .dishes-table {
-      min-width: unset !important;
-    }
-
-    // —————————————————————————————————————
-    // New: stack and stretch the Edit/Delete buttons
-    .dishes-table tbody tr td:last-child {
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 0.5rem !important;
-    }
-
-    .dishes-table tbody tr td:last-child
-      .btn-outline-warning,
-    .dishes-table tbody tr td:last-child
-      .btn-outline-danger {
-      width: 100% !important;
-      margin: 0 !important;
-    }
-  }
+.inline-form {
+  display: inline;
+  margin: 0;
+  padding: 0;
 }

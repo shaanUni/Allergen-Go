@@ -18,6 +18,16 @@
                 {{ $dish->description }}
             </p>
 
+            <div class="stat-list">
+                        @php
+                            $halal = $dish->halal == true ? 'halal,' : '';
+                            $vegan = $dish->vegan == true ? 'vegan,' : '';
+                            $vegetarian = $dish->vegetarian == true ? 'vegetarian,' : '';
+                        @endphp
+                                               
+                            <p class="stat-item">  <strong>{{ $halal }} {{ $vegan }} {{ $vegetarian }}</strong> </p>
+                </div>
+
             <!-- Ingredients list -->
             <div class="dish-card__ingredients">
                 <h3>Ingredients</h3>
