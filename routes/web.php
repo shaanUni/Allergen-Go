@@ -27,6 +27,14 @@ Route::get('/login', function () {
     return redirect()->route('admin.login');
 })->name('login');
 
+Route::get('/privacy-policy', function () {
+    return view('user.legal.privacy');
+})->name('privacy.policy');
+
+Route::get('/terms-of-service', function () {
+    return view('user.legal.terms');
+})->name('terms.of.service');
+
 Route::prefix('user')->name('user.')->group(function () {
 
     Route::get('search', [SearchController::class, 'search'])->name('search');
