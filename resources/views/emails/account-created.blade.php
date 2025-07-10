@@ -14,13 +14,19 @@
   <a href="mailto:support@allergengo.com" style="color: #28a745; font-weight: bold; text-decoration: none;">support@allergengo.com</a>
 </p>
 
-<p>Helpful links:</p>
-<div class="register-legal-links documents">
-  <a class="green-link legal-long" href="{{ route('admin.agreement') }}">Restaurant Customer Agreement</a><br>
-  <a class="green-link" href="{{ route('admin.terms.of.service') }}">Terms of Service</a>
+<p style="font-family: Arial, sans-serif; font-size: 14px; color: #333;">Helpful links:</p>
+<div style="margin-top: 4px; font-family: Arial, sans-serif; font-size: 14px;">
+  <a href="{{ route('admin.agreement') }}" 
+     style="color: #28a745; text-decoration: none; display: block; margin-bottom: 6px;">
+    Restaurant Customer Agreement
+  </a>
+  <a href="{{ route('admin.terms.of.service') }}" 
+     style="color: #28a745; text-decoration: none; display: block;">
+    Terms of Service
+  </a>
 </div>
+
 
 <p>Thanks again for choosing AllergenGo—we’re excited to have you on board!</p>
 
-</div>
 @endsection
