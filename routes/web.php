@@ -57,6 +57,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
 
+    Route::get('/agreement', function () {
+        return view('admin.legal.agreement');
+    })->name('agreement');
+    
+    Route::get('/admin-terms-of-service', function () {
+        return view('admin.legal.terms');
+    })->name('terms.of.service');
+
 
     Route::get('unsubscribed', function () {
         return view('admin.auth.unsubscribed');

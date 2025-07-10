@@ -23,5 +23,12 @@
             <div class="code-display">{{ $restaurant_code }}</div>
         @endif
     </div>
+
+    <div class="code-box">
+    <p class="manual-entry documents">
+            <a class="green-link" href="{{ route('admin.agreement') }}">Restaurant Customer Agreement</a>
+            <a class="green-link" href="{{ route('admin.terms.of.service') }}">Terms of service</a>
+        </p>
+    </div>
 </div>
 @endsection

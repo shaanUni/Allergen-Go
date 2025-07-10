@@ -9,6 +9,10 @@
           Create your account to get started. You’ll then be taken to our secure payment page to complete
           your subscription — £30/month for full access to AllergenGo.
         </p>
+        <div class="register-legal-links documents" >
+            <a class="green-link legal-long" href="{{ route('admin.agreement') }}">Restaurant Customer Agreement</a>
+            <a class="green-link" href="{{ route('admin.terms.of.service') }}">Terms of service</a>
+</div>
       </div>
 
       <div class="register-form-wrapper">
