@@ -24,15 +24,18 @@
   </section>
 
   <section class="legal-section">
-    <h2>3. License Scope</h2>
-    <h3>Single Location</h3>
+  <h2>3. License Scope</h2>
+  <br>
+  <h6><strong>Single Location</strong></h6>
+    
     <ul>
       <li>A standard subscription covers one physical restaurant location.</li>
       <li>Additional locations require additional/separate subscriptions, with different emails.</li>
     </ul>
-    <h3>Multi-Site or Chains</h3>
-    <p>If you operate multiple restaurants or locations under one brand, you must:</p>
+    <h6><strong>Multi-Site or Chains</strong></h6>
+    
     <ul>
+    <p>If you operate multiple restaurants or locations under one brand, you must:</p>
       <li>Contact us to arrange a multi-location agreement (or have each branch purchase AllergenGo separately with a seperate email).</li>
       <li>Register and pay for each site or secure a chain-wide license (contact us).</li>
       <li>You may not share login credentials or access across unauthorized sites or users.</li>
