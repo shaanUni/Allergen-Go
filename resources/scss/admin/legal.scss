@@ -1,0 +1,155 @@
+.privacy-policy {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    font-family: 'Inter', sans-serif;
+    color: #333;
+    line-height: 1.6;
+  
+    h1 {
+      font-size: 2rem;
+      color: #40945c;
+      margin-bottom: 0.5rem;
+    }
+  
+    .effective-date {
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      color: #555;
+  
+      strong {
+        font-weight: 600;
+        color: #222;
+      }
+    }
+  
+    > p {
+      margin-bottom: 1.5rem;
+    }
+  
+    section {
+      margin-bottom: 1.75rem;
+  
+      h2 {
+        font-size: 1.25rem;
+        color: #2f7347;
+        margin-bottom: 0.5rem;
+      }
+  
+      p {
+        margin-bottom: 1rem;
+        font-size: 0.95rem;
+      }
+  
+      ul {
+        margin-left: 1.2rem;
+        margin-bottom: 1rem;
+        list-style-type: disc;
+  
+        li {
+          margin-bottom: 0.5rem;
+          font-size: 0.95rem;
+        }
+      }
+    }
+  }
+  
+  // Responsive
+  @media (max-width: 600px) {
+    .privacy-policy {
+      padding: 1.5rem;
+      margin: 1rem;
+    }
+  }
+  
+
+  // user.scss (or wherever your user‐styles live)
+.back-link {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: transparent;
+    color: #40945c;              // your green-nav
+    border: 2px solid #40945c;   // outline style
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s;
+    position: relative;
+   
+
+    &:hover {
+      background-color: #40945c;
+      color: white;
+    }
+  
+    &:active {
+      background-color: darken(#40945c, 10%);
+    }
+  }
+  
+  // Wrap the back button so it sits neatly above the card
+.page-header {
+    max-width: 800px;            // match your card width
+    margin: 1.5rem auto 0;       // push down from the navbar
+    padding: 0 1rem;             // align with your page padding
+    display: flex;
+    justify-content: flex-start; // change to flex-end to float right
+  }
+  
+  // Re-use your .back-link styling, but reset margins
+  .back-link {
+    margin: 0;                   // remove default link spacing
+  }
+  
+  .green-link{
+    color: #40945c;
+  }
+  .green-link{
+    color: #40945c;
+  }
+
+  .documents {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  
+    a {
+      margin: 0;            // reset your previous margins
+      color: #40945c;
+      font-weight: 500;
+  
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  
+
+.register-legal-links{
+    width: 80%;
+}
+
+@media (max-width: 768px) {
+
+    .register-legal-links{
+        width: 100%;
+    }
+}
+
+@media (max-width: 445px) {
+
+  .legal-long{
+    width: 50%;
+  }
+  
+
+}
+
+.legal-section{
+  padding: 1rem 0 !important;
+}

@@ -27,6 +27,14 @@ Route::get('/login', function () {
     return redirect()->route('admin.login');
 })->name('login');
 
+Route::get('/privacy-policy', function () {
+    return view('user.legal.privacy');
+})->name('privacy.policy');
+
+Route::get('/terms-of-service', function () {
+    return view('user.legal.terms');
+})->name('terms.of.service');
+
 Route::prefix('user')->name('user.')->group(function () {
 
     Route::get('search', [SearchController::class, 'search'])->name('search');
@@ -48,6 +56,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Registration
     Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
+
+    Route::get('/agreement', function () {
+        return view('admin.legal.agreement');
+    })->name('agreement');
+    
+    Route::get('/admin-terms-of-service', function () {
+        return view('admin.legal.terms');
+    })->name('terms.of.service');
 
 
     Route::get('unsubscribed', function () {
