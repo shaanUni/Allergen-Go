@@ -7,7 +7,7 @@
 </div>
 <article class="privacy-policy">
   <h1>Terms of Use (End Users)</h1>
-  <p class="effective-date"><strong>Effective Date:</strong> [Insert Date]</p>
+  <p class="effective-date"><strong>Effective Date:</strong>14/07/2025</p>
 
   <p>These Terms of Use (“Terms”) apply when you access or use our service, which helps you find allergy-compatible dishes at participating restaurants. By using our website or app, you agree to these Terms.</p>
 
@@ -39,9 +39,9 @@
     <ul>
       <li>The collection and processing of your allergy information</li>
       <li>The sharing of that information with the selected restaurant</li>
-      <li>Our <a href="/privacy-policy">Privacy Policy</a></li>
+      <li>Our <a href="{{ route('privacy.policy') }}">Privacy Policy</a></li>
     </ul>
-    <p>You may withdraw consent at any time by contacting us.</p>
+    <p>You may withdraw consent at any time by opting out when using the site or contacting us.</p>
   </section>
 
   <section>
@@ -72,7 +72,7 @@
 
   <section>
     <h2>7. Contact</h2>
-    <p>If you have any questions or want to withdraw consent, contact us at: <a href="mailto:[insert contact email]">[insert contact email]</a></p>
+    <p>If you have any questions or want to withdraw consent, contact us at: <a href="mailto:support@allergengo.com">support@allergengo.com</a></p>
   </section>
 </article>
 

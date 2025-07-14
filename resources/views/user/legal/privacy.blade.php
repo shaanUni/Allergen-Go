@@ -8,13 +8,13 @@
 
 <article class="privacy-policy">
   <h1>Privacy Policy</h1>
-  <p class="effective-date"><strong>Effective Date:</strong> [Insert Date]</p>
+  <p class="effective-date"><strong>Effective Date:</strong> 14/07/2025</p>
 
   <p>We take your privacy seriously. This Privacy Policy explains what data we collect, how we use it, and your rights under the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018.</p>
 
   <section>
     <h2>1. What We Collect</h2>
-    <p>We only collect information about your food allergies — no names, emails, or other personal identifiers.</p>
+    <p>We only collect information about your food allergies — no names, emails, or other personal identifiers. The only information anyone can see, is your allergies. Nothing else.</p>
   </section>
 
   <section>
@@ -61,13 +61,9 @@
       <li>Withdraw your consent at any time</li>
       <li>Lodge a complaint with the Information Commissioner’s Office (ICO)</li>
     </ul>
-    <p>You can exercise any of these rights by emailing us at: [insert contact email]</p>
+    <p>You can exercise any of these rights by emailing us at: <a href="mailto:support@allergengo.com">support@allergengo.com</a></p>
   </section>
 
-  <section>
-    <h2>7. International Transfers</h2>
-    <p>We store and process data using secure UK-based or GDPR-compliant cloud services. If any data is processed outside the UK, we ensure it is subject to appropriate safeguards as required by law (e.g., Standard Contractual Clauses or equivalent mechanisms).</p>
-  </section>
 </article>
 
 @endsection
