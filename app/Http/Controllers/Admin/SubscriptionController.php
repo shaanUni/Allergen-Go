@@ -38,11 +38,11 @@ class SubscriptionController extends Controller
 
         //tell stripe to cancel at the end of the period
         $stripe->subscriptions->update($subscription->stripe_id, [
-            'cancel_at_period_end' => true,
+           'cancel_at_period_end' => true,
         ]);
-
+        
         //$stripe->subscriptions->cancel($subscription->stripe_id);
-
+        
         //This will go in the admin table, so they can se when subscription expires, so convert to correct format
         $dateForDb = Carbon::parse($stripeSub->current_period_end)->toDateString();
         //$dateForDb = Carbon::parse(now())->toDateString();
@@ -118,7 +118,6 @@ class SubscriptionController extends Controller
             ]);
 
     }
-
     public function updateCard(Request $request)
     {
         $request->validate([
@@ -128,31 +127,10 @@ class SubscriptionController extends Controller
         $admin = Auth::guard('admin')->user();
         $paymentMethodId = $request->input('payment_method');
 
-        $stripe = new StripeClient(config('services.stripe.secret'));
-
-        // Retrieve the new payment method
-        $newPaymentMethod = $stripe->paymentMethods->retrieve($paymentMethodId, []);
-        $newFingerprint = $newPaymentMethod->card->fingerprint;
-
-        // Retrieve all attached payment methods from Stripe (NOT via Cashier)
-        $stripePaymentMethods = $stripe->paymentMethods->all([
-            'customer' => $admin->stripe_id,
-            'type' => 'card',
-        ]);
-
-        foreach ($stripePaymentMethods->data as $existingMethod) {
-            if ($existingMethod->card->fingerprint === $newFingerprint) {
-                return back()->withErrors([
-                    'payment_method' => 'This card is already on your account.',
-                ]);
-            }
-        }
-
-        // No duplicate found, so proceed
+        // Tell Cashier to update the default payment method on Stripe
         $admin->updateDefaultPaymentMethod($paymentMethodId);
         $admin->default_payment_method = $paymentMethodId;
         $admin->save();
-
         return back()->with('success', 'Your card has been updated successfully.');
     }
 
@@ -222,9 +200,9 @@ class SubscriptionController extends Controller
                 'payment_intent_client_secret' => $pi->client_secret,
             ]);
         }
-
+       
         try {
-
+        
             // Otherwise, pay it immediately server-side
             $paid = $stripe->invoices->pay($invoice->id, [
                 'expand' => ['payment_intent'],
