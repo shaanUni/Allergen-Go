@@ -28,7 +28,7 @@ class InitAccountPageInfo implements ShouldQueue
      */
     public function handle(): void
     {
-        Log::into('init account here');
+        Log::info('init account here');
         $admin = Auth::guard('admin')->user()->fresh();
 
         //Grab the local Subscription record 
