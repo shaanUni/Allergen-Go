@@ -98,8 +98,8 @@ class DashboardController extends Controller
         $stripeSub = $stripe->subscriptions->retrieve($subscription->stripe_id, []);
 
         //When the admin next has to pay
-        $date = Carbon::createFromTimestamp($admin->current_period_end);
-        //$date = Carbon::parse($date)->format('F j, Y');
+        $date = $admin->current_period_end;
+        $date = Carbon::parse($date)->format('F j, Y');
 
         //If the account has been cancelled
         if ($admin->account_delete_date != null) {
