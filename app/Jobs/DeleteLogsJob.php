@@ -26,6 +26,6 @@ class DeleteLogsJob implements ShouldQueue
     {
         //
        // Opt_in_logs::where('created_at', '<=', Carbon::now()->subweeks(3))->delete();
-       Opt_in_logs::where('created_at', '<=', Carbon::now()->subMinutes(5))->delete();
+       Opt_in_logs::where('created_at', '<=', Carbon::now()->subMinutes(2))->delete();
     }
 }
