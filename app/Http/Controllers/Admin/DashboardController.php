@@ -83,19 +83,7 @@ class DashboardController extends Controller
     public function account()
     {
 
-        /*
-            1) the storage of cards, can be moved into a job. dispatch upon job creation, and whenever card updated.
-            2) the current_period end. Can this be moved into a job and stored in the local DB?
-        */
         $admin = Auth::guard('admin')->user()->fresh();
-
-        //Grab the local Subscription record 
-        $subscription = $admin->subscription('default');
-
-        $stripe = new StripeClient(config('services.stripe.secret'));
-
-        //Find subscription
-        $stripeSub = $stripe->subscriptions->retrieve($subscription->stripe_id, []);
 
         //When the admin next has to pay
         $date = $admin->current_period_end;
@@ -103,21 +91,14 @@ class DashboardController extends Controller
 
         //If the account has been cancelled
         if ($admin->account_delete_date != null) {
-            //$date = Carbon::parse($admin->account_delete_date)->format('F j, Y');
+            $date = Carbon::parse($admin->account_delete_date)->format('F j, Y');
         }
 
         // Create a SetupIntent for this user. Cashier will set up the Stripe customer automatically if needed.
         // The SetupIntent’s client_secret is used by Stripe.js on the front-end.
         $intent = $admin->createSetupIntent();
 
-        $stripeCustomer = $stripe->customers->retrieve($admin->stripe_id, []);
-
-        // Save it to local model
-        $admin->default_payment_method = $stripeCustomer->invoice_settings->default_payment_method;
-        $admin->save();
-
         $defaultMethod = $admin->defaultPaymentMethod();
-
         $paymentMethods = $admin->paymentMethods();
 
         $cancelled = "";

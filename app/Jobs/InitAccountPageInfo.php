@@ -42,13 +42,17 @@ class InitAccountPageInfo implements ShouldQueue
 
         //Find subscription
         $stripeSub = $stripe->subscriptions->retrieve($subscription->stripe_id, []);
+        
         //Next payment date
         $date = Carbon::createFromTimestamp($stripeSub->current_period_end);
-        log::info($date);
 
+        //save to local record - date of next payment
         $admin->current_period_end = $date;
+        $stripeCustomer = $stripe->customers->retrieve($admin->stripe_id, []);
+
+        // Save it to local model - the default payment method
+        $admin->default_payment_method = $stripeCustomer->invoice_settings->default_payment_method;
+        
         $admin->save();
-
-
     }
 }
