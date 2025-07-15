@@ -33,7 +33,7 @@ class DashboardController extends Controller
         if(session('new_user')){
             
             //Card details, dates for next payment
-            //InitAccountPageInfo::dispatch($admin);
+            InitAccountPageInfo::dispatch($admin);
             
             //send hellp email
             SendWelcomeEmail::dispatch($admin)->delay(now()->addMinute());
