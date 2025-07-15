@@ -34,7 +34,7 @@
           <h2 class="card-title">You’ve Unsubscribed</h2>
 
           <p class="card-text">
-            You no longer have access to AllergenGo because you’ve cancelled your subscription.&nbsp;
+            Your access to AllergenGo has been revoked: either because you cancelled your subscription, or you had failed payments which you failed to resolve.&nbsp;
             Don’t worry—your data is safe. Simply click the button below to resubscribe and regain access.
           </p>
 
