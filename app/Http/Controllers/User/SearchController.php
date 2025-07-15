@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Models\Dishes;
+use App\Models\Opt_in_logs;
 use App\Models\Searches;
 use App\Models\AllergenCount;
 
@@ -49,16 +50,26 @@ class SearchController extends Controller
 
     public function searchCode(Request $request)
     {
-        //generate new uuid - Before if a user had many tabs open, the app would break. The UUID should fix that.
-        $uuid = (string) Str::uuid();
+
+        do {
+            $uuid = (string) Str::uuid();
+            //The check for uniqueness
+        } while (Opt_in_logs::where('session_uuid', $uuid)->exists());
+
 
         //Get the value of the opt in value
         $opt_in = $request->validate(['opt-in' => 'boolean']);
         $opt_in_value = $opt_in['opt-in'];
         
+        Opt_in_logs::create([
+            'session_uuid' => $uuid,
+            'consent_given' => $opt_in_value,
+            'consent_version' => 'v1.0',
+        ]);
+        
         //so we know if has been selected, also used in search service
         session(['opt-in' => $opt_in_value]);
-
+        
         // Grab exsisting UUIDs or create an array
         $uuids = session('uuids', []);
 

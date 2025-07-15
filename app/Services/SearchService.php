@@ -155,7 +155,7 @@ class SearchService
 
         //Did user opt in? 1=yes, 0=no
         $optInStatus = session('opt-in');
-        
+
         //Convert User allergies array into a string
         $userAllergiesString = AllergenService::userSerialize($userAllergies);
         if (!session('user_allergy_string')) {

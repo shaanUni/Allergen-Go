@@ -10,8 +10,7 @@
         $optInPereferences = session('opt-in');
         $optInValue = 1;
     @endphp
-
-    @if (!$optInPereferences)
+    @if ($optInPereferences == "")
         <!-- Consent Modal Markup -->
         <div class="modal fade" id="consentModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
