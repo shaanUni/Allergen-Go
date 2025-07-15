@@ -4,9 +4,11 @@ namespace App\Jobs;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Log;
 use Stripe\StripeClient;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Admin;
 
 
 class InitAccountPageInfo implements ShouldQueue
@@ -26,6 +28,7 @@ class InitAccountPageInfo implements ShouldQueue
      */
     public function handle(): void
     {
+        Log::into('init account here');
         $admin = Auth::guard('admin')->user()->fresh();
 
         //Grab the local Subscription record 
@@ -42,6 +45,6 @@ class InitAccountPageInfo implements ShouldQueue
         $admin->current_period_end = $date;
         $admin->save();
 
-        
+
     }
 }
