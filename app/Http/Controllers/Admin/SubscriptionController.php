@@ -142,6 +142,9 @@ class SubscriptionController extends Controller
             $admin->updateDefaultPaymentMethod($paymentMethod);
             $admin->refresh();
 
+            $admin->default_payment_method = $paymentMethod;
+            $admin->save();
+
             return back()->with('success', 'Default payment method updated.');
         } catch (\Exception $e) {
             return back()->with('error', 'Failed to set default: ' . $e->getMessage());
