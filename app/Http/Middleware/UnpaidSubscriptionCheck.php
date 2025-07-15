@@ -36,7 +36,7 @@ class UnpaidSubscriptionCheck
             //if(now()->greaterThanOrEqualTo($date)){
                 //return redirect()->route('admin.account')->with('error', 'You need to pay.');
             //}
-            return redirect()->route('admin.subscribed.revoke');
+            return redirect()->route('admin.subscription.revoke');
         }
 
         return $next($request);
