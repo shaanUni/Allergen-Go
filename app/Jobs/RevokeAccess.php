@@ -14,17 +14,20 @@ use Stripe\StripeClient;
 use Stripe\Exception\CardException;
 use Stripe\Exception\ApiErrorException;
 use Illuminate\Support\Facades\Log;
+use App\Models\Admin;
 
 class RevokeAccess implements ShouldQueue
 {
     use Queueable;
+    protected $admin;
 
     /**
      * Create a new job instance.
      */
-    public function __construct()
+    public function __construct(Admin $admin)
     {
         //
+        $this->admin = $admin;
     }
 
     /**
@@ -35,7 +38,7 @@ class RevokeAccess implements ShouldQueue
         Log::info('inside');
 
         //
-        $admin = Auth::guard('admin')->user()->fresh();
+        $admin = $this->admin;
 
         //Grab the local Subscription record 
         $subscription = $admin->subscription('default');

@@ -39,7 +39,7 @@ class UnpaidSubscriptionCheck
                 //return redirect()->route('admin.account')->with('error', 'You need to pay.');
             //}
             Log::info('middleware');
-            RevokeAccess::dispatch();
+            RevokeAccess::dispatch($admin);
         }
 
         return $next($request);
