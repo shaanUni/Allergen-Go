@@ -129,7 +129,8 @@ class SubscriptionController extends Controller
 
         // Tell Cashier to update the default payment method on Stripe
         $admin->updateDefaultPaymentMethod($paymentMethodId);
-
+        $admin->default_payment_method = $paymentMethodId;
+        $admin->save();
         return back()->with('success', 'Your card has been updated successfully.');
     }
 
@@ -141,6 +142,9 @@ class SubscriptionController extends Controller
         try {
             $admin->updateDefaultPaymentMethod($paymentMethod);
             $admin->refresh();
+
+            $admin->default_payment_method = $paymentMethod;
+            $admin->save();
 
             return back()->with('success', 'Default payment method updated.');
         } catch (\Exception $e) {

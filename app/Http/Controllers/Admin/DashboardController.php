@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\SendWelcomeEmail;
+use App\Jobs\InitAccountPageInfo;
 use App\Models\Admin;
 
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +29,13 @@ class DashboardController extends Controller
 
         $admin = Auth::guard('admin')->user()->fresh();
 
+        //If the user just made an account, and they are seeing dashboard for the first time
         if(session('new_user')){
+            
+            //Card details, dates for next payment
+            InitAccountPageInfo::dispatch($admin);
+            
+            //send hellp email
             SendWelcomeEmail::dispatch($admin)->delay(now()->addMinute());
             session()->forget('new_user');
         }
@@ -80,18 +87,15 @@ class DashboardController extends Controller
 
     public function account()
     {
+
         $admin = Auth::guard('admin')->user()->fresh();
 
-        //Grab the local Subscription record 
-        $subscription = $admin->subscription('default');
-
-        $stripe = new StripeClient(config('services.stripe.secret'));
-        //Find subscription
-        $stripeSub = $stripe->subscriptions->retrieve($subscription->stripe_id, []);
-
         //When the admin next has to pay
-        $date = Carbon::createFromTimestamp($stripeSub->current_period_end);
-        $date = Carbon::parse($date)->format('F j, Y');
+        $date = $admin->current_period_end;
+
+        if($date != null){
+            $date = Carbon::parse($date)->format('F j, Y');
+        }
 
         //If the account has been cancelled
         if ($admin->account_delete_date != null) {
@@ -102,15 +106,7 @@ class DashboardController extends Controller
         // The SetupIntent’s client_secret is used by Stripe.js on the front-end.
         $intent = $admin->createSetupIntent();
 
-        $stripeCustomer = $stripe->customers->retrieve($admin->stripe_id, []);
-
-        // Save it to your local model (optional if your UI depends on it)
-        $admin->default_payment_method = $stripeCustomer->invoice_settings->default_payment_method;
-        $admin->save();
-
-        // Optionally, you can pass in the current default payment method (so the user sees “Current card: **** 4242”).
         $defaultMethod = $admin->defaultPaymentMethod();
-
         $paymentMethods = $admin->paymentMethods();
 
         $cancelled = "";

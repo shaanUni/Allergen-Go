@@ -38,7 +38,7 @@
                             </button>
                         </form>
 
-                        @if ($cancelled === '')
+                        @if ($cancelled === '' && $date != null)
                             <p class="stat-info">
                                 Next payment: <strong>£30 on {{ $date }}</strong>
                             </p>
