@@ -31,6 +31,8 @@ class InitAccountPageInfo implements ShouldQueue
      */
     public function handle(): void
     {
+        log::info('asdasd');
+
         $admin = $this->admin;
 
         //Grab the local Subscription record 
@@ -40,9 +42,9 @@ class InitAccountPageInfo implements ShouldQueue
 
         //Find subscription
         $stripeSub = $stripe->subscriptions->retrieve($subscription->stripe_id, []);
-
         //Next payment date
         $date = Carbon::createFromTimestamp($stripeSub->current_period_end);
+        log::info($date);
 
         $admin->current_period_end = $date;
         $admin->save();
