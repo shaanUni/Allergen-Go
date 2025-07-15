@@ -31,8 +31,6 @@ class InitAccountPageInfo implements ShouldQueue
      */
     public function handle(): void
     {
-        log::info('asdasd');
-
         $admin = $this->admin;
 
         //Grab the local Subscription record 

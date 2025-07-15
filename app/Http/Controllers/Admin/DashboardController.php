@@ -29,8 +29,13 @@ class DashboardController extends Controller
 
         $admin = Auth::guard('admin')->user()->fresh();
 
+        //If the user just made an account, and they are seeing dashboard for the first time
         if(session('new_user')){
-            InitAccountPageInfo::dispatch($admin);
+            
+            //Card details, dates for next payment
+            //InitAccountPageInfo::dispatch($admin);
+            
+            //send hellp email
             SendWelcomeEmail::dispatch($admin)->delay(now()->addMinute());
             session()->forget('new_user');
         }
