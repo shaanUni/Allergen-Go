@@ -11,12 +11,14 @@
         </form>
 
         @if (session('error'))
-    <div class="alert-box alert-danger">
-        {{ session('error') }}
-    </div>
-@endif
-        <p>Welcome to the accounts page. See and change your card details, view your billing history, or cancel your subscription. If you ever encounter
-            any issues with AllergenGo, or just have any general questions or suggestions, please email <a href="mailto:support@allergengo.com">support@allergengo.com</a>.
+            <div class="alert-box alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+        <p>Welcome to the accounts page. See and change your card details, view your billing history, or cancel your
+            subscription. If you ever encounter
+            any issues with AllergenGo, or just have any general questions or suggestions, please email <a
+                href="mailto:support@allergengo.com">support@allergengo.com</a>.
         </p>
         <div class="subscription-page">
             <div class="stats-grid">
@@ -77,9 +79,8 @@
                                             </td>
                                             <td>
                                                 @if ($invoice->invoice_pdf)
-                                                    <a href="{{ $invoice->invoice_pdf }}"
-                                                       target="_blank"
-                                                       class="btn btn-link btn-sm p-0 align-baseline">
+                                                    <a href="{{ $invoice->invoice_pdf }}" target="_blank"
+                                                        class="btn btn-link btn-sm p-0 align-baseline">
                                                         Download
                                                     </a>
                                                 @else
@@ -128,29 +129,25 @@
                                         @if($method->id === $admin->default_payment_method)
                                             <span class="text-green-600 font-semibold">Default</span>
                                         @else
-                                            <form action="{{ route('admin.payment-methods.default', $method->id) }}"
-                                                  method="POST"
-                                                  class="d-inline me-2">
+                                            <form action="{{ route('admin.payment-methods.default', $method->id) }}" method="POST"
+                                                class="d-inline me-2">
                                                 @csrf
-                                                <button type="submit"
-                                                        class="btn btn-outline-success btn-sm">
+                                                <button type="submit" class="btn btn-outline-success btn-sm">
                                                     Make Default
                                                 </button>
                                             </form>
                                         @endif
                                         @if (count($paymentMethods) > 1)
-                                        
-                                        <form action="{{ route('admin.payment-methods.delete', $method->id) }}"
-                                              method="POST"
-                                              class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                    class="btn btn-outline-danger btn-sm"
+
+                                            <form action="{{ route('admin.payment-methods.delete', $method->id) }}" method="POST"
+                                                class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-outline-danger btn-sm"
                                                     onclick="return confirm('Are you sure you want to delete this card?')">
-                                                Delete
-                                            </button>
-                                        </form>
+                                                    Delete
+                                                </button>
+                                            </form>
                                         @endif
 
                                     </li>
@@ -167,9 +164,7 @@
                         Enter a new card below and click “Save” to replace your existing payment method.
                     </p>
 
-                    <form id="update-card-form"
-                          action="{{ route('admin.payment-methods.update-card') }}"
-                          method="POST">
+                    <form id="update-card-form" action="{{ route('admin.payment-methods.update-card') }}" method="POST">
                         @csrf
 
                         <div id="card-element" class="border p-3 rounded mb-3">
@@ -178,16 +173,12 @@
 
                         <input type="hidden" name="payment_method" id="payment_method_input">
 
-                        <button id="submit-btn"
-                                type="submit"
-                                class="btn btn-primary w-100">
+                        <button id="submit-btn" type="submit" class="btn btn-primary w-100">
                             Save New Card
                         </button>
                     </form>
 
-                    <div id="card-errors"
-                         role="alert"
-                         class="mt-2 text-danger small">
+                    <div id="card-errors" role="alert" class="mt-2 text-danger small">
                     </div>
                 </div>
             </div>
@@ -219,30 +210,30 @@
             });
 
             document.getElementById('update-card-form')
-                    .addEventListener('submit', e => {
-                e.preventDefault();
-                const btn = document.getElementById('submit-btn');
-                btn.disabled = true;
+                .addEventListener('submit', e => {
+                    e.preventDefault();
+                    const btn = document.getElementById('submit-btn');
+                    btn.disabled = true;
 
-                stripe.confirmCardSetup("{{ $intent->client_secret }}", {
-                    payment_method: {
-                        card: cardElement,
-                        billing_details: {
-                            name: "{{ Auth::guard('admin')->user()->name }}",
-                            email: "{{ Auth::guard('admin')->user()->email }}"
+                    stripe.confirmCardSetup("{{ $intent->client_secret }}", {
+                        payment_method: {
+                            card: cardElement,
+                            billing_details: {
+                                name: "{{ Auth::guard('admin')->user()->name }}",
+                                email: "{{ Auth::guard('admin')->user()->email }}"
+                            }
                         }
-                    }
-                }).then(result => {
-                    if (result.error) {
-                        document.getElementById('card-errors').textContent = result.error.message;
-                        btn.disabled = false;
-                    } else {
-                        document.getElementById('payment_method_input').value =
-                            result.setupIntent.payment_method;
-                        e.target.submit();
-                    }
+                    }).then(result => {
+                        if (result.error) {
+                            document.getElementById('card-errors').textContent = result.error.message;
+                            btn.disabled = false;
+                        } else {
+                            document.getElementById('payment_method_input').value =
+                                result.setupIntent.payment_method;
+                            e.target.submit();
+                        }
+                    });
                 });
-            });
         });
     </script>
 @endsection

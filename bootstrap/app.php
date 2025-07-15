@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\AdminSubscribedCheck;
+use App\Http\Middleware\AlreadyAuthenticatedCheck;
 use App\Http\Middleware\UnpaidSubscriptionCheck;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -14,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         //
+        $middleware->appendToGroup('web', [
+            AlreadyAuthenticatedCheck::class,
+        ]);
         $middleware->appendToGroup('subscribed', [
             AdminSubscribedCheck::class,
             UnpaidSubscriptionCheck::class,
