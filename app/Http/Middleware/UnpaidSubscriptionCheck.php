@@ -34,8 +34,9 @@ class UnpaidSubscriptionCheck
             //$date = Carbon::parse($admin->failed_payment_date)->addDays(7);
             //If a week or more elapsed.
             //if(now()->greaterThanOrEqualTo($date)){
-                return redirect()->route('admin.account')->with('error', 'You need to pay.');
+                //return redirect()->route('admin.account')->with('error', 'You need to pay.');
             //}
+            return redirect()->route('admin.subscribed.revoke');
         }
 
         return $next($request);
