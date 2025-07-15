@@ -15,12 +15,15 @@ class InitAccountPageInfo implements ShouldQueue
 {
     use Queueable;
 
+    protected $admin;
+
     /**
      * Create a new job instance.
      */
-    public function __construct()
+    public function __construct(Admin $admin)
     {
         //
+        $this->admin = $admin;
     }
 
     /**
@@ -28,8 +31,7 @@ class InitAccountPageInfo implements ShouldQueue
      */
     public function handle(): void
     {
-        Log::info('init account here');
-        $admin = Auth::guard('admin')->user()->fresh();
+        $admin = $this->admin;
 
         //Grab the local Subscription record 
         $subscription = $admin->subscription('default');

@@ -30,7 +30,7 @@ class DashboardController extends Controller
         $admin = Auth::guard('admin')->user()->fresh();
 
         if(session('new_user')){
-            InitAccountPageInfo::dispatch();
+            InitAccountPageInfo::dispatch($admin);
             SendWelcomeEmail::dispatch($admin)->delay(now()->addMinute());
             session()->forget('new_user');
         }
