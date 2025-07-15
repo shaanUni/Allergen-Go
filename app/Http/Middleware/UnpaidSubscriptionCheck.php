@@ -31,11 +31,11 @@ class UnpaidSubscriptionCheck
         //If they missed a payment
         if($admin->payment_failed){
             //Get the date of their first failed payment, and add a week
-            $date = Carbon::parse($admin->failed_payment_date)->addDays(7);
+            //$date = Carbon::parse($admin->failed_payment_date)->addDays(7);
             //If a week or more elapsed.
-            if(now()->greaterThanOrEqualTo($date)){
+            //if(now()->greaterThanOrEqualTo($date)){
                 return redirect()->route('admin.account')->with('error', 'You need to pay.');
-            }
+            //}
         }
 
         return $next($request);
