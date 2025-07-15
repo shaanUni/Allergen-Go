@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Stripe\StripeClient;
 use Stripe\Exception\CardException;
 use Stripe\Exception\ApiErrorException;
+use Illuminate\Support\Facades\Log;
 
 class RevokeAccess implements ShouldQueue
 {
@@ -31,6 +32,8 @@ class RevokeAccess implements ShouldQueue
      */
     public function handle(): void
     {
+        Log::info('inside');
+
         //
         $admin = Auth::guard('admin')->user()->fresh();
 

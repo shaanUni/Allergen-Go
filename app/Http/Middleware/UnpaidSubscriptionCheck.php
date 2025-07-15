@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class UnpaidSubscriptionCheck
 {
@@ -37,6 +38,7 @@ class UnpaidSubscriptionCheck
             //if(now()->greaterThanOrEqualTo($date)){
                 //return redirect()->route('admin.account')->with('error', 'You need to pay.');
             //}
+            Log::info('middleware');
             RevokeAccess::dispatch();
         }
 
