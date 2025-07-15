@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\SendWelcomeEmail;
+use App\Jobs\InitAccountPageInfo;
 use App\Models\Admin;
 
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +30,7 @@ class DashboardController extends Controller
         $admin = Auth::guard('admin')->user()->fresh();
 
         if(session('new_user')){
+            InitAccountPageInfo::dispatch();
             SendWelcomeEmail::dispatch($admin)->delay(now()->addMinute());
             session()->forget('new_user');
         }
@@ -80,17 +82,23 @@ class DashboardController extends Controller
 
     public function account()
     {
+
+        /*
+            1) the storage of cards, can be moved into a job. dispatch upon job creation, and whenever card updated.
+            2) the current_period end. Can this be moved into a job and stored in the local DB?
+        */
         $admin = Auth::guard('admin')->user()->fresh();
 
         //Grab the local Subscription record 
         $subscription = $admin->subscription('default');
 
         $stripe = new StripeClient(config('services.stripe.secret'));
+
         //Find subscription
         $stripeSub = $stripe->subscriptions->retrieve($subscription->stripe_id, []);
 
         //When the admin next has to pay
-        $date = Carbon::createFromTimestamp($stripeSub->current_period_end);
+        $date = Carbon::createFromTimestamp($admin->current_period_end);
         $date = Carbon::parse($date)->format('F j, Y');
 
         //If the account has been cancelled
@@ -104,11 +112,10 @@ class DashboardController extends Controller
 
         $stripeCustomer = $stripe->customers->retrieve($admin->stripe_id, []);
 
-        // Save it to your local model (optional if your UI depends on it)
+        // Save it to local model
         $admin->default_payment_method = $stripeCustomer->invoice_settings->default_payment_method;
         $admin->save();
 
-        // Optionally, you can pass in the current default payment method (so the user sees “Current card: **** 4242”).
         $defaultMethod = $admin->defaultPaymentMethod();
 
         $paymentMethods = $admin->paymentMethods();
