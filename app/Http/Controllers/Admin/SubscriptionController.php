@@ -128,30 +128,33 @@ class SubscriptionController extends Controller
         $admin = Auth::guard('admin')->user();
         $paymentMethodId = $request->input('payment_method');
 
-        // Get the new payment method from Stripe
         $stripe = new StripeClient(config('services.stripe.secret'));
-        $newPaymentMethod = $stripe->paymentMethods->retrieve($paymentMethodId, []);
 
+        // Retrieve the new payment method
+        $newPaymentMethod = $stripe->paymentMethods->retrieve($paymentMethodId, []);
         $newFingerprint = $newPaymentMethod->card->fingerprint;
 
-        // Get all existing payment methods attached to the user
-        $existingMethods = $admin->paymentMethods();
+        // Retrieve all attached payment methods from Stripe (NOT via Cashier)
+        $stripePaymentMethods = $stripe->paymentMethods->all([
+            'customer' => $admin->stripe_id,
+            'type' => 'card',
+        ]);
 
-        // Check for duplicates by comparing fingerprints
-        foreach ($existingMethods as $method) {
-            if ($method->card->fingerprint === $newFingerprint) {
-                return back()->withErrors(['payment_method' => 'This card is already on your account.']);
+        foreach ($stripePaymentMethods->data as $existingMethod) {
+            if ($existingMethod->card->fingerprint === $newFingerprint) {
+                return back()->withErrors([
+                    'payment_method' => 'This card is already on your account.',
+                ]);
             }
         }
 
-        // No duplicate found — update default
+        // No duplicate found, so proceed
         $admin->updateDefaultPaymentMethod($paymentMethodId);
         $admin->default_payment_method = $paymentMethodId;
         $admin->save();
 
         return back()->with('success', 'Your card has been updated successfully.');
     }
-
 
 
     public function makeDefault($paymentMethod)
