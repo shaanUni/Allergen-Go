@@ -99,11 +99,11 @@ class DashboardController extends Controller
 
         //When the admin next has to pay
         $date = Carbon::createFromTimestamp($admin->current_period_end);
-        $date = Carbon::parse($date)->format('F j, Y');
+        //$date = Carbon::parse($date)->format('F j, Y');
 
         //If the account has been cancelled
         if ($admin->account_delete_date != null) {
-            $date = Carbon::parse($admin->account_delete_date)->format('F j, Y');
+            //$date = Carbon::parse($admin->account_delete_date)->format('F j, Y');
         }
 
         // Create a SetupIntent for this user. Cashier will set up the Stripe customer automatically if needed.
