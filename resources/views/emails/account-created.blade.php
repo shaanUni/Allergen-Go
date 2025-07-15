@@ -8,7 +8,7 @@
 <p>Thanks for signing up with <strong>AllergenGo</strong>! Your free trial is active and will expire on: <strong>{{ $date }}</strong>.</p>
 
 <p>You’ll have full access to our platform—designed to help you easily manage and share allergen and dietary information with your customers. We’re here to make providing information simple and dining safer for everyone.</p>
-<p>Once the trial is over, billing was start. Head to the account page at anytime to cancel.</p>
+<p>Once the trial is over, billing will start. Head to the account page at anytime to cancel.</p>
 
 <p>
   If you have any questions or need help getting started, don’t hesitate to contact us — we're always happy to assist. 

@@ -28,7 +28,7 @@
 
                     @if ($cancelled === 'true')
                         <p class="stat-info">
-                            You cancelled your subscription on <strong>{{ $date }}</strong>.
+                            You cancelled your subscription, and will retain access until <strong>{{ $date }}</strong>.
                         </p>
                     @else
                         <form method="POST" action="{{ route('admin.subscription.cancel') }}" class="mb-3">
