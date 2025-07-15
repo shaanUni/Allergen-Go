@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Jobs\RevokeAccess;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,7 +37,7 @@ class UnpaidSubscriptionCheck
             //if(now()->greaterThanOrEqualTo($date)){
                 //return redirect()->route('admin.account')->with('error', 'You need to pay.');
             //}
-            return redirect()->route('admin.subscription.revoke');
+            RevokeAccess::dispatch();
         }
 
         return $next($request);
