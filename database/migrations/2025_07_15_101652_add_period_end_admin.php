@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('admins', function (Blueprint $table) {
             //
-            $table->dateTime('current_period_end');
+            $table->dateTime('current_period_end')->nullable();
         });
     }
 
