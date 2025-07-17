@@ -32,8 +32,13 @@ class UnpaidSubscriptionCheck
 
         //If they missed a payment
         if($admin->payment_failed){
-            Log::info('middleware');
-            RevokeAccess::dispatch($admin);
+            //Get the date of their first failed payment, and add a week
+            $date = Carbon::parse($admin->failed_payment_date)->addDays(7);
+
+            //if a week or more has elapsed, revoke their access
+            if(now()->greaterThanOrEqualTo($date)){
+                RevokeAccess::dispatch($admin);
+            }
         }
 
         return $next($request);
