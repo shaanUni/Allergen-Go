@@ -25,7 +25,7 @@ class AdminSubscribedCheck
         }
 
         //Also allow access to account pages, so they can update card if needed
-        if ($request->routeIs('admin.account') || $request->routeIs('admin.payment-methods.update-card')) {
+        if ($request->routeIs('admin.account') || $request->routeIs('admin.payment-methods.update-card') || $request->routeIs('admin.payment-methods.delete')) {
             return $next($request); 
         }
         

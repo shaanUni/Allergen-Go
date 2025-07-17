@@ -82,6 +82,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('auth:admin', 'subscribed')->group(function () {
         Route::get('/checkout', [SubscriptionController::class, 'checkout']);
         Route::post('/admin/subscription/cancel', [SubscriptionController::class, 'cancelSubscription'])->name('subscription.cancel');
+
         Route::post('/admin/subscription/buy', [SubscriptionController::class, 'resubscribe'])->name('subscription.buy');
 
         Route::post('/admin/payment-methods/{paymentMethod}/default', [SubscriptionController::class, 'makeDefault'])->name('payment-methods.default');
