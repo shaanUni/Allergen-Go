@@ -36,7 +36,7 @@ class LoginController extends Controller
                 //If it has been swapped more than 5 times, but it was over a week ago, reset everything
                 } else if($admin->ip_data->switches >= 5 && !$isWithinPastWeek){
                     $admin->ip_data->switches = 0;
-                    $admin->ip_data?->date_of_first_switch = now();
+                    $admin->ip_data->date_of_first_switch = now();
                     $admin->ip_data->ip_address = request()->ip();
                     $admin->ip_data->save();
                 
