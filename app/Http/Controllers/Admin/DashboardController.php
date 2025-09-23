@@ -54,10 +54,6 @@ class DashboardController extends Controller
 
         $showIpForm = true;
 
-        if(session('new_ip')){
-            $showIpForm = true;
-            session()->forget('new_ip');
-        }
         //get the unique code
         $restaurantCode = $this->getRestaurantCode();
         return view(

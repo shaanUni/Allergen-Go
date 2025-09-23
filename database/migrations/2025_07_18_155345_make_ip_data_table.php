@@ -16,8 +16,10 @@ return new class extends Migration
             $table->unsignedBigInteger('admin_id');
             $table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade');
             $table->string('ip_address')->nullable();
-            $table->tinyInteger('switches')->unsigned()->nullable();
+            $table->tinyInteger('switches')->unsigned()->default(0);
             $table->date('date_of_first_switch')->nullable();
+            $table->boolean('account_sharing')->default(false);
+
             $table->timestamps();
         });
     }
