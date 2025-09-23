@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Auth\SessionGuard;
 use Illuminate\Support\Facades\Auth;
 use Log;
 
@@ -25,7 +26,7 @@ class LoginController extends Controller
         if (Auth::guard('admin')->attempt($credentials)) {
             $admin = Auth::guard('admin')->user()->fresh();
             
-            Auth::logoutOtherDevices($request->password);
+            Auth::guard('admin')->logoutOtherDevices($request->password);
 
             if($admin->ip_data && request()->ip() != $admin->ip_data->ip_address){
                 //if date of first switch happened within this week     
