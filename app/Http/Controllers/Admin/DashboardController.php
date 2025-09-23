@@ -58,7 +58,7 @@ class DashboardController extends Controller
         $restaurantCode = $this->getRestaurantCode();
         return view(
             'admin.dashboard',
-            ['restaurant_code' => $restaurantCode, 'showIpForm' => $showIpForm]
+            ['restaurant_code' => $restaurantCode]
         );
     }
 
