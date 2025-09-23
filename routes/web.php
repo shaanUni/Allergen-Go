@@ -79,7 +79,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
     //Once the admin has logged in, they can acsess these pages
-    Route::middleware('auth:admin', 'subscribed')->group(function () {
+    Route::middleware(['auth:admin', 'auth.session'], 'subscribed')->group(function () {
         Route::get('/checkout', [SubscriptionController::class, 'checkout']);
         Route::post('/admin/subscription/cancel', [SubscriptionController::class, 'cancelSubscription'])->name('subscription.cancel');
 
