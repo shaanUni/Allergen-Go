@@ -58,4 +58,8 @@ class Admin extends Authenticatable
         return $this->hasMany(\Laravel\Cashier\Subscription::class, 'user_id');
     }
 
+    public function ip_data(){
+        return $this->hasOne(IpData::class);
+    }
+
 }

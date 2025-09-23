@@ -7,10 +7,12 @@ use App\Jobs\SendWelcomeEmail;
 use App\Jobs\InitAccountPageInfo;
 use App\Models\Admin;
 
+use App\Models\IpData;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\URL;
 use Carbon\Carbon;
+use PHPUnit\TextUI\XmlConfiguration\RemoveRegisterMockObjectsFromTestArgumentsRecursivelyAttribute;
 use Stripe\StripeClient;
 use Illuminate\Notifications\Notifiable;
 
@@ -28,22 +30,39 @@ class DashboardController extends Controller
     {
 
         $admin = Auth::guard('admin')->user()->fresh();
+        
+        $ip = request()->ip();
 
         //If the user just made an account, and they are seeing dashboard for the first time
         if(session('new_user')){
             
+            $date = Carbon::today();
+
+            $ip = IpData::create([
+                'admin_id' => $admin->id,
+                'ip_address' => $ip,
+                'date_of_first_switch' => $date,
+            ]);
+
             //Card details, dates for next payment
             InitAccountPageInfo::dispatch($admin);
-            
+
             //send hellp email
             SendWelcomeEmail::dispatch($admin)->delay(now()->addMinute());
             session()->forget('new_user');
+        }
+
+        $showIpForm = true;
+
+        if(session('new_ip')){
+            $showIpForm = true;
+            session()->forget('new_ip');
         }
         //get the unique code
         $restaurantCode = $this->getRestaurantCode();
         return view(
             'admin.dashboard',
-            ['restaurant_code' => $restaurantCode,]
+            ['restaurant_code' => $restaurantCode, 'showIpForm' => $showIpForm]
         );
     }
 

@@ -22,6 +22,10 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::guard('admin')->attempt($credentials)) {
+            $admin = Auth::guard('admin')->user()->fresh();
+            if($admin->ip_data && request()->ip() != $admin->ip_data->ip_address){
+                session(['new_ip'=> true]);
+            }
             return redirect()->route('admin.dashboard');
         }
 
