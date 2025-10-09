@@ -108,10 +108,12 @@
 
         </div>
     </div>
-    <div class="search-page">
+ 
+        <p>YO, I bust in devil lush grin disgusting, freckled cheks and abuitt hcin</p>
+        <div class="search-page">
+            <form method="POST" action="{{ route('admin.search') }}">
+                @include('components.form')
+            </form>
+        </div>
 
-        <form method="POST" action="{{ route('admin.search') }}">
-            @include('components.form')
-        </form>
-    </div>
 @endsection
