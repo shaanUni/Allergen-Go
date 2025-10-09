@@ -27,6 +27,11 @@ class RegisterController extends Controller
             'password' => 'required|string|min:6|confirmed',
         ]);
 
+        if (!filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
+            return back()->withErrors(['email' => 'Invalid email address.']);
+        }
+        
+
         $admin = Admin::create([
             'name' => $request->name,
             'email' => $request->email,
