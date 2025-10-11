@@ -121,7 +121,6 @@ class StatsPageController extends Controller
             $uuids[] = $uuid;
             session(['uuids' => $uuids]);
         }
-        dd("kpi");
 
         return view(
             'admin.stats',
