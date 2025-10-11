@@ -96,6 +96,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('stats', [StatsPageController::class, 'index'])->name('stats');
         Route::post('search', [StatsPageController::class, 'search'])->name('search');
+        Route::post('individual/{id}/{state}', [StatsPageController::class, 'showIndividualDish'])->name('individual');
 
 
         Route::get('dishes', [DishController::class, 'index'])->name('dishes.index');

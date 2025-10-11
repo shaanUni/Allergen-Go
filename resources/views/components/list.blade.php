@@ -1,7 +1,7 @@
 <div class="list-main">
 
     <div class="list-forms top">
-        <form method="GET" action="{{ route('user.qr', ['code' => $restaurant->restaurant_code]) }}">
+        <form method="GET" action="{{ Route::currentRouteName() == 'user.selected' ? route('user.qr', ['code' => $restaurant->restaurant_code]) : route('admin.stats') }}">
             @csrf
             <button type="submit" class="top-buttons">Re-select Allergens</button>
         </form>
@@ -50,7 +50,7 @@
                 </p>
 
                 <div class="list-forms">
-                    <form method="POST" action="{{ route('user.individual', ['id' => $dish->id, 'state' => 1]) }}">
+                    <form method="POST" action="{{ Route::currentRouteName() == 'admin.search' ? route('admin.individual', ['id' => $dish->id, 'state' => 1]) : route('user.individual', ['id' => $dish->id, 'state' => 1]) }}">
                         @csrf
                         <input type="hidden" name="uuid" value="{{ $uuid }}">
                         <button type="submit" class="action-button">View Dish</button>
@@ -59,7 +59,7 @@
                     @php
                         $selectedBool = session('selectedDishes'.$uuid, []);
                     @endphp
-                    @if (Route::currentRouteName() != 'user.selected')
+                    @if (Route::currentRouteName() != 'user.selected' && Route::currentRouteName() != 'admin.search')
                         <form method="POST" action="{{ route('user.adddish', ['id' => $dish->id, 'state' => 1]) }}">
                             @csrf
                             <input type="hidden" name="uuid" value="{{ $uuid }}">
@@ -129,7 +129,7 @@
                     @php
                         $selectedBool = session('selectedRemoveableDishes'.$uuid, []);
                     @endphp
-                    @if (Route::currentRouteName() != 'user.selected')
+                    @if (Route::currentRouteName() != 'user.selected' && Route::currentRouteName() != 'admin.search')
                         <form method="POST" action="{{ route('user.adddish', ['id' => $dish->id, 'state' => 0]) }}">
                             @csrf
                             <input type="hidden" name="uuid" value="{{ $uuid }}">
@@ -144,7 +144,7 @@
         </div> {{-- ← added this closing tag --}}
     @endforeach
 
-    @if (Route::currentRouteName() != 'user.selected')
+    @if (Route::currentRouteName() != 'user.selected' && Route::currentRouteName() != 'admin.search')
         <div class="list-text finished-btn">
             <form method="POST" action="{{ route('user.selected') }}">
                 @csrf

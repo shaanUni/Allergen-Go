@@ -97,11 +97,6 @@ class SearchController extends Controller
         $dishesWithRemoveables = $filteredAllergens['removeables'];
         $restaurant = $filteredAllergens['restaurant'];
 
-        //Give the user a unique ID
-        if (!session()->has('guest_token')) {
-            session(['guest_token' => (string) Str::uuid()]);
-        }
-
         //Store the restaurant id with the user: note - should ! be removed as needs to be updated
         if (!session()->has('restaurant')) {
             session(['restaurant' => $restaurant]);
