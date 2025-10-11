@@ -8,11 +8,13 @@ use App\Models\Admin;
 use App\Models\Dishes;
 use App\Models\Searches;
 use App\Models\AllergenCount;
-
+use App\Models\Opt_in_logs;
 use App\Models\SelectedDishes;
+
 use App\Services\AllergenService;
 use App\Services\SearchService;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -106,6 +108,20 @@ class StatsPageController extends Controller
             $filteredDishes = Dishes::findMany($ids);
         }
 
+        do {
+            $uuid = (string) Str::uuid();
+            //The check for uniqueness
+        } while (Opt_in_logs::where('session_uuid', $uuid)->exists());
+          
+        // Grab exsisting UUIDs or create an array
+        $uuids = session('uuids', []);
+
+        if (!in_array($uuid, $uuids)) {
+            //add the new uuid
+            $uuids[] = $uuid;
+            session(['uuids' => $uuids]);
+        }
+        dd("kpi");
 
         return view(
             'admin.stats',
@@ -122,6 +138,7 @@ class StatsPageController extends Controller
                 'filteredDishesCount' => $filteredDishesCount,
                 'groupedCounts' => $groupedCounts,
                 'diet' => $dietaryRestrictions,
+                'uuid' => $uuid, 
             ],
         );
     }
