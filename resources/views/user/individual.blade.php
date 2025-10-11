@@ -65,6 +65,7 @@
                     }
                 }
             @endphp
+            @if (Route::currentRouteName() != 'admin.search')
             <div class="list-form">
             <form method="POST" action="{{ route('user.adddish', ['id' => $dish->id, 'state' => $state]) }}">
                 @csrf
@@ -74,5 +75,6 @@
             </form>
             </div>
         </div>
+        @endif
     </div>
 @endsection

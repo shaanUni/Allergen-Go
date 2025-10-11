@@ -47,8 +47,11 @@ class DashboardController extends Controller
             //Card details, dates for next payment
             InitAccountPageInfo::dispatch($admin);
 
-            //send hellp email
+            //send welcome email
             SendWelcomeEmail::dispatch($admin)->delay(now()->addMinute());
+
+            $this->generate();
+
             session()->forget('new_user');
         }
 
@@ -62,6 +65,7 @@ class DashboardController extends Controller
         );
     }
 
+    //Generate a new unique restaurant code
     public function generate()
     {
         // get exsisting code
@@ -85,7 +89,7 @@ class DashboardController extends Controller
             $newRestaurantCode->save();
         }
 
-        return redirect()->route('admin.dashboard')->with('success', 'New code Generated.');
+        return 0;
     }
 
 

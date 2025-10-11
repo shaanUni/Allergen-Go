@@ -90,13 +90,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        Route::get('generate', [DashboardController::class, 'generate'])->name('generate');
         Route::get('qrcode', [DashboardController::class, 'qrCode'])->name('qrcode');
         Route::get('account', [DashboardController::class, 'account'])->name('account');
         Route::post('/update-card', [SubscriptionController::class, 'updateCard'])->name('payment-methods.update-card');
 
         Route::get('stats', [StatsPageController::class, 'index'])->name('stats');
         Route::post('search', [StatsPageController::class, 'search'])->name('search');
+        Route::post('individual/{id}/{state}', [StatsPageController::class, 'showIndividualDish'])->name('individual');
 
 
         Route::get('dishes', [DishController::class, 'index'])->name('dishes.index');

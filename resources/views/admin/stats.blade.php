@@ -108,10 +108,14 @@
 
         </div>
     </div>
-    <div class="search-page">
+ 
+        <p>Below is the same form that the user would use, when visiting your restaurant. Use the form to replicate their experience, and see 
+            if any certain allergies are lacking dishes on your menu.
+        </p>
+        <div class="search-page">
+            <form method="POST" action="{{ route('admin.search') }}">
+                @include('components.form')
+            </form>
+        </div>
 
-        <form method="POST" action="{{ route('admin.search') }}">
-            @include('components.form')
-        </form>
-    </div>
 @endsection

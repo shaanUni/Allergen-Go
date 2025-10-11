@@ -8,11 +8,13 @@ use App\Models\Admin;
 use App\Models\Dishes;
 use App\Models\Searches;
 use App\Models\AllergenCount;
-
+use App\Models\Opt_in_logs;
 use App\Models\SelectedDishes;
+
 use App\Services\AllergenService;
 use App\Services\SearchService;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -106,6 +108,19 @@ class StatsPageController extends Controller
             $filteredDishes = Dishes::findMany($ids);
         }
 
+        do {
+            $uuid = (string) Str::uuid();
+            //The check for uniqueness
+        } while (Opt_in_logs::where('session_uuid', $uuid)->exists());
+          
+        // Grab exsisting UUIDs or create an array
+        $uuids = session('uuids', []);
+
+        if (!in_array($uuid, $uuids)) {
+            //add the new uuid
+            $uuids[] = $uuid;
+            session(['uuids' => $uuids]);
+        }
 
         return view(
             'admin.stats',
@@ -122,6 +137,7 @@ class StatsPageController extends Controller
                 'filteredDishesCount' => $filteredDishesCount,
                 'groupedCounts' => $groupedCounts,
                 'diet' => $dietaryRestrictions,
+                'uuid' => $uuid, 
             ],
         );
     }
@@ -135,14 +151,24 @@ class StatsPageController extends Controller
 
     public function search(Request $request)
     {
+
+        
         //Call a service method that will compare user allergies with the dish allergens
         $filteredAllergens = SearchService::search($request, "client");
-
+        
+        //The search service will return false if the user added no data to the form or restaurant code, so redirect
+        if ($filteredAllergens == "empty") {
+            return redirect()->route('admin.stats')->with('failure', 'You must select either a dietary restriction (e.g. halal, vegan), or one allergen.');
+        }
+        
         //Gather results to pass through
         $edibleDishes = $filteredAllergens['dishes'];
         $dishesWithRemoveables = $filteredAllergens['removeables'];
         $restaurant = $filteredAllergens['restaurant'];
-
+        
+        //get the UUID
+        $uuid = $request->input('uuid');
+        
         //return to the view with the dish and restaurant
         return view(
             'admin.list',
@@ -150,8 +176,24 @@ class StatsPageController extends Controller
                 'dishes' => $edibleDishes,
                 'removeables' => $dishesWithRemoveables,
                 'restaurant' => $restaurant,
+                'uuid' => $uuid,
             ],
         );
+    }
+
+    public function showIndividualDish(Request $request, $id, $state)
+    {
+        //get the UUID
+        $uuid = $request->input('uuid');
+
+        //find the dish in the DB
+        $dish = Dishes::findOrFail($id);
+
+        //parse that dishes allergen info
+        $allergens = AllergenService::parse($dish->allergen_string)['allergens'];
+        $removeable = AllergenService::parse($dish->allergen_string)['combined'];
+
+        return view('user.individual', ['dish' => $dish, 'state' => $state, 'uuid' => $uuid], compact('allergens', 'removeable'));
     }
 
 }

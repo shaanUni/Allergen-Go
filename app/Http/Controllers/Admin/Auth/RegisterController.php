@@ -31,7 +31,6 @@ class RegisterController extends Controller
             return back()->withErrors(['email' => 'Invalid email address.']);
         }
         
-
         $admin = Admin::create([
             'name' => $request->name,
             'email' => $request->email,
