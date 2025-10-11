@@ -50,7 +50,7 @@ class DashboardController extends Controller
             //send welcome email
             SendWelcomeEmail::dispatch($admin)->delay(now()->addMinute());
 
-            //$this->generate();
+            $this->generate();
 
             session()->forget('new_user');
         }
@@ -89,6 +89,7 @@ class DashboardController extends Controller
             $newRestaurantCode->save();
         }
 
+        return 0;
     }
 
 

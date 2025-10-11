@@ -90,7 +90,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        Route::get('generate', [DashboardController::class, 'generate'])->name('generate');
         Route::get('qrcode', [DashboardController::class, 'qrCode'])->name('qrcode');
         Route::get('account', [DashboardController::class, 'account'])->name('account');
         Route::post('/update-card', [SubscriptionController::class, 'updateCard'])->name('payment-methods.update-card');

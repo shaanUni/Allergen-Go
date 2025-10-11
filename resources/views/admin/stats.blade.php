@@ -109,7 +109,9 @@
         </div>
     </div>
  
-        <p>YO, I bust in devil lush grin disgusting, freckled cheks and abuitt hcin</p>
+        <p>Below is the same form that the user would use, when visiting your restaurant. Use the form to replicate their experience, and see 
+            if any certain allergies are lacking dishes on your menu.
+        </p>
         <div class="search-page">
             <form method="POST" action="{{ route('admin.search') }}">
                 @include('components.form')
