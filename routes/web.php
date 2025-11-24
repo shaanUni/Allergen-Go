@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DishController;
+use App\Http\Controllers\Admin\DishShareController;
 use App\Http\Controllers\Admin\StatsPageController;
 use App\Http\Controllers\User\SelectedDishesController;
 use App\Models\SelectedDishes;
@@ -88,7 +89,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/admin/payment-methods/{paymentMethod}/default', [SubscriptionController::class, 'makeDefault'])->name('payment-methods.default');
         Route::delete('/admin/payment-methods/{paymentMethod}', [SubscriptionController::class, 'deletePaymentMethod'])->name('payment-methods.delete');
 
-
+        Route::get('share-dish', [DishShareController::class, 'index'])->name('share-dish.index');
+        Route::post('share-dish-sharing', [DishShareController::class, 'initShare'])->name('init-share');
+        Route::get('dish-share-accept/{uuid}', [DishShareController::class, 'accept'])->name('dish-share-accept')->middleware('signed');
+        Route::get('dish-share-decline/{uuid}', [DishShareController::class, 'decline'])->name('dish-share-decline')->middleware('signed');
+        Route::delete('dish-share/{child_admin_id}', [DishShareController::class, 'delete'])->name('dish-share.delete');
+        
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('qrcode', [DashboardController::class, 'qrCode'])->name('qrcode');
         Route::get('account', [DashboardController::class, 'account'])->name('account');
