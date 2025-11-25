@@ -36,6 +36,10 @@ Route::get('/terms-of-service', function () {
     return view('user.legal.terms');
 })->name('terms.of.service');
 
+Route::get('/email-message', function () {
+    return view('generic-email-page');
+})->name('generic.email.message');
+
 Route::prefix('user')->name('user.')->group(function () {
 
     Route::get('search', [SearchController::class, 'search'])->name('search');

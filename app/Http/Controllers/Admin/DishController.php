@@ -39,7 +39,7 @@ class DishController extends Controller
         $ownDishes = Dishes::where('admin_id', $adminId);
 
         //Retrive any dishes from "dish shares", where a parent restaurant would share its dishes
-        $share = DishShare::where('child_admin_id', $adminId)->first();
+        $share = DishShare::where('child_admin_id', $adminId)->where('status', true)->first();
         
         //If the query above is not null, the admin is involved in a dish share
         $dishShareStatus = $share != null ? true : false;
@@ -72,7 +72,7 @@ class DishController extends Controller
         $dishes = $dishes->paginate(10);
 
         //Does this admin share it's dishes with anyone
-        $children = DishShare::where('parent_admin_id', $adminId)->get();
+        $children = DishShare::where('parent_admin_id', $adminId)->where('status', true)->get();
 
         return view('admin.dishes.index', compact('dishes', 'dishShareStatus', 'children'));
     }

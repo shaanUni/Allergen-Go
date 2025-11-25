@@ -23,6 +23,8 @@ class StatsPageController extends Controller
 
     public function index(Request $request)
     {
+        return redirect('/admin/dishes');
+
         $request->validate([
             'search_allergen' => ['nullable', 'string', 'max:255']
         ]);
