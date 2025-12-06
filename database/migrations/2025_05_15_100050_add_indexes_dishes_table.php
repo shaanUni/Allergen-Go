@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('dishes', function (Blueprint $table) {
             //
             $table->index('admin_id'); // For filtering by admin
-            $table->fullText(['dish_name', 'description']); // For full-text search
+            $table->string(['dish_name', 'description']); 
         });
     }
 
