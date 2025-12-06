@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::table('dishes', function (Blueprint $table) {
             //
             $table->index('admin_id'); // For filtering by admin
-            $table->string('dish_name')->index();
-            $table->string('description')->index(); 
+            $table->index('dish_name');//->index();
+            $table->index('description');//->index(); 
         });
     }
 
