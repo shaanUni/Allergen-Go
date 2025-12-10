@@ -15,7 +15,7 @@ return new class extends Migration
             //
             $table->index('admin_id'); // For filtering by admin
             $table->index('dish_name');//->index();
-            $table->index('description');//->index(); 
+            $table->index('description', 'dishes_description_index', 'FULLTEXT');
         });
     }
 
