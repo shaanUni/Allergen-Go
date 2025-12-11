@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('admin_id')->index();
             $table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade');
             $table->string('dish_name')->length(255)->index();
-            $table->text('description')->length(255)->nullable()->index(); 
+            $table->string('description')->length(255)->nullable()->index(); 
             $table->string('allergen_string'); 
             $table->decimal('price', 8, 2);           
             $table->timestamps();
