@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('dishes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('admin_id');
+            $table->unsignedBigInteger('admin_id')->index();
             $table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade');
-            $table->string('dish_name');
-            $table->text('description')->nullable(); 
+            $table->string('dish_name')->index();
+            $table->text('description')->nullable()->index(); 
             $table->string('allergen_string'); 
             $table->decimal('price', 8, 2);           
             $table->timestamps();
