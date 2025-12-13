@@ -1,12 +1,16 @@
 @extends('admin.layout')
 
 @section('content')
+@if (session('message'))
+    <p>{{session('message')}}</p>
+@endif
 <div class="admin-dashboard">
     <h1 class="dashboard-title">Welcome to the Admin Dashboard</h1>
     <p class="dashboard-subtitle">This is your secure area to manage content and settings.</p>
 
     <div class="dashboard-nav">
         <a href="{{ route('admin.dishes.index') }}" class="dashboard-link">Manage Dishes</a>
+        <a href="{{ route('admin.share-dish.index') }}" class="dashboard-link">Share Dishes</a>
         <a href="{{ route('admin.qrcode') }}" class="dashboard-link">QR Code</a>
         <a href="{{ route('admin.stats') }}" class="dashboard-link">View Stats</a>
     </div>
