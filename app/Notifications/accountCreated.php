@@ -34,12 +34,13 @@ class accountCreated extends Notification implements ShouldQueue
 
         //Send a welcome email, if they have a valid subscription, and include the date their trial is over
         if ($subscription && $subscription->trial_ends_at) {
+            Log::info('in here all is fine');
             $this->date = Carbon::parse($subscription->trial_ends_at)->format('F j, Y');
             return ['mail'];
 
         } else {
             Log::warning("No subscription found for Admin ID: {$notifiable->id}");
-            return [];
+            return ['mail'];
         }
     }
 
