@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('emails.layout')
 
 @section('content')
 @if (session('message'))

@@ -7,6 +7,9 @@
 
 </style>
 @section('content')
+<form action="{{ route('admin.dashboard') }}" method="get" style="display:inline;">
+  <button type="submit" class="back-button">Back to Dashboard</button>
+</form>
 <div class="container-fluid my-4">
     <div class="row justify-content-center">
         <div class="col-12 col-lg-10 col-xl-8">

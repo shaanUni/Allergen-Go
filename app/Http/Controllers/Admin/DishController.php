@@ -19,11 +19,14 @@ class DishController extends Controller
     //vegan, vegetarian, halal
     protected array $diet;
 
+    protected int $admin_id;
+
     public function __construct()
     {
         //We have a file which the whole codebase uses to acsess allergens. This is the single source of truth for whole app/site, which will refer here.
         $this->allergens = config('allergens');
         $this->diet = config('dietary-restrictions');
+        $this->admin_id = Auth::guard('admin')->id();
     }
 
     public function index(Request $request)
@@ -32,14 +35,11 @@ class DishController extends Controller
             'search_dish' => ['nullable', 'string', 'max:255']
         ]);
 
-        //Id of the logged in admin
-        $adminId = Auth::guard('admin')->id();
-        
         //retrive all dishes belonging to the currently authenticated admin
-        $ownDishes = Dishes::where('admin_id', $adminId);
+        $ownDishes = Dishes::where('admin_id', $this->admin_id);
 
         //Retrive any dishes from "dish shares", where a parent restaurant would share its dishes
-        $share = DishShare::where('child_admin_id', $adminId)->where('status', true)->first();
+        $share = DishShare::where('child_admin_id', $this->admin_id)->where('status', true)->first();
         
         //If the query above is not null, the admin is involved in a dish share
         $dishShareStatus = $share != null ? true : false;
@@ -72,7 +72,7 @@ class DishController extends Controller
         $dishes = $dishes->paginate(10);
 
         //Does this admin share it's dishes with anyone
-        $children = DishShare::where('parent_admin_id', $adminId)->where('status', true)->get();
+        $children = DishShare::where('parent_admin_id', $this->admin_id)->where('status', true)->get();
 
         return view('admin.dishes.index', compact('dishes', 'dishShareStatus', 'children'));
     }
@@ -95,7 +95,7 @@ class DishController extends Controller
         $allergenString = AllergenService::restaurantSerialize($request);
 
         //ensure that we are only adding the dish to the correct restaurant
-        $validated['admin_id'] = $adminId;
+        $validated['admin_id'] = $this->admin_id;
         $validated['allergen_string'] = $allergenString;
 
         $dish = Dishes::create($validated);
@@ -151,11 +151,8 @@ class DishController extends Controller
         $allergenString = AllergenService::restaurantSerialize($request);
 
         //ensure that we are only adding the dish to the correct restaurant
-        $validated['admin_id'] = $adminId;
+        $validated['admin_id'] = $this->admin_id;
         $validated['allergen_string'] = $allergenString;
-
-        //ensure that we are only adding the dish to the correct restaurant
-        $validated['admin_id'] = $adminId;
 
         //This->diet contains dietary restrictions, halal, vagan.. etc
         foreach ($this->diet as $key) {
@@ -189,7 +186,7 @@ class DishController extends Controller
     //This function can be used when editing/deleting dishes, and ensures the dish being modified belongs to the current logged in user
     public function authorizeDish(Dishes $dish)
     {
-        if ($dish->admin_id != $adminId) {
+        if ($dish->admin_id != $this->admin_id) {
             abort(403, 'No');
         }
     }

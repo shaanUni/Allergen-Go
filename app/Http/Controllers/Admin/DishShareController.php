@@ -110,6 +110,7 @@ class DishShareController extends Controller
     {
         $dishShareRecord = DishShare::where('child_admin_id', $child_admin_id)->first();
         $dishShareRecord->delete();
+        return redirect()->route('admin.dashboard')->with('message', 'Their access has now been revoked.');
     }
 
     //Function to set status. If false, they have delcined
@@ -138,7 +139,7 @@ class DishShareController extends Controller
         $dishShare->save();
 
         //success
-        return redirect()->route('generic.email.message')->with('message', 'Success!');
+        return redirect()->route('generic.email.message')->with('message', 'You are now part of a dish share! You will be able to see the dishes of your parent (the restaurant who shared the dishes with you.)');
     }
 
 }

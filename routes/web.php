@@ -37,7 +37,7 @@ Route::get('/terms-of-service', function () {
 })->name('terms.of.service');
 
 Route::get('/email-message', function () {
-    return view('generic-email-page');
+    return view('emails.generic-email-page');
 })->name('generic.email.message');
 
 Route::prefix('user')->name('user.')->group(function () {
