@@ -61,7 +61,7 @@ class DishShareController extends Controller
         $childAdminId = $ChildAdmin->id;
 
         //if the person we are sharing with is already involved, don't share with them
-        $childAlreadyHasParent = DishShare::where('child_admin_id', $childAdminId)->where('declined', false)->get();
+        $childAlreadyHasParent = DishShare::where('child_admin_id', $childAdminId)->orWhere('parent_admin_id', $childAdminId)->where('declined', false)->get();
 
         if (count($childAlreadyHasParent) != 0) {
             return back()->withErrors(['email' => 'You are unable to start a dish share, as the admin you are sharing with already has a dish share.']);
