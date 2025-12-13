@@ -29,7 +29,6 @@ class DashboardController extends Controller
     {
 
         $admin = Auth::guard('admin')->user()->fresh();
-        $admin->notify(new accountCreated());
         
         //If the user just made an account, and they are seeing dashboard for the first time
         if(session('new_user')){
@@ -48,6 +47,7 @@ class DashboardController extends Controller
             InitAccountPageInfo::dispatch($admin);
 
             //send welcome email
+            $admin->notify(new accountCreated());
 
             $this->generate();
 

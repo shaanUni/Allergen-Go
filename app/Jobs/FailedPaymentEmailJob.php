@@ -36,8 +36,6 @@ class FailedPaymentEmailJob implements ShouldQueue
         ->whereNull('account_delete_date')
         ->where('reminder_email_sent', false)
         ->get();
-        Log::info('toby');
-
 
         foreach ($admins as $admin) {
             //  needs to go inJob
