@@ -6,6 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class accountCreated extends Notification implements ShouldQueue
 {
@@ -15,10 +17,9 @@ class accountCreated extends Notification implements ShouldQueue
     /**
      * Create a new notification instance.
      */
-    public function __construct($date)
+    public function __construct()
     {
         //
-        $this->date = $date;
     }
 
     /**
@@ -28,7 +29,18 @@ class accountCreated extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        //Get the admins subscription table
+        $subscription = $notifiable->subscription('default');
+
+        //Send a welcome email, if they have a valid subscription, and include the date their trial is over
+        if ($subscription && $subscription->trial_ends_at) {
+            $this->date = Carbon::parse($subscription->trial_ends_at)->format('F j, Y');
+            return ['mail'];
+
+        } else {
+            Log::warning("No subscription found for Admin ID: {$notifiable->id}");
+            return [];
+        }
     }
 
     /**
@@ -41,15 +53,4 @@ class accountCreated extends Notification implements ShouldQueue
             ->view('emails.account-created', ['date' => $this->date]);
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
-    {
-        return [
-            //
-        ];
-    }
 }

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\SendWelcomeEmail;
 use App\Jobs\InitAccountPageInfo;
 use App\Models\Admin;
 
@@ -30,13 +29,14 @@ class DashboardController extends Controller
     {
 
         $admin = Auth::guard('admin')->user()->fresh();
+        $admin->notify(new accountCreated());
         
-        $ip = request()->ip();
-
         //If the user just made an account, and they are seeing dashboard for the first time
         if(session('new_user')){
             
             $date = Carbon::today();
+            
+            $ip = request()->ip();
 
             $ip = IpData::create([
                 'admin_id' => $admin->id,
@@ -48,14 +48,11 @@ class DashboardController extends Controller
             InitAccountPageInfo::dispatch($admin);
 
             //send welcome email
-            SendWelcomeEmail::dispatch($admin)->delay(now()->addMinute());
 
             $this->generate();
 
             session()->forget('new_user');
         }
-
-        $showIpForm = true;
 
         //get the unique code
         $restaurantCode = $this->getRestaurantCode();
