@@ -24,11 +24,30 @@
 
 <div class="mb-3">
     <label class="form-label">Allergens</label><br>
+
+    @php
+        $oldAllergens = old('allergens', $selectedAllergens ?? []);
+    @endphp
+
     @foreach ($allergens as $allergen)
+        @php
+            $allergenChecked = in_array($allergen, $oldAllergens ?? [], true);
+
+            $removableKey = "removables.$allergen";
+            $removableDefault = !empty($combined[$allergen] ?? false);
+            $removableChecked = old($removableKey, $removableDefault) == 1;
+        @endphp
+
         <div class="border rounded p-2 mb-2">
             <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="allergen-{{ $allergen }}" name="allergens[]"
-                    value="{{ $allergen }}" {{ in_array($allergen, $selectedAllergens ?? []) ? 'checked' : '' }}>
+                <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="allergen-{{ $allergen }}"
+                    name="allergens[]"
+                    value="{{ $allergen }}"
+                    @checked($allergenChecked)
+                >
 
                 <label class="form-check-label" for="allergen-{{ $allergen }}">
                     {{ ucfirst($allergen) }}
@@ -36,7 +55,16 @@
             </div>
 
             <div class="form-check ms-4">
-                <input type="checkbox" name="removables[{{ $allergen }}]" value="1" {{ isset($combined[$allergen]) && $combined[$allergen] ? 'checked' : '' }}>
+                <input type="hidden" name="removables[{{ $allergen }}]" value="0">
+
+                <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="removable-{{ $allergen }}"
+                    name="removables[{{ $allergen }}]"
+                    value="1"
+                    @checked($removableChecked)
+                >
 
                 <label class="form-check-label" for="removable-{{ $allergen }}">
                     Removable
@@ -46,11 +74,11 @@
     @endforeach
 </div>
 
+
 <div class="mb-3">
     <div class="border rounded p-2 mb-2">
         <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="no_allergens" name="no_allergens" value="1" {{ isset($no_allergens) && $no_allergens ? 'checked' : '' }}>
-
+            <input type="checkbox" class="form-check-input" id="no_allergens" name="no_allergens" value="1" {{ (isset($no_allergens) && $no_allergens) || old(key: 'no_allergens', default: $dish->no_allergens ?? '') ? 'checked' : '' }}>
             <label class="form-check-label" for="no_allergens">
                 No Allergens?
             </label>
@@ -74,9 +102,14 @@
                             $dietSetBool = true;
                         }
                     }
+
+                    $key = "diet.$diet_restriction"; 
+                    $defaultChecked = !empty($dietSelected[$diet_restriction] ?? false);
+                    $checked = old($key, $defaultChecked) === 'true';
                 @endphp
+
                 <input type="checkbox" class="form-check-input" id="diet-{{ $diet_restriction }}"
-                    name="diet[{{ $diet_restriction }}]" value="true" {{ $dietSetBool ? 'checked' : '' }}>
+                    name="diet[{{ $diet_restriction }}]" value="true" {{ $dietSetBool ? 'checked' : '' }} @checked($checked)>
 
                 <label class="form-check-label" for="diet-{{ $diet_restriction }}">
                     {{ ucfirst($diet_restriction) }}
