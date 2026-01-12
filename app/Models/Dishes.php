@@ -17,9 +17,11 @@ class Dishes extends Model
     }
 
     public function getFormattedAllergenStringAttribute(){
+        
         if($this->allergen_string == ','){
             return 'No Allergens Added!';
         }
+
         $rawString = $this->allergen_string;
 
         //strip leading/trailing commas + whitespace

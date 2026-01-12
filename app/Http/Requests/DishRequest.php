@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Dishes;
+
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
@@ -35,6 +37,19 @@ class DishRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(function ($validator) {
+
+            $dishName = $this->input('dish_name');
+
+            //get the number of dishes with that name
+            $others = Dishes::where('dish_name', $dishName)->count();
+
+            //if a dish is already using that name return with errors
+            if($others > 0){
+                $validator->errors()->add(
+                    'dish_name',
+                    'You need to select a unique dish name. This one is already being used.'
+                );
+            }
 
             //allergens in the dish
             $allergens = $this->input('allergens', []);
