@@ -21,21 +21,21 @@
     <textarea name="description" id="description"
         class="form-control">{{ old('description', $dish->description ?? '') }}</textarea>
 </div>
-
 <div class="mb-3">
     <label class="form-label">Allergens</label><br>
 
-    @php
-        $oldAllergens = old('allergens', $selectedAllergens ?? []);
-    @endphp
-
     @foreach ($allergens as $allergen)
         @php
-            $allergenChecked = in_array($allergen, $oldAllergens ?? [], true);
+            $allergenChecked = in_array(
+                $allergen,
+                old('allergens', $selectedAllergens ?? []),
+                true
+            );
 
-            $removableKey = "removables.$allergen";
-            $removableDefault = !empty($combined[$allergen] ?? false);
-            $removableChecked = old($removableKey, $removableDefault) == 1;
+            $removablesOld = old('removables');
+            $removableChecked = is_array($removablesOld)
+                ? !empty($removablesOld[$allergen])
+                : (!empty($combined[$allergen] ?? false));
         @endphp
 
         <div class="border rounded p-2 mb-2">
@@ -55,8 +55,6 @@
             </div>
 
             <div class="form-check ms-4">
-                <input type="hidden" name="removables[{{ $allergen }}]" value="0">
-
                 <input
                     type="checkbox"
                     class="form-check-input"
@@ -102,7 +100,7 @@
                             $dietSetBool = true;
                         }
                     }
-
+                    
                     $key = "diet.$diet_restriction"; 
                     $defaultChecked = !empty($dietSelected[$diet_restriction] ?? false);
                     $checked = old($key, $defaultChecked) === 'true';
