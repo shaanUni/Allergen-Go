@@ -5,7 +5,7 @@
         <button type="submit" class="back-button">Back to Dashboard</button>
     </form>
     @if ($dishShareStatus)
-        You are involved in a dish share! This means some dishes you see belong to the parent restaurant.
+        <p>You are involved in a dish share! This means some dishes you see belong to the parent restaurant.</p>
     @endif
     <div class="dishes-page">
         <div class="dishes-header">
@@ -68,8 +68,12 @@
             </table>
         </div>
         {{ $dishes->links('pagination::bootstrap-5') }}
+<br>
+<br>
+<br>
 
         @if (count($children))
+        <div class="dishes-table-wrapper">
             <table class="dishes-table">
                 <thead>
                     <tr>
@@ -80,6 +84,9 @@
                 <tbody>
                     You are sharing your dishes with some other restaurants! Please see which ones below, and you can control
                     access from here.
+                    <br>
+                    <br>
+
 
                     @foreach ($children as $child)
                         <tr>
@@ -99,6 +106,7 @@
                 </tbody>
 
             </table>
+            </div>
         @endif
     </div>
 @endsection

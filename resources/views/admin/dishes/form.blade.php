@@ -1,4 +1,14 @@
 @csrf
+@if ($errors->any())
+  <div class="alert alert-danger">
+    <ul class="mb-0">
+      @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+      @endforeach
+    </ul>
+  </div>
+@endif
+
 
 <div class="mb-3">
     <label for="dish_name" class="form-label">Dish Name</label>
@@ -11,7 +21,6 @@
     <textarea name="description" id="description"
         class="form-control">{{ old('description', $dish->description ?? '') }}</textarea>
 </div>
-
 
 <div class="mb-3">
     <label class="form-label">Allergens</label><br>
@@ -38,34 +47,36 @@
 </div>
 
 <div class="mb-3">
+    <div class="border rounded p-2 mb-2">
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="no_allergens" name="no_allergens" value="1" {{ isset($no_allergens) && $no_allergens ? 'checked' : '' }}>
+
+            <label class="form-check-label" for="no_allergens">
+                No Allergens?
+            </label>
+        </div>
+    </div>
+</div>
+
+<div class="mb-3">
     <label class="form-label">Other dietary restrictions: </label><br>
     @php
-     $i = 0;
+        $i = 0;
     @endphp
     @foreach ($diet as $diet_restriction)
         <div class="border rounded p-2 mb-2">
             <div class="form-check">
-                <input
-                    type="hidden"
-                    name="diet[{{ $diet_restriction }}]"
-                    value="false"
-                >
+                <input type="hidden" name="diet[{{ $diet_restriction }}]" value="false">
                 @php
                     $dietSetBool = false;
-                    if(isset($dietSelected[$i])){
-                        if($dietSelected[$i]){
+                    if (isset($dietSelected[$i])) {
+                        if ($dietSelected[$i]) {
                             $dietSetBool = true;
                         }
                     }
                 @endphp
-                <input
-                    type="checkbox"
-                    class="form-check-input"
-                    id="diet-{{ $diet_restriction }}"
-                    name="diet[{{ $diet_restriction }}]"
-                    value="true"
-                    {{ $dietSetBool ? 'checked' : '' }}
-                >
+                <input type="checkbox" class="form-check-input" id="diet-{{ $diet_restriction }}"
+                    name="diet[{{ $diet_restriction }}]" value="true" {{ $dietSetBool ? 'checked' : '' }}>
 
                 <label class="form-check-label" for="diet-{{ $diet_restriction }}">
                     {{ ucfirst($diet_restriction) }}
@@ -73,8 +84,8 @@
             </div>
         </div>
         @php
-     $i ++;
-    @endphp
+            $i++;
+        @endphp
     @endforeach
 </div>
 
@@ -82,7 +93,7 @@
 
 <div class="mb-3">
     <label for="price" class="form-label">£ Price</label>
-    <input type="number" name="price" id="price" step="0.01" class="form-control"
+    <input type="number" min="0" max="999999" name="price" id="price" step="0.01" class="form-control"
         value="{{ old('price', $dish->price ?? '') }}" required>
 </div>
 

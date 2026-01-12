@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DishRequest;
+
 use App\Models\Dishes;
 use App\Models\DishShare;
 
@@ -10,6 +12,7 @@ use App\Services\AllergenService;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\Routing\Matcher\TraceableUrlMatcher;
 
 class DishController extends Controller
 {
@@ -81,17 +84,10 @@ class DishController extends Controller
         return view('admin.dishes.create', ['allergens' => $this->allergens, 'diet' => $this->diet]);
     }
 
-    public function store(Request $request)
+    public function store(DishRequest $request)
     {
-        //validate all inputs for creating a new dish
-        $validated = $request->validate([
-            'dish_name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'allergens' => 'array',
-            'price' => 'required|numeric|min:0',
-            'diet' => 'array',
-        ]);
-
+        $validated = $request->validated();
+        
         $allergenString = AllergenService::restaurantSerialize($request);
 
         //ensure that we are only adding the dish to the correct restaurant
@@ -100,13 +96,18 @@ class DishController extends Controller
 
         $dish = Dishes::create($validated);
 
+        if(isset($validated['no_allergens'])){
+            $dish->no_allergens = true;
+        }
+
         //This->diet contains dietary restrictions, halal, vagan.. etc
         foreach ($this->diet as $key) {
             if ($validated['diet'][$key] == 'true') { // Use the key to check the value from the form
                 $dish->{$key} = true; //the key can even be used to access the model, as it is $dish->halal, $dish->vegan
-                $dish->save();
             }
         }
+
+        $dish->save();
 
         return redirect()->route('admin.dishes.index')->with('success', 'Dish created successfully.');
     }
@@ -129,24 +130,22 @@ class DishController extends Controller
         $dish->vegan ? $dietaryRestrictionSelectedArray[] = true : $dietaryRestrictionSelectedArray[] = false;
         $dish->halal ? $dietaryRestrictionSelectedArray[] = true : $dietaryRestrictionSelectedArray[] = false;
 
-        return view('admin.dishes.edit', ['allergens' => $this->allergens, 'dish' => $dish, 'combined' => $combined, 'selectedAllergens' => $allergens, 'diet' => $this->diet, 'dietSelected' => $dietaryRestrictionSelectedArray]);
+        return view('admin.dishes.edit', ['allergens' => $this->allergens, 'dish' => $dish, 'combined' => $combined, 'selectedAllergens' => $allergens, 'diet' => $this->diet, 'dietSelected' => $dietaryRestrictionSelectedArray, 'no_allergens' => $dish->no_allergens]);
     }
 
-    public function update(Request $request, $id)
+    public function update(DishRequest $request, $id)
     {
         //First find the dish
         $dish = Dishes::findOrFail($id);
 
         $this->authorizeDish($dish);
 
-        //validate new inputs for new dish
-        $validated = $request->validate([
-            'dish_name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'allergens' => 'array',
-            'price' => 'required|numeric|min:0',
-            'diet' => 'array',
-        ]);
+        $validated = $request->validated();
+
+        if(empty($validated['no_allergens'])){
+            $dish->no_allergens = false;
+            $dish->save();
+        }
 
         $allergenString = AllergenService::restaurantSerialize($request);
 
@@ -158,13 +157,12 @@ class DishController extends Controller
         foreach ($this->diet as $key) {
             if ($validated['diet'][$key] == 'true') { // Use the key to check the value from the form
                 $dish->{$key} = true; //the key can even be used to access the model, as it is $dish->halal, $dish->vegan
-                $dish->save();
             } else if ($validated['diet'][$key] == 'false') {
                 $dish->{$key} = false; 
-                $dish->save();
             }
         }
 
+        $dish->save();
         $dish->update($validated);
 
         return redirect()->route('admin.dishes.index')->with('success', 'Dish updated successfully.');
