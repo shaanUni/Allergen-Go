@@ -40,8 +40,13 @@ class DishRequest extends FormRequest
 
             $dishName = $this->input('dish_name');
 
+            //if of the dish
+            $id = $this->route('id');
+
             //get the number of dishes with that name
-            $others = Dishes::where('dish_name', $dishName)->count();
+            $others = Dishes::where('dish_name', $dishName)
+                ->where('id', '!=', $id)
+                ->count();
 
             //if a dish is already using that name return with errors
             if($others > 0){
