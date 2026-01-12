@@ -38,7 +38,7 @@
                         <tr>
                             <td>{{ $dish->dish_name }}</td>
                             <td>{{ $dish->description }}</td>
-                            <td>{{ $dish->allergen_string }}</td>
+                            <td>{{ $dish->formatted_allergen_string }}</td>
                             <td>£{{ number_format($dish->price, 2) }}</td>
                             @if ($dish->admin_id == Auth::guard('admin')->id())
                                 <td style="white-space: nowrap;">

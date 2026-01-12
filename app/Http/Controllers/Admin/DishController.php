@@ -51,8 +51,10 @@ class DishController extends Controller
         if($share){
             //Get the admin relationship with the parent
             $parentAdminId = $share->parentAdmin->id;
+            
             //Query the parent admins dishes 
             $sharedDishes = Dishes::where('admin_id', $parentAdminId);
+
             //merge the query builders
             $dishes = $ownDishes->union($sharedDishes);
         
