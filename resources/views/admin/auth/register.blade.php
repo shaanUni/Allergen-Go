@@ -7,7 +7,7 @@
         <h1 class="register-title">Create Admin Account</h1>
         <p class="register-desc">
           Create your account to get started. You’ll then be taken to our secure payment page to complete
-          your subscription — £30/month for full access to AllergenGo.
+          your subscription — £{{ config('service-info.monthly_price') }}/month for full access to AllergenGo.
         </p>
         <div class="register-legal-links documents" >
             <a class="green-link legal-long" href="{{ route('admin.agreement') }}">Restaurant Customer Agreement</a>

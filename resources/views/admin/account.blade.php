@@ -40,7 +40,7 @@
 
                         @if ($cancelled === '' && $date != null)
                             <p class="stat-info">
-                                Next payment: <strong>£30 on {{ $date }}</strong>
+                                Next payment: <strong>£{{ config('service-info.monthly_price') }} on {{ $date }}</strong>
                             </p>
                         @endif
                     @endif

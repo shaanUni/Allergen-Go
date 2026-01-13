@@ -45,7 +45,7 @@
   <section class="legal-section">
     <h2>4. Payment Terms</h2>
     <ul>
-      <li>Subscription fee: £30/month per location.</li>
+      <li>Subscription fee: £{{ config('service-info.monthly_price') }}/month per location.</li>
       <li>Billing is handled via Stripe.</li>
       <li>Subscriptions auto-renew monthly unless canceled in advance.</li>
       <li>If you cancel, you retain access until the end of the billing period.</li>
@@ -92,7 +92,7 @@
   <section class="legal-section">
     <h2>Summary</h2>
     <ul>
-      <li>£30/month per location</li>
+      <li>£{{ config('service-info.monthly_price') }}/month per location</li>
       <li>One location/branch per subscription</li>
       <li>Chain licenses available — contact us or have each branch purchase AllergenGo seperately with different emails.</li>
       <li>Stripe handles billing</li>
