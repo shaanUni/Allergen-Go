@@ -1,7 +1,7 @@
 <div class="list-main">
 
     <div class="list-forms top">
-        <form method="GET" action="{{ Route::currentRouteName() == 'user.selected' ? route('user.qr', ['code' => $restaurant->restaurant_code]) : route('admin.stats') }}">
+        <form method="GET" action="{{ \Illuminate\Support\Str::contains(Route::currentRouteName(), 'user') ? route('user.qr', ['code' => $restaurant->restaurant_code]) : route('admin.stats') }}">
             @csrf
             <button type="submit" class="top-buttons">Re-select Allergens</button>
         </form>
