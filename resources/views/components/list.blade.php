@@ -21,6 +21,9 @@
                 : 'List of Edible Dishes' }}
         </h2>
         <h3>Restaurant: <span>{{ $restaurant->name }}</span></h3>
+        <p>We hope allergengo has been useful in helping you choose a suitable meal to eat! If you liked using allergengo
+           make sure you tell other restaurants about us, so you, and many other people with allergies can eat safe wherever you are!
+        </p>
     </div>
 
     @foreach ($dishes as $dish)
@@ -28,6 +31,10 @@
             $allergens = \App\Services\AllergenService::parse($dish->allergen_string)['allergens'];
         @endphp
 
+        <p>Your dishes, safe to eat:
+        </p>
+        <br>
+        
         <div class="list-box">
             <div class="list-text">
                 <h4 class="dish-name">{{ $dish->dish_name }}</h4>
@@ -79,7 +86,8 @@
             <h3>⚠️ Attention:</h3>
             <p>
                 The dishes below contain allergens you're allergic to, but the chef has marked them as removable.
-                If you choose one, please tell the waiter to remove those allergens during preparation.
+                If you choose one, please tell the waiter to remove those allergens during preparation. Do this at your own risk
+                -  we can not guarantee the restaurant can do this safeley. Speak to the restaurant for more details.
             </p>
         </div>
     @endif
