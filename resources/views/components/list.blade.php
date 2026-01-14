@@ -38,7 +38,6 @@
         <div class="list-box">
             <div class="list-text">
                 <h4 class="dish-name">Dish Name: {{ $dish->dish_name }}</h4>
-                <p class="dish-description">Dish Description: {{ Str::limit($dish->description, 25, '...') }}</p>
                 <div class="stat-list">
                     @php
                         $halal = $dish->halal     ? 'halal,'     : '';
