@@ -38,8 +38,11 @@
             
             <!-- Ingredients list -->
             <div class="dish-card__ingredients">
-                <h3>Ingredients</h3>
-                <ul>
+                <h3>Allergens: </h3>
+                @if ($dish->no_allergens)
+                        This dish contains no allergens!
+                    @else
+                    <ul>
                     @foreach ($allergens as $allergen)
                         <li>
                             <span class="allergen">{{ $allergen }}</span>
@@ -49,6 +52,7 @@
                         </li>
                     @endforeach
                 </ul>
+                    @endif
             </div>
 
             @php

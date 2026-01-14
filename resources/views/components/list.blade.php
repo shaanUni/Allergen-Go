@@ -25,20 +25,20 @@
            make sure you tell other restaurants about us, so you, and many other people with allergies can eat safe wherever you are!
         </p>
     </div>
-
+    <p>Your dishes, safe to eat:
+        </p>
+        <br>
     @foreach ($dishes as $dish)
         @php
             $allergens = \App\Services\AllergenService::parse($dish->allergen_string)['allergens'];
         @endphp
 
-        <p>Your dishes, safe to eat:
-        </p>
-        <br>
+     
         
         <div class="list-box">
             <div class="list-text">
-                <h4 class="dish-name">{{ $dish->dish_name }}</h4>
-                <p class="dish-description">{{ Str::limit($dish->description, 25, '...') }}</p>
+                <h4 class="dish-name">Dish Name: {{ $dish->dish_name }}</h4>
+                <p class="dish-description">Dish Description: {{ Str::limit($dish->description, 25, '...') }}</p>
                 <div class="stat-list">
                     @php
                         $halal = $dish->halal     ? 'halal,'     : '';
@@ -51,9 +51,13 @@
                 </div>
 
                 <p class="dish-allergens">
-                    @foreach (array_slice($allergens, 0, 4) as $allergen)
-                        {{ $allergen }}@if (! $loop->last), @else...@endif
-                    @endforeach
+                    @if ($dish->no_allergens)
+                        This dish contains no allergens!
+                    @else
+                        @foreach (array_slice($allergens, 0, 4) as $allergen)
+                            {{ $allergen }}@if (! $loop->last), @else...@endif
+                        @endforeach
+                    @endif
                 </p>
 
                 <div class="list-forms">
