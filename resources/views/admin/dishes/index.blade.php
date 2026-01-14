@@ -67,6 +67,7 @@
                 </tbody>
             </table>
         </div>
+        <br>
         {{ $dishes->links('pagination::bootstrap-5') }}
 <br>
 <br>
