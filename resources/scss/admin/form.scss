@@ -4,6 +4,49 @@ $accent-hover: darken($accent-color, 5%);
 $border-color: #ccc;
 $bg-light: #f9f9f9;
 
+.tt{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: help;
+  position: relative;
+  user-select: none;
+  background: rgba(0,0,0,.08);
+  color: rgba(0,0,0,.75);
+}
+
+.tt__text{
+  position: absolute;
+  left: 50%;
+  top: 120%;
+  transform: translateX(-50%);
+  width: 240px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.35;
+  background: #111;
+  color: #fff;
+  box-shadow: 0 10px 25px rgba(0,0,0,.18);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.tt:hover .tt__text,
+.tt:focus .tt__text{
+  opacity: 1;
+  visibility: visible;
+}
+
 .admin-form {
   font-family: $font-primary;
   background-color: #ffffff;
