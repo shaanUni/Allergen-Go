@@ -10,7 +10,7 @@
           your subscription — £{{ config('service-info.monthly_price') }}/month for full access to AllergenGo.
           <br>
           <br>
-          You will receive a full {{ config('service-info.trial_period') == 14 ? "2 week trial" : config('service-info.trial_period')" day trial"}} , so you will not be charged until the trial is over. You can cancel anytime before then.
+          You will receive a full {{ config('service-info.trial_period') == 14 ? "2 week trial" : config('service-info.trial_period')." day trial"}}, so you will not be charged until the trial is over. You can cancel anytime before then.
         </p>
         <div class="register-legal-links documents" >
             <a class="green-link legal-long" href="{{ route('admin.agreement') }}">Restaurant Customer Agreement</a>
