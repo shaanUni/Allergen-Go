@@ -188,3 +188,18 @@ $list-gap: 1.25rem;
   position: relative;
   left: 20px;
 }
+
+@media (max-width: 353px){
+  .top-buttons{
+    margin-bottom: 8px;
+  }
+  .top-buttons:last-child{
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 353px){
+  form + form .top-buttons{
+    margin-top: 8px;
+  }
+}

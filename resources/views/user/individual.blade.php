@@ -28,6 +28,14 @@
                             <p class="stat-item">  <strong>{{ $halal }} {{ $vegan }} {{ $vegetarian }}</strong> </p>
                 </div>
 
+            @if ($state == 0)
+                <div class="warning-box">
+                    <strong>⚠️ This dish contains allergens</strong><br>
+                    Some allergens can be removed, but please speak to the staff before ordering.
+                </div>
+            @endif
+            <br>
+            
             <!-- Ingredients list -->
             <div class="dish-card__ingredients">
                 <h3>Ingredients</h3>
@@ -42,15 +50,6 @@
                     @endforeach
                 </ul>
             </div>
-
-
-            @if ($state == 0)
-                <div class="warning-box">
-                    <strong>⚠️ This dish contains allergens</strong><br>
-                    Some allergens can be removed, but please speak to the staff before ordering.
-                </div>
-            @endif
-
 
             @php
                 $selectedBool = false;
@@ -74,7 +73,7 @@
                 <button type="submit" class="action-button-select {{ $selectedBool ? 'remove-button' : ''}}">{{ $selectedBool ? 'Remove Dish' : 'Add dish'}}</button>
             </form>
             </div>
-        </div>
         @endif
+        </div>
     </div>
 @endsection

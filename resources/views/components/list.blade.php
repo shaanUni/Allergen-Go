@@ -1,6 +1,6 @@
 <div class="list-main">
 
-    <div class="list-forms top">
+    <div class="list-forms top-actions top">
         <form method="GET" action="{{ \Illuminate\Support\Str::contains(Route::currentRouteName(), 'user') ? route('user.qr', ['code' => $restaurant->restaurant_code]) : route('admin.stats') }}">
             @csrf
             <button type="submit" class="top-buttons">Re-select Allergens</button>
@@ -9,7 +9,7 @@
             <form method="POST" action="{{ route('user.reset') }}">
                 @csrf
                 <input type="hidden" name="uuid" value="{{ $uuid }}">
-                <button type="submit" class="top-buttons right-btn">Re-select dishes</button>
+                <button type="submit" class="top-buttons ">Re-select dishes</button>
             </form>
         @endif
     </div>
