@@ -10,7 +10,6 @@ use App\Models\AllergenCount;
 
 use App\Models\SelectedDishes;
 use App\Services\AllergenService;
-use App\Services\SearchService;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;

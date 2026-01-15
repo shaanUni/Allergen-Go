@@ -65,7 +65,6 @@ class StatsPageController extends Controller
         $allergens = config('allergens');
         $dietaryRestrictions = config('dietary-restrictions');
 
-
         //Restaurant will enter an allergy, to sort all selected dishes where people have had this allergy
         $allergenSearch = $request->input('search_allergen');
 
@@ -149,12 +148,10 @@ class StatsPageController extends Controller
             ->where('admin_id', Auth::guard('admin')->id());
     }
 
-    public function search(Request $request)
+    public function search(Request $request, SearchService $searchService)
     {
-
-        
         //Call a service method that will compare user allergies with the dish allergens
-        $filteredAllergens = SearchService::search($request, "client");
+        $filteredAllergens = $searchService->search($request, "client");
         
         //The search service will return false if the user added no data to the form or restaurant code, so redirect
         if ($filteredAllergens == "empty") {

@@ -10,6 +10,7 @@ use App\Models\DishShare;
 
 use App\Services\AllergenService;
 
+use App\Services\GetAllDishesService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\Routing\Matcher\TraceableUrlMatcher;
@@ -32,36 +33,14 @@ class DishController extends Controller
         $this->admin_id = Auth::guard('admin')->id();
     }
 
-    public function index(Request $request)
+    public function index(Request $request, GetAllDishesService $getDishesService)
     {
         $request->validate([
             'search_dish' => ['nullable', 'string', 'max:255']
         ]);
 
-        //retrive all dishes belonging to the currently authenticated admin
-        $ownDishes = Dishes::where('admin_id', $this->admin_id);
-
-        //Retrive any dishes from "dish shares", where a parent restaurant would share its dishes
-        $share = DishShare::where('child_admin_id', $this->admin_id)->where('status', true)->first();
-        
-        //If the query above is not null, the admin is involved in a dish share
-        $dishShareStatus = $share != null ? true : false;
-
-        //If a dish share found
-        if($share){
-            //Get the admin relationship with the parent
-            $parentAdminId = $share->parentAdmin->id;
-            
-            //Query the parent admins dishes 
-            $sharedDishes = Dishes::where('admin_id', $parentAdminId);
-
-            //merge the query builders
-            $dishes = $ownDishes->union($sharedDishes);
-        
-        //If there is no dish share
-        } else{
-            $dishes = $ownDishes;
-        }
+        $dishes = $getDishesService->getDishes($this->admin_id);
+        $dishShareStatus = $getDishesService->dishShareStatus($this->admin_id);
         
         //If admin used searchbar to search for dish by name or description
         if ($request->filled('search_dish')) {

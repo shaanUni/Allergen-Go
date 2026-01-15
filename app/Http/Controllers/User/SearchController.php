@@ -48,7 +48,7 @@ class SearchController extends Controller
         return view('user.userqrcode', ['code' => $code, 'allergens' => $this->allergens, 'diet' => $this->diet]);
     }
 
-    public function searchCode(Request $request)
+    public function searchCode(Request $request, SearchService $searchService)
     {
 
         do {
@@ -83,7 +83,7 @@ class SearchController extends Controller
         session()->forget(['selectedDishes', 'selectedRemoveableDishes', 'removeables', 'user_allergy_string']);
 
         //Call a service method that will compare user allergies with the dish allergens
-        $filteredAllergens = SearchService::search($request, "user");
+        $filteredAllergens = $searchService->search($request, 'user');
 
         //The search service will return false if the user added no data to the form or restaurant code, so redirect
         if ($filteredAllergens == "empty") {

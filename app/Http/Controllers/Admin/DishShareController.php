@@ -13,7 +13,6 @@ use App\Models\Opt_in_logs;
 use App\Models\SelectedDishes;
 
 use App\Services\AllergenService;
-use App\Services\SearchService;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;

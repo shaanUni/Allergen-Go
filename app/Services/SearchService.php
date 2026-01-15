@@ -3,16 +3,27 @@
 namespace App\Services;
 
 use App\Models\Admin;
-use App\Models\Searches;
 use App\Models\AllergenCount;
+use App\Models\Dishes;
+use App\Models\DishShare;
+use App\Models\Searches;
+use App\Services\GetAllDishesService;
 
 use Illuminate\Http\Request;
 
 //this service class can be called anywhere
 class SearchService
 {
+
+    protected GetAllDishesService $dishes;
+
+    public function __construct(GetAllDishesService $dishes)
+    {
+        $this->dishes = $dishes;
+    }
+
     //Take request from user, and compare dish allergens with user allergies
-    public static function search(Request $request, $whoami)
+    public function search(Request $request, $whoami)
     {
         //Validate code entered by user
         $validated = $request->validate([
@@ -44,7 +55,6 @@ class SearchService
             return "empty";
         }
 
-
         $userAllergies = [];
 
         //In case they don't have an allergy, they just want to search for halal dishes
@@ -57,7 +67,7 @@ class SearchService
         $restaurantCode = $validated['restaurant_code'];
 
         //Compare user allergies with restaurant dishes allergens
-        $filteredAllergens = self::filterAllergens($userAllergies, $dietaryRestrictionArray, $restaurant, $whoami);
+        $filteredAllergens = $this->filterAllergens($userAllergies, $dietaryRestrictionArray, $restaurant, $whoami);
 
         //If the restaurant code was invalid, redirect
         if (!$filteredAllergens && $whoami == "user") {
@@ -78,11 +88,13 @@ class SearchService
     }
 
     //Main function that compares user allergies with dish allergens
-    public static function filterAllergens($userAllergies, $dietaryRestrictionArray, $restaurant, $whoami)
+    public function filterAllergens($userAllergies, $dietaryRestrictionArray, $restaurant, $whoami)
     {
-        //Get the dishes that where eager loaded
-        $dishes = $restaurant->dishes;
+        
+        $dishes = $this->dishes->getDishes($restaurant->id);
 
+        $dishes = $dishes->get();
+        
         //This will contain dishes the user can eat
         $edibleDishes = [];
         $dishesWithRemoveables = [];
@@ -94,7 +106,7 @@ class SearchService
 
         //This is where the fun begins - Anakin Skywalker
         foreach ($dishes as $dish) {
-            self::dietaryRestrictionResolver($dish, $dietaryRestrictionArray);
+            $this->dietaryRestrictionResolver($dish, $dietaryRestrictionArray);
 
             //Parse dish's allergens
             $dishAllergens = AllergenService::parse($dish->allergen_string)['allergens'];
@@ -114,7 +126,7 @@ class SearchService
                 if ($removeable == false) {
                     $filteredDishAllergens[] = $dishAllergens[$i];
                     //If it is removeable and the removeable allergen is in the users allergies, also compare dietary restirctions
-                } else if ($removeable == true && in_array($dishAllergens[$i], $userAllergies) && self::dietaryRestrictionResolver($dish, $dietaryRestrictionArray)) {
+                } else if ($removeable == true && in_array($dishAllergens[$i], $userAllergies) && $this->dietaryRestrictionResolver($dish, $dietaryRestrictionArray)) {
                     //If the dish has already been added to the array, skip the rest of the iteration
                     if (in_array($dish->id, $existingIds)) {
                         $i++;
@@ -148,7 +160,7 @@ class SearchService
             $commonAllergens = array_intersect($filteredDishAllergens, $userAllergies);
 
             //If the array is empty, this means the dish does not have any allergens the user is allergic to, also ensure that the food is halal if user needs that
-            if (empty($commonAllergens) && self::dietaryRestrictionResolver($dish, $dietaryRestrictionArray)) {
+            if (empty($commonAllergens) && $this->dietaryRestrictionResolver($dish, $dietaryRestrictionArray)) {
                 $edibleDishes[] = $dish; // edibleDishes += dish
             }
         }
@@ -208,7 +220,7 @@ class SearchService
         ];
     }
 
-    public static function dietaryRestrictionResolver($dish, $userRestrictions)
+    public function dietaryRestrictionResolver($dish, $userRestrictions)
     {
         $diet = config('dietary-restrictions');
         foreach ($diet as $key) {
