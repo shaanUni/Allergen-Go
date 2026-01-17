@@ -61,7 +61,6 @@ class RegisterController extends Controller
             Log::info('inside admin id');        
 
             $ok = Auth::guard('admin')->loginUsingId($adminId); 
-            $request->session()->regenerate();
             session()->forget('pending_admin_id');
             session(['new_user' => 'true']);   
             $admin = Admin::where('id', $adminId)->first();        
