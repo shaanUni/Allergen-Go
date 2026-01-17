@@ -30,7 +30,9 @@ class DashboardController extends Controller
 
         $admin = Auth::guard('admin')->user()->fresh();
         
-        //If the user just made an account, and they are seeing dashboard for the first time
+        $subscription = $admin->subscription('default');
+        dd($subscription->trial_ends_at);//->format('F j, Y');
+        
         if(session('new_user')){
             
             $date = Carbon::today();
