@@ -16,24 +16,6 @@ use App\Http\Controllers\User\SearchController;
 use PhpParser\Node\Expr\FuncCall;
 use App\Http\Middleware\AdminSubscribedCheck;
 
-
-Route::get('/__debug/auth', function () {
-    return response()->json([
-        'url' => request()->fullUrl(),
-        'host' => request()->getHost(),
-        'scheme' => request()->getScheme(),
-        'session_id' => session()->getId(),
-        'session_name' => config('session.cookie'),
-        'session_domain' => config('session.domain'),
-        'session_secure' => config('session.secure'),
-        'session_samesite' => config('session.same_site'),
-        'admin_check' => Auth::guard('admin')->check(),
-        'admin_id' => Auth::guard('admin')->id(),
-        'web_check' => Auth::guard('web')->check(),
-        'web_id' => Auth::guard('web')->id(),
-    ]);
-});
-
 Route::get('/', function () {
     return view('restaurant');
 })->name('restaurant');
