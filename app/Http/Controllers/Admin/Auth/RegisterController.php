@@ -60,13 +60,13 @@ class RegisterController extends Controller
         if ($adminId) {
             Log::info('inside admin id');        
 
-            Auth::guard('admin')->loginUsingId($adminId);  
+            $ok = Auth::guard('admin')->loginUsingId($adminId);  
             session()->forget('pending_admin_id');
             session(['new_user' => 'true']);   
             $admin = Admin::where('id', $adminId)->first();        
             $admin->account_delete_date = null;
             $admin->save();
-            Log::info('redirect suii');        
+            Log::info("redirect suii - ok{$ok}");        
 
             return redirect()->route('admin.dashboard')->with('success', 'Account created and subscription active!');
         }
