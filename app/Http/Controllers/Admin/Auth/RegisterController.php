@@ -86,7 +86,6 @@ class RegisterController extends Controller
             $admin = Admin::where('id', $adminId)->first();        
             $admin->account_delete_date = null;
             $admin->save();
-            Log::info("redirect suii - ok{$ok}");        
 
             return redirect()->route('admin.dashboard')->with('success', 'Account created and subscription active!');
         }
