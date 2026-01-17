@@ -17,14 +17,10 @@
 
     <div class="code-box">
         @if ($restaurant_code == null)
-            <p class="code-warning">You need to generate a new code for users to access the app.</p>
-            <form action="{{ route('admin.generate') }}" method="GET">
-                @csrf
-                <button type="submit" class="dashboard-button">Generate Code</button>
-            </form>
+            <p class="code-warning">You need to generate a new code for users to access the app. email use as something went wrong.</p>
         @else
             <p class="code-label">Your restaurant's unique access code:</p>
-            <div class="code-display">{{ $restaurant_code }}</div>
+            <div class="code-display">{{ $restaurant_code ??null }}</div>
         @endif
     </div>
 
