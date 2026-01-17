@@ -30,9 +30,6 @@ class DashboardController extends Controller
 
         $admin = Auth::guard('admin')->user()->fresh();
         
-        $subscription = $admin->subscription('default');
-        dd($subscription->trial_ends_at);//->format('F j, Y');
-        
         if(session('new_user')){
             
             $date = Carbon::today();
