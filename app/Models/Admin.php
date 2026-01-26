@@ -25,6 +25,9 @@ class Admin extends Authenticatable
         'failed_payment_date',
         'default_payment_method',
         'reminder_email_sent',
+        'super_admin',
+        'super_admin_id',
+        'quantity',
     ];
 
     protected $hidden = [
@@ -60,6 +63,18 @@ class Admin extends Authenticatable
 
     public function ip_data(){
         return $this->hasOne(IpData::class);
+    }
+
+    public function location(){
+        return $this->hasOne(Location::class);
+    }
+    
+    public function childAccounts(){
+        return $this->hasMany(self::class, 'super_admin_id', 'id');
+    }
+
+    public function parentAccount(){
+        return $this->belongsTo(self::class, 'super_admin_id', 'id' );
     }
 
 }

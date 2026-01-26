@@ -4,27 +4,10 @@
   <div class="container register-page">
     <div class="register-card">
       <div class="register-info">
-        <h1 class="register-title">Create Admin Account</h1>
+        
+      <h1 class="register-title">Create New Admin Account</h1>
         <p class="register-desc">
-          Create your account to get started. You’ll then be taken to our secure payment page to complete
-          your subscription — £{{ config('service-info.monthly_price') }}/month for full access to AllergenGo.
-          <br>
-          <br>
-          You will receive a full
-          {{ config('service-info.trial_period') == 14 ? "2 week trial" : config('service-info.trial_period') . " day trial"}},
-          so you will not be charged until the trial is over. You can cancel anytime before then.
-        </p>
-        <div class="register-legal-links documents">
-          <a class="green-link legal-long" href="{{ route('admin.agreement') }}">Restaurant Customer Agreement</a>
-          <a class="green-link" href="{{ route('admin.terms.of.service') }}">Terms of service</a>
-        </div>
-        <br>
-        <br>
-        <p><strong>
-            Are you a multi branch orginisation? This form is for restaurants with a single location.
-            If you have more than one, <a class="green-link" href="{{ route('admin.multi-form-register') }}">Click
-              here</a>.
-          </strong>
+         
         </p>
       </div>
 
@@ -39,7 +22,7 @@
           </div>
         @endif
 
-        <form method="POST" action="{{ route('admin.register') }}" class="register-form">
+        <form method="POST" action="{{ route('admin.super-admin.submit') }}" class="register-form">
           @csrf
 
           <div class="form-group">
@@ -52,10 +35,20 @@
             <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
           </div>
 
-          <div style="display: none;" class="form-group">
-            <input class="form-control" type="number" id="quantity" name="quantity" value="1" readonly>
+          <div class="form-group">
+            <label for="city">City</label>
+            <input id="city" type="text" class="form-control" name="city" value="{{ old('city') }}" >
           </div>
 
+          <div class="form-group">
+            <label for="street">Street/Area</label>
+            <input id="street" type="text" class="form-control" name="street" value="{{ old('street') }}" >
+          </div>
+
+          <div class="form-group">
+            <label for="postcode">Postcode</label>
+            <input id="postcode" type="text" class="form-control" name="postcode" value="{{ old('postcode') }}" >
+          </div>
 
           <div class="form-group">
             <label for="password">Password</label>
@@ -68,7 +61,7 @@
           </div>
 
           <button type="submit" class="btn btn-primary create-account-submit btn-submit w-100">
-            Create Account &amp; Subscribe
+            Create Account
           </button>
         </form>
       </div>

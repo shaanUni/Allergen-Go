@@ -18,22 +18,40 @@ class RegisterController extends Controller
     {
         return view('admin.auth.register');
     }
+    
+    //multi branch registration has slightly different form
+    public function showMultiBranchRegisterForm()
+    {
+        return view('admin.auth.multi-branch-register');
+    }
 
     public function register(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:admins,email',
+            'quantity' => 'required|int',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
         if (!filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
             return back()->withErrors(['email' => 'Invalid email address.']);
         }
+
+        $quantity = (int) $request->quantity;
+
+        $super_admin = false;
+
+        //if more than 1 license is being purchased, they are a super admin
+        if($quantity > 1){
+            $super_admin = true;
+        }
         
         $admin = Admin::create([
             'name' => $request->name,
             'email' => $request->email,
+            'super_admin' => $super_admin,
+            'quantity' => $quantity,
             'password' => Hash::make($request->password),
         ]);
 
@@ -42,6 +60,7 @@ class RegisterController extends Controller
         // Redirect to Stripe Checkout
         return $admin->newSubscription('default', config('services.stripe.price_id')) // 2nd param is price ID
             ->trialDays(config('service-info.trial_period'))
+            ->quantity($quantity)
             ->checkout([
                 'success_url' => route('admin.subscription.success'),
                 'cancel_url' => route('admin.register'),

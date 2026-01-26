@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DishController;
 use App\Http\Controllers\Admin\DishShareController;
 use App\Http\Controllers\Admin\StatsPageController;
+use App\Http\Controllers\Admin\SuperAdmin\SuperAdminController;
 use App\Http\Controllers\User\SelectedDishesController;
 use App\Models\SelectedDishes;
 use Illuminate\Support\Facades\Route;
@@ -60,6 +61,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     // Registration
     Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
+    Route::get('/multi-branch-register', [RegisterController::class, 'showMultiBranchRegisterForm'])->name('multi-form-register');
+
     Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
 
     Route::get('/agreement', function () {
@@ -118,6 +121,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('dishes/{id}', [DishController::class, 'update'])->name('dishes.update');
 
         Route::delete('dishes/{id}', [DishController::class, 'destroy'])->name('dishes.destroy');
+
+        //super admin
+        Route::prefix('super-admin')->name('super-admin.')->group(function () {
+            Route::get('dashboard', [SuperAdminController::class, 'index'])->name('dashboard');
+            Route::get('new-admin', [SuperAdminController::class, 'newAdminForm'])->name('new-admin-form');
+            Route::post('submit', [SuperAdminController::class, 'submit'])->name('submit');
+        });
 
     });
 });

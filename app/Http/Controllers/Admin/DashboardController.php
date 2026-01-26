@@ -29,6 +29,10 @@ class DashboardController extends Controller
     {
 
         $admin = Auth::guard('admin')->user()->fresh();
+
+        if(is_null($this->getRestaurantCode())){
+            $this->generate();
+        }
         
         if(session('new_user')){
             
@@ -47,8 +51,6 @@ class DashboardController extends Controller
 
             //send welcome email
             $admin->notify((new accountCreated())->delay(now()->addMinutes(1)));
-
-            $this->generate();
 
             session()->forget('new_user');
         }
