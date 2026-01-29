@@ -16,9 +16,30 @@ class SuperAdminController extends Controller
 {
     public function index(Request $request)
     {
+        $request->validate([
+            'search_admin' => ['nullable', 'string', 'max:255']
+        ]);
+
         $admin = Auth::guard('admin')->user()->fresh();
-        $childrenAccounts = $admin->childAccounts()->get();
-        
+        $childrenAccounts = $admin->childAccounts();
+                
+        //If admin used searchbar to search for admin by name or location
+        if ($request->filled('search_admin')) {
+            $search = $request->input('search_admin');
+            //query
+            $childrenAccounts->where(function ($q) use ($search) {
+                //search by restaurant name
+                $q->where('name', 'like', "%{$search}%")
+                //search by location
+                ->orWhereHas('location', function ($query) use ($search) {
+                    $query->where('city', 'like', "%{$search}%")
+                    ->orWhere('street', 'like', "%{$search}%")
+                    ->orWhere('postcode', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        $childrenAccounts = $childrenAccounts->paginate(10);
         $reachedLimit = $admin->reachedLimit();
         
         return view(

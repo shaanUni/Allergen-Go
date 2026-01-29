@@ -131,6 +131,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('update-share-dish', [SuperAdminController::class, 'updateDishShareSatus'])->name('update-share-dish');
 
             Route::delete('delete-account/{admin}', [SuperAdminController::class, 'deleteAccount'])->name('delete-account');
+            Route::get('overall-stats', [StatsPageController::class, 'superAdminStats'])->name('overall-stats');
+
         });
 
     });

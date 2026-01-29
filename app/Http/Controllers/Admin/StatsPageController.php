@@ -23,6 +23,12 @@ class StatsPageController extends Controller
 
     public function index(Request $request)
     {
+        $admin = Admin::find(Auth::guard('admin')->id());
+
+        if ($admin->super_admin) {
+            //  dd("hhe");
+        }
+
         $request->validate([
             'search_allergen' => ['nullable', 'string', 'max:255']
         ]);
@@ -111,7 +117,7 @@ class StatsPageController extends Controller
             $uuid = (string) Str::uuid();
             //The check for uniqueness
         } while (Opt_in_logs::where('session_uuid', $uuid)->exists());
-          
+
         // Grab exsisting UUIDs or create an array
         $uuids = session('uuids', []);
 
@@ -136,7 +142,102 @@ class StatsPageController extends Controller
                 'filteredDishesCount' => $filteredDishesCount,
                 'groupedCounts' => $groupedCounts,
                 'diet' => $dietaryRestrictions,
-                'uuid' => $uuid, 
+                'uuid' => $uuid,
+            ],
+        );
+    }
+
+    public function superAdminStats(Request $request)
+    {
+        $request->validate([
+            'search_allergen' => ['nullable', 'string', 'max:255']
+        ]);
+        //get super admin record
+        $admin = Admin::find(Auth::guard('admin')->id());
+
+        //find all the searches from subaccounts
+        $totalSearches = Searches::whereIn('admin_id', $admin->childAccounts->pluck('id'))
+            ->count();
+
+        //Find all of the failed searches. (failed meaning the user could not have anything to eat)
+        $failedSearches = Searches::whereIn('admin_id', $admin->childAccounts->pluck('id'))
+            ->where('failure', true)
+            ->orderBy('created_at', 'desc') //order by most recent
+            ->take(5) // restrict at 5
+            ->get();
+
+        //Find the total of all the failed searches
+        $failedSearchesCount = Searches::whereIn('admin_id', $admin->childAccounts->pluck('id'))
+            ->where('failure', true)
+            ->orderBy('created_at', 'desc') //order by most recent
+            ->count();
+
+        $allergenCounts = AllergenCount::whereIn('admin_id', $admin->childAccounts->pluck('id'))
+            ->orderBy('count', 'desc')
+            ->get();
+
+        $halalUsers = Searches::whereIn('admin_id', $admin->childAccounts->pluck('id'))
+            ->where('halal', 1)
+            ->get();
+
+        $totalHalalUsers = count($halalUsers);
+        //List of allergens for the form
+        $allergens = config('allergens');
+        $dietaryRestrictions = config('dietary-restrictions');
+        $restaurantCode = 0;
+        //Eager load dishes with the selected dishes table, and multi tenancy security
+        $dishes = SelectedDishes::with('dish')->whereIn('admin_id', $admin->childAccounts->pluck('id'))->get();
+
+        //For the dish counts box
+        $groupedByDishId = $dishes
+            ->groupBy('dishes_id')                      // Group by dishes_id
+            ->sortByDesc(fn($group) => $group->count()) // Sort groups by count descending
+            ->take(7);
+
+
+        //Another variable of eager laoded dishes with the selected dishes table
+        $selectedDishes = SelectedDishes::with('dish')
+            ->whereIn('admin_id', $admin->childAccounts->pluck('id'))
+            ->get();
+            $allergenSearch = $request->input('search_allergen');
+
+
+        $filteredDishesCount = 0;
+        $filteredDishes = [];
+        $groupedCounts = [];
+      //If restaurant entered something into search box
+      if ($allergenSearch) {
+        //Do the search
+        $filtered = $selectedDishes->filter(function ($selected) use ($allergenSearch) {
+            return $selected->dish && str_contains($selected->user_allergy_string, $allergenSearch);
+        });
+
+        //Get all the ids of selected dishes table
+        $dishes1 = $filtered->unique('id')->filter();
+        //then get ids of the dishes themselves
+        $ids = $dishes1->pluck('dishes_id');
+        //count each dish
+        $groupedCounts = $ids->countBy()->sortDesc();
+        //total
+        $filteredDishesCount = count($ids);
+        //Get dishes from ids
+        $filteredDishes = Dishes::findMany($ids);
+    }
+        return view(
+            'admin.stats',
+            [
+                'totalSearches' => $totalSearches,
+                'failedSearches' => $failedSearches,
+                'allergenCounts' => $allergenCounts,
+                'allergens' => $allergens,
+                'code' => $restaurantCode, // restaurant ID for the search form
+                'failedSearchCount' => $failedSearchesCount,
+                'totalHalalUsers' => $totalHalalUsers,
+                'groupedByDishId' => $groupedByDishId,
+                'filteredDishes' => $filteredDishes,
+                'filteredDishesCount' => $filteredDishesCount,
+                'groupedCounts' => $groupedCounts,
+                'diet' => $dietaryRestrictions,
             ],
         );
     }
@@ -152,20 +253,20 @@ class StatsPageController extends Controller
     {
         //Call a service method that will compare user allergies with the dish allergens
         $filteredAllergens = $searchService->search($request, "client");
-        
+
         //The search service will return false if the user added no data to the form or restaurant code, so redirect
         if ($filteredAllergens == "empty") {
             return redirect()->route('admin.stats')->with('failure', 'You must select either a dietary restriction (e.g. halal, vegan), or one allergen.');
         }
-        
+
         //Gather results to pass through
         $edibleDishes = $filteredAllergens['dishes'];
         $dishesWithRemoveables = $filteredAllergens['removeables'];
         $restaurant = $filteredAllergens['restaurant'];
-        
+
         //get the UUID
         $uuid = $request->input('uuid');
-        
+
         //return to the view with the dish and restaurant
         return view(
             'admin.list',

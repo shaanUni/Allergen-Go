@@ -17,7 +17,7 @@
         </p>
         <div class="dashboard-nav">
             <a href="{{ route('admin.dishes.index') }}" class="dashboard-link">Manage Dishes</a>
-            <a href="{{ route('admin.stats') }}" class="dashboard-link">View Stats</a>
+            <a href="{{ route('admin.super-admin.overall-stats') }}" class="dashboard-link">View Overall Stats</a>
         </div>
 
         <div class="dishes-page">
@@ -52,11 +52,11 @@
                 </label>
             </form>
 
-            <form method="GET" action="{{ route('admin.dishes.index') }}" class="mb-3 search-dishes-div">
-                <input class="form-control text-box" type="text" name="search_dish" placeholder="search"
-                    value="{{ request('search_dish') }}">
+            <form method="GET" action="{{ route('admin.super-admin.dashboard') }}" class="mb-3 search-dishes-div">
+                <input class="form-control text-box" type="text" name="search_admin" placeholder="search"
+                    value="{{ request('search_admin') }}">
                 <button type="submit" class="btn btn-primary">Search</button>
-                <a type="submit" href="{{ route('admin.dishes.index') }}" class="btn btn-primary red-btn">Clear</a>
+                <a type="submit" href="{{ route('admin.super-admin.dashboard') }}" class="btn btn-primary red-btn">Clear</a>
             </form>
 
             <div class="dishes-table-wrapper">
