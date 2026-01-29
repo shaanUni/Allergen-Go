@@ -17,7 +17,7 @@
         </p>
         <div class="dashboard-nav">
             <a href="{{ route('admin.dishes.index') }}" class="dashboard-link">Manage Dishes</a>
-            <a href="{{ route('admin.super-admin.overall-stats') }}" class="dashboard-link">View Overall Stats</a>
+            <a href="{{ route('admin.stats') }}" class="dashboard-link">View Stats</a>
         </div>
 
         <div class="dishes-page">

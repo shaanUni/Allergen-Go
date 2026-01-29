@@ -26,8 +26,9 @@
                             $vegan = $failed->vegan == true ? 'vegan,' : '';
                             $vegetarian = $failed->vegetarian == true ? 'vegetarian,' : '';
                         @endphp
-                                               
-                            <p class="stat-item">  <strong>{{ $halal }} {{ $vegan }} {{ $vegetarian }}</strong> {{ implode(', ', $failedAllergens) }}</p>
+
+                        <p class="stat-item"> <strong>{{ $halal }} {{ $vegan }} {{ $vegetarian }}</strong>
+                            {{ implode(', ', $failedAllergens) }}</p>
                     @endforeach
                 </div>
             </div>
@@ -53,29 +54,29 @@
                 <p class="stat-info">
                     Number of times each dish was selected:
                 </p>
-                    <table class="dish-counts-table">
-                        <thead>
+                <table class="dish-counts-table">
+                    <thead>
+                        <tr>
+                            <th>Dish Name</th>
+                            <th>Revenue</th>
+                            <th>Times selected</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($groupedByDishId as $dishId => $group)
+                            @php
+                                $dish = \App\Models\Dishes::find($dishId);
+                                $revenue = $dish->price * count($group);
+                                $count = count($group);
+                            @endphp
                             <tr>
-                                <th>Dish Name</th>
-                                <th>Revenue</th>
-                                <th>Times selected</th>
+                                <td>{{ $dish->dish_name }}</td>
+                                <td>£{{ number_format($revenue, 2) }}</td>
+                                <td class="count">{{ $count }}</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($groupedByDishId as $dishId => $group)
-                                @php
-                                    $dish = \App\Models\Dishes::find($dishId);
-                                    $revenue = $dish->price * count($group);
-                                    $count = count($group);
-                                @endphp
-                                <tr>
-                                    <td>{{ $dish->dish_name }}</td>
-                                    <td>£{{ number_format($revenue, 2) }}</td>
-                                    <td class="count">{{ $count }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                        @endforeach
+                    </tbody>
+                </table>
 
 
             </div>
@@ -108,8 +109,10 @@
 
         </div>
     </div>
- 
-        <p>Below is the same form that the user would use, when visiting your restaurant. Use the form to replicate their experience, and see 
+
+    @if (!$superAdmin)
+        <p>Below is the same form that the user would use, when visiting your restaurant. Use the form to replicate their
+            experience, and see
             if any certain allergies are lacking dishes on your menu.
         </p>
         <div class="search-page">
@@ -117,5 +120,6 @@
                 @include('components.form')
             </form>
         </div>
+    @endif
 
 @endsection
