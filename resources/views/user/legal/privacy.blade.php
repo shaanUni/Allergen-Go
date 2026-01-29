@@ -61,7 +61,7 @@
       <li>Withdraw your consent at any time</li>
       <li>Lodge a complaint with the Information Commissioner’s Office (ICO)</li>
     </ul>
-    <p>You can exercise any of these rights by emailing us at: <a href="mailto:support@allergengo.com">support@allergengo.com</a></p>
+    <p>You can exercise any of these rights by emailing us at: <a href="mailto:{{ config('service-info.support-email') }}">{{ config('service-info.support-email') }}</a></p>
   </section>
 
 </article>

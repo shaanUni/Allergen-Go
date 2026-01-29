@@ -8,6 +8,16 @@
 
     <div class="stats-page">
         <h1 class="stats-title">AllergenGo Stats Overview</h1>
+        @if ($superAdmin && !$child_admin_id)
+            <h2 class="stats-title">You are looking at the stats of all your locations totalled.</h2>
+        @elseif(!is_null($child_admin_id))
+            @php
+                //if a super admin is looking at the stats of a certain restaurant, give the name
+                $restaurantName = \App\Models\Admin::find($child_admin_id);
+                $restaurantName = $restaurantName->name;
+            @endphp
+            <h2 class="stats-title">You are looking at the stats of specific location - {{ $restaurantName }}.</h2>
+        @endif
         <p class="stats-total">Total Number of Searches: <span>{{ $totalSearches }}</span></p>
         <p class="stats-total">Total Number of Searches by halal users: <span>{{ $totalHalalUsers }}</span></p>
 

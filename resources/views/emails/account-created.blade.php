@@ -12,7 +12,7 @@
 
 <p>
   If you have any questions or need help getting started, don’t hesitate to contact us — we're always happy to assist. 
-  <a href="mailto:support@allergengo.com" style="color: #28a745; font-weight: bold; text-decoration: none;">support@allergengo.com</a>
+  <a href="mailto:{{ config('service-info.support-email') }}" style="color: #28a745; font-weight: bold; text-decoration: none;">{{ config('service-info.support-email') }}</a>
 </p>
 
 <p style="font-family: Arial, sans-serif; color: #333;">Helpful links:</p>

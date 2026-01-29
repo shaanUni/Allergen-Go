@@ -21,7 +21,7 @@
                 <br>
                 <br>
                 <p><strong>
-                        If you would like to discuss purchasing with sales, please email { email here} instead.
+                        If you would like to discuss purchasing with sales, please email <span style="color: green;">{{ config('service-info.support-email') }}</span> instead.
                     </strong>
                 </p>
             </div>

@@ -7,7 +7,7 @@
 </div>
 <article class="privacy-policy">
   <h1>Restaurant Customer Agreement</h1>
-  <p class="effective-date"><strong>Effective Date:</strong> 10/07/2025 <span><strong>Version:</strong> 1.0</span> <span><strong>Provider:</strong> AllergenGo</span> <span><strong>Contact:</strong> support@allergengo.com</span></p>
+  <p class="effective-date"><strong>Effective Date:</strong> 10/07/2025 <span><strong>Version:</strong> 1.0</span> <span><strong>Provider:</strong> AllergenGo</span> <span><strong>Contact:</strong> {{ config('service-info.support-email') }}</span></p>
 
   <section class="legal-section">
     <h2>1. Overview</h2>
@@ -86,7 +86,7 @@
 
   <section class="legal-section">
     <h2>9. Contact</h2>
-    <p>If you have questions about this Agreement, please contact us at: <a href="mailto:support@allergengo.com">support@allergengo.com</a></p>
+    <p>If you have questions about this Agreement, please contact us at: <a href="mailto:{{ config('service-info.support-email') }}">{{ config('service-info.support-email') }}</a></p>
   </section>
 
   <section class="legal-section">

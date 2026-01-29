@@ -72,7 +72,7 @@
 
   <section>
     <h2>7. Contact</h2>
-    <p>If you have any questions or want to withdraw consent, contact us at: <a href="mailto:support@allergengo.com">support@allergengo.com</a></p>
+    <p>If you have any questions or want to withdraw consent, contact us at: <a href="mailto:{{ config('service-info.support-email') }}">{{ config('service-info.support-email') }}</a></p>
   </section>
 </article>
 

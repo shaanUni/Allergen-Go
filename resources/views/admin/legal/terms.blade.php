@@ -94,7 +94,7 @@
 
   <section class="legal-section">
     <h2>9. Contact</h2>
-    <p>For questions or legal concerns, contact us at: <a href="mailto:support@allergengo.com">support@allergengo.com</a></p>
+    <p>For questions or legal concerns, contact us at: <a href="mailto:{{ config('service-info.support-email') }}">{{ config('service-info.support-email') }}</a></p>
   </section>
 </article>
 

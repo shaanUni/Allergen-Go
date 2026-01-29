@@ -29,28 +29,7 @@
                     </div>
                 @endif
             </div>
-
-            <p>
-                @if (!$admin->share_dish)
-                    Click here to share your dishes with your sub accounts.
-                    If your menu is the same across locations, we recommend you do this to save time.
-                @else
-                    Your dishes are being shared with yuor sub accounts.
-                @endif
-            </p>
-
-            <form method="POST" action="{{ route('admin.super-admin.update-share-dish') }}" class="mb-3 search-dishes-div">
-                @csrf
-                <label class="toggle" for="share_dishes">
-                    <input type="hidden" name="share_dishes" value="0">
-
-                    <input type="checkbox" id="share_dishes" name="share_dishes" value="1" {{ old('share_dishes', $admin->share_dishes ?? false) ? 'checked' : '' }}>
-
-                    <span class="slider" aria-hidden="true"></span>
-                    <span class="label-text">Share Dishes</span>
-                    <button type="submit" class="btn btn-primary">Update</button>
-                </label>
-            </form>
+          
 
             <form method="GET" action="{{ route('admin.super-admin.dashboard') }}" class="mb-3 search-dishes-div">
                 <input class="form-control text-box" type="text" name="search_admin" placeholder="search"
@@ -78,13 +57,15 @@
                                     {{ $child->location->postcode ?? '' }}
                                 </td>
                                 <td>
-                                    <a href="{{ route('admin.dishes.index', $child->id) }}" class="dashboard-link">View Dishes</a>
+                                    <a href="{{ route('admin.dishes.index', $child->id) }}" class="dashboard-link">View
+                                        Dishes</a>
                                 </td>
                                 <td>
                                     <a href="{{ route('admin.stats', $child->id) }}" class="dashboard-link">View Stats</a>
                                 </td>
                                 <td style="white-space: nowrap;">
-                                    <form action="{{ route('admin.super-admin.delete-account', $child->id) }}" method="POST" class="inline-form" style="display:inline;">
+                                    <form action="{{ route('admin.super-admin.delete-account', $child->id) }}" method="POST"
+                                        class="inline-form" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn-small btn-danger"
@@ -103,5 +84,48 @@
             </div>
 
         </div>
+        <div class="setting-card setting-card--share-dishes">
+    <div class="setting-info">
+        <h4 class="setting-title">Share dishes with sub accounts</h4>
+
+        @if (!$admin->share_dishes)
+            <p class="setting-desc">
+                When enabled, your sub accounts will use the same dish list. Recommended if your menu is the same across locations.
+            </p>
+        @else
+            <p class="setting-desc">
+                Sharing is currently <strong>ON</strong>. Turning this off may cause sub accounts to lose access to shared dishes.
+                <span class="setting-warn">Not recommended.</span>
+            </p>
+        @endif
     </div>
+
+    <form method="POST" action="{{ route('admin.super-admin.update-share-dish') }}" class="setting-form">
+        @csrf
+        <input type="hidden" name="share_dishes" value="0">
+
+        <div class="setting-actions">
+            <span class="status-pill {{ $admin->share_dishes ? 'is-on' : 'is-off' }}">
+                {{ $admin->share_dishes ? 'On' : 'Off' }}
+            </span>
+
+            <label class="switch">
+                <input
+                    type="checkbox"
+                    id="share_dishes"
+                    name="share_dishes"
+                    value="1"
+                    onchange="this.form.submit()"
+                    {{ old('share_dishes', $admin->share_dishes ?? false) ? 'checked' : '' }}
+                >
+                <span class="switch-ui" aria-hidden="true"></span>
+                <span class="switch-text">Share</span>
+            </label>
+
+        </div>
+    </form>
+</div>
+    </div>
+
+    
 @endsection

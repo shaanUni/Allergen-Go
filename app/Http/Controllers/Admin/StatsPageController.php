@@ -28,7 +28,7 @@ class StatsPageController extends Controller
     {
         $admin_id = Auth::guard('admin')->id();
 
-        if($child_admin_id){
+        if ($child_admin_id) {
             $admin_id = $child_admin_id;
         }
 
@@ -45,7 +45,7 @@ class StatsPageController extends Controller
         $totalSearches = count($searches);
 
         //Find all of the failed searches. (failed meaning the user could not have anything to eat)
-        $failedSearches = self::baseSearchQuery($admin,$admin_id)
+        $failedSearches = self::baseSearchQuery($admin, $admin_id)
             ->where('failure', true)
             ->orderBy('created_at', 'desc') //order by most recent
             ->take(5) // restrict at 5
@@ -117,7 +117,17 @@ class StatsPageController extends Controller
             ->where('admin_id', $admin_id)
             ->get();
 
-
+        if ($admin->super_admin) {
+            $selectedDishes = SelectedDishes::with('dish')
+                ->whereHas('admin', function ($query) use ($admin) {
+                    $query->whereIn('id', function ($subQuery) use ($admin) {
+                        $subQuery->select('id')
+                            ->from('admins')
+                            ->where('super_admin_id', $admin->id);
+                    });
+                })
+                ->get();
+        }
         $filteredDishesCount = 0;
         $filteredDishes = [];
         $groupedCounts = [];
@@ -186,7 +196,7 @@ class StatsPageController extends Controller
                     $query->select('id')->from('admins')->where('super_admin_id', $admin->id);
                 })
             : Searches::with('admin.dishes')
-                ->where('admin_id',  $admin_id);
+                ->where('admin_id', $admin_id);
     }
 
     public function search(Request $request, SearchService $searchService)

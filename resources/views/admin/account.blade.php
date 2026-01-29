@@ -18,7 +18,7 @@
         <p>Welcome to the accounts page. See and change your card details, view your billing history, or cancel your
             subscription. If you ever encounter
             any issues with AllergenGo, or just have any general questions or suggestions, please email <a
-                href="mailto:support@allergengo.com">support@allergengo.com</a>.
+                href="mailto:{{ config('service-info.support-email') }}">{{ config('service-info.support-email') }}</a>.
         </p>
         <div class="subscription-page">
             <div class="stats-grid">
