@@ -14,14 +14,28 @@ use Illuminate\Support\Facades\Hash;
 
 class SuperAdminController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $admin = Auth::guard('admin')->user()->fresh();
         $childrenAccounts = $admin->childAccounts()->get();
-
+        
+        $reachedLimit = $admin->reachedLimit();
+        
         return view(
-            'admin.super-admin.dashboard', compact('admin', 'childrenAccounts')
+            'admin.super-admin.dashboard', compact('admin', 'childrenAccounts', 'reachedLimit')
         );
+    }
+
+    public function updateDishShareSatus(Request $request){
+        $admin = Auth::guard('admin')->user()->fresh();
+
+        $request->validate([
+            'share_dishes' => 'required|boolean',
+        ]);
+
+        $admin->share_dishes = $request->share_dishes;
+        $admin->save();
+        return redirect()->route('admin.super-admin.dashboard')->with('success', 'Share dish status udpated!');
     }
 
     public function newAdminForm(){
@@ -29,7 +43,7 @@ class SuperAdminController extends Controller
     }
 
     public function submit(Request $request){
-        
+       
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:admins,email',
@@ -40,6 +54,11 @@ class SuperAdminController extends Controller
         ]);
 
         $admin = Auth::guard('admin')->user()->fresh();
+        
+        //don't let them add a new sub account if they hit the limit. should never reach this stage anyway, handled on the frontend.
+        if($admin->reachedLimit()){
+            return redirect()->route('admin.super-admin.dashboard');
+        }
 
         //make the child admin account
         $childAdmin = Admin::create([
@@ -58,6 +77,12 @@ class SuperAdminController extends Controller
         ]);
 
         return redirect()->route('admin.super-admin.dashboard')->with('success', 'Account added successfully!');
+    }
+
+    public function deleteAccount(Admin $admin){
+        $admin->location()->delete();
+        $admin->delete();
+        return redirect()->route('admin.super-admin.dashboard')->with('success', 'Their access has now been revoked.');
     }
   
 }

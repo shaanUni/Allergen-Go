@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DishRequest;
 
+use App\Models\Admin;
 use App\Models\Dishes;
 use App\Models\DishShare;
 

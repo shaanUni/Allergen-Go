@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-//if the user logged in is the super admin, they should only be able to access the superadmin dashboard
+//if the user logged in is the super admin, they should only be able to access the superadmin dashboard, not the normal one
 class SuperAdminCheck
 {
     /**
@@ -19,8 +19,8 @@ class SuperAdminCheck
     {
         $admin = Auth::guard('admin')->user();
         
-        //if the logged in admin is a super admin, and he is straying away from the super admin pages, send him back
-        if($admin && $admin->super_admin && !$request->routeIs('admin.super-admin.*')){
+        //if the logged in admin is a super admin, and he is straying away from the super admin pages, send him back.
+        if(($admin && $admin->super_admin) && ($request->routeIs('admin.dashboard') || $request->routeIs('admin.dish-share.*'))){
             return redirect()->route('admin.super-admin.dashboard');
         }
 

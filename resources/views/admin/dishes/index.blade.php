@@ -7,9 +7,12 @@
     @if ($dishShareStatus)
         <p>You are involved in a dish share! This means some dishes you see belong to the parent restaurant.</p>
     @endif
+
     <div class="dishes-page">
         <div class="dishes-header">
             <h1 class="page-title">Manage Dishes</h1>
+
+
             <div class="dishes-actions">
                 <a href="{{ route('admin.dishes.create') }}" class="btn-primary">+ Add New Dish</a>
             </div>
@@ -69,44 +72,45 @@
         </div>
         <br>
         {{ $dishes->links('pagination::bootstrap-5') }}
-<br>
-<br>
-<br>
+        <br>
+        <br>
+        <br>
 
         @if (count($children))
-        <div class="dishes-table-wrapper">
-            <table class="dishes-table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Revoke Access</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    You are sharing your dishes with some other restaurants! Please see which ones below, and you can control
-                    access from here.
-                    <br>
-                    <br>
-
-
-                    @foreach ($children as $child)
+            <div class="dishes-table-wrapper">
+                <table class="dishes-table">
+                    <thead>
                         <tr>
-                            <td>{{ $child->childAdmin->name }}</td>
-                            <td style="white-space: nowrap;">
-                                <form action="{{ route('admin.dish-share.delete', $child->childAdmin->id) }}" method="POST" class="inline-form"
-                                    style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-small btn-danger"
-                                        onclick="return confirm('Delete this dish?')">Delete</button>
-                                </form>
-                            </td>
+                            <th>Name</th>
+                            <th>Revoke Access</th>
                         </tr>
+                    </thead>
+                    <tbody>
+                        You are sharing your dishes with some other restaurants! Please see which ones below, and you can
+                        control
+                        access from here.
+                        <br>
+                        <br>
 
-                    @endforeach
-                </tbody>
 
-            </table>
+                        @foreach ($children as $child)
+                            <tr>
+                                <td>{{ $child->childAdmin->name }}</td>
+                                <td style="white-space: nowrap;">
+                                    <form action="{{ route('admin.dish-share.delete', $child->childAdmin->id) }}" method="POST"
+                                        class="inline-form" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn-small btn-danger"
+                                            onclick="return confirm('Delete this dish?')">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+
+                        @endforeach
+                    </tbody>
+
+                </table>
             </div>
         @endif
     </div>

@@ -25,6 +25,7 @@ class Admin extends Authenticatable
         'failed_payment_date',
         'default_payment_method',
         'reminder_email_sent',
+        'share_dishes',
         'super_admin',
         'super_admin_id',
         'quantity',
@@ -75,6 +76,22 @@ class Admin extends Authenticatable
 
     public function parentAccount(){
         return $this->belongsTo(self::class, 'super_admin_id', 'id' );
+    }
+
+    //has a organisation reached the limit of sub accounts added
+    public function reachedLimit(){
+        $childrenAccounts = $this->childAccounts()->get();
+        
+        //how many sub accounts have they added
+        $childrenAccountsCount = count($childrenAccounts);
+
+        //how many did they pay for
+        $quantity = $this->quantity;
+
+        //if they reached the limit, don't show them the button to make new accounts
+        $reachedLimit = $childrenAccountsCount >= $quantity;
+
+        return $reachedLimit;
     }
 
 }

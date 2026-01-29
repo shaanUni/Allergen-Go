@@ -15,14 +15,30 @@ use Illuminate\Http\Request;
 class GetAllDishesService
 {
     public function getDishes(int $restaurant_id){
-
         //Get the dishes that were eager loaded
         $ownDishes = Dishes::where('admin_id', $restaurant_id);
 
+        $admin = Admin::find($restaurant_id);
+
+        //if they have the super admin id set, then they have a parent org
+        $partOfOrg = !is_null($admin->super_admin_id);
+        
         //Retrive any dishes from "dish shares", where a parent restaurant would share its dishes
         $share = DishShare::where('child_admin_id', $restaurant_id)->where('status', true)->first();
+        
+        //if they have a parent restaurant as part of an orginisation
+        if($partOfOrg){
+            //Get the admin relationship with the parent
+            $parentAdminId = $admin->super_admin_id;
+            
+            //Query the parent admins dishes 
+            $sharedDishes = Dishes::where('admin_id', $parentAdminId);
 
-        if($share){
+            //merge the query builders
+            $dishes = $ownDishes->union($sharedDishes);
+    
+        //if they have parent restaurant from a dish share (org and dish share are not mutually exclusive)
+        } else if($share){
 
             //Get the admin relationship with the parent
             $parentAdminId = $share->parentAdmin->id;
@@ -41,6 +57,9 @@ class GetAllDishesService
         return $dishes;
     }
 
+    public function mergeDishes($admin_id){
+
+    }
     public function dishShareStatus(int $admin_id){
         $share = DishShare::where('child_admin_id', $admin_id)->where('status', true)->first();
         
