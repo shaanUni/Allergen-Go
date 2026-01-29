@@ -113,11 +113,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('individual/{id}/{state}', [StatsPageController::class, 'showIndividualDish'])->name('individual');
 
 
-        Route::get('dishes/{admin_id?}', [DishController::class, 'index'])->name('dishes.index');
 
         Route::get('dishes/create', [DishController::class, 'create'])->name('dishes.create');
         Route::post('dishes', [DishController::class, 'store'])->name('dishes.store');
-
+        
+        Route::get('dishes/{admin_id?}', [DishController::class, 'index'])->name('dishes.index');
         Route::get('dishes/{id}/edit', [DishController::class, 'edit'])->name('dishes.edit');
         Route::put('dishes/{id}', [DishController::class, 'update'])->name('dishes.update');
 
