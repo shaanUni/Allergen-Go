@@ -12,10 +12,12 @@
         <div class="dishes-header">
             <h1 class="page-title">Manage Dishes</h1>
 
+            @if (!$admin_id)
+                <div class="dishes-actions">
+                    <a href="{{ route('admin.dishes.create') }}" class="btn-primary">+ Add New Dish</a>
+                </div>
+            @endif
 
-            <div class="dishes-actions">
-                <a href="{{ route('admin.dishes.create') }}" class="btn-primary">+ Add New Dish</a>
-            </div>
         </div>
 
         <form method="GET" action="{{ route('admin.dishes.index') }}" class="mb-3 search-dishes-div">

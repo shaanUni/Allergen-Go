@@ -65,6 +65,7 @@
                         <tr>
                             <th>Name</th>
                             <th>Location</th>
+                            <th>View Individual Dishes</th>
                             <th>View Individual Stats</th>
                             <th>Delete</th>
                         </tr>
@@ -75,6 +76,9 @@
                                 <td>{{ $child->name }}</td>
                                 <td>{{ $child->location->city ?? '' }}, {{ $child->location->street ?? '' }},
                                     {{ $child->location->postcode ?? '' }}
+                                </td>
+                                <td>
+                                    <a href="{{ route('admin.dishes.index', $child->id) }}" class="dashboard-link">View Dishes</a>
                                 </td>
                                 <td>
                                     <a href="{{ route('admin.stats', $child->id) }}" class="dashboard-link">View Stats</a>
