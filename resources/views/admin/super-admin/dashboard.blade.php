@@ -65,6 +65,7 @@
                         <tr>
                             <th>Name</th>
                             <th>Location</th>
+                            <th>View Individual Stats</th>
                             <th>Delete</th>
                         </tr>
                     </thead>
@@ -74,6 +75,9 @@
                                 <td>{{ $child->name }}</td>
                                 <td>{{ $child->location->city ?? '' }}, {{ $child->location->street ?? '' }},
                                     {{ $child->location->postcode ?? '' }}
+                                </td>
+                                <td>
+                                    <a href="{{ route('admin.stats', $child->id) }}" class="dashboard-link">View Stats</a>
                                 </td>
                                 <td style="white-space: nowrap;">
                                     <form action="{{ route('admin.super-admin.delete-account', $child->id) }}" method="POST" class="inline-form" style="display:inline;">

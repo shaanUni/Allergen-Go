@@ -86,7 +86,11 @@
                 <p class="stat-info">
                     People with the allergy you entered, have selected the following dishes:
                 </p>
-                <form method="GET" action="{{ route('admin.stats') }}" class="mb-3 search-dishes-div">
+                @php
+                    //if the request initially came from a super admin accessing a sub account stats, make sure it remains that way on reload
+                    $searchRoute = is_null($child_admin_id) ? route('admin.stats') : route('admin.stats', $child_admin_id);
+                @endphp
+                <form method="GET" action="{{ $searchRoute }}" class="mb-3 search-dishes-div">
                     <input class="form-control text-box" type="text" name="search_allergen" placeholder="search"
                         value="{{ request('search_allergen') }}">
                     <button type="submit" class="btn btn-primary">Search</button>
@@ -110,7 +114,7 @@
         </div>
     </div>
 
-    @if (!$superAdmin)
+    @if (!$superAdmin && is_null($child_admin_id))
         <p>Below is the same form that the user would use, when visiting your restaurant. Use the form to replicate their
             experience, and see
             if any certain allergies are lacking dishes on your menu.

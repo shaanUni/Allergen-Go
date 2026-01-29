@@ -24,29 +24,35 @@ use Illuminate\Support\Facades\Auth;
 class StatsPageController extends Controller
 {
 
-    public function index(Request $request)
+    public function index(Request $request, $child_admin_id = null)
     {
-        $admin = Admin::find(Auth::guard('admin')->id());
+        $admin_id = Auth::guard('admin')->id();
+
+        if($child_admin_id){
+            $admin_id = $child_admin_id;
+        }
+
+        $admin = Admin::find($admin_id);
 
         $request->validate([
             'search_allergen' => ['nullable', 'string', 'max:255']
         ]);
 
         //Get the data from the searches table
-        $searches = self::baseSearchQuery($admin)->get();
+        $searches = self::baseSearchQuery($admin, $admin_id)->get();
 
         //This can give the restaurant an insight into how many people will allergens go to the restaurant. It is just a total of all the searches.
         $totalSearches = count($searches);
 
         //Find all of the failed searches. (failed meaning the user could not have anything to eat)
-        $failedSearches = self::baseSearchQuery($admin)
+        $failedSearches = self::baseSearchQuery($admin,$admin_id)
             ->where('failure', true)
             ->orderBy('created_at', 'desc') //order by most recent
             ->take(5) // restrict at 5
             ->get();
 
         //Find the total of all the failed searches
-        $failedSearchesCount = self::baseSearchQuery($admin)
+        $failedSearchesCount = self::baseSearchQuery($admin, $admin_id)
             ->where('failure', true)
             ->orderBy('created_at', 'desc') //order by most recent
             ->count();
@@ -60,7 +66,7 @@ class StatsPageController extends Controller
                         ->where('super_admin_id', $admin->id);
                 });
             })
-            : AllergenCount::where('admin_id', Auth::guard('admin')->id());
+            : AllergenCount::where('admin_id', $admin_id);
 
 
 
@@ -68,11 +74,9 @@ class StatsPageController extends Controller
             ->orderBy('count', 'desc')
             ->get();
 
-        //Get the restaurant code for the form
-        $restaurant = Admin::find(Auth::guard('admin')->id());
-        $restaurantCode = $restaurant->restaurant_code;
+        $restaurantCode = $admin->restaurant_code;
 
-        $halalUsers = self::baseSearchQuery($admin)
+        $halalUsers = self::baseSearchQuery($admin, $admin_id)
             ->where('halal', 1)
             ->get();
 
@@ -87,7 +91,7 @@ class StatsPageController extends Controller
         $allergenSearch = $request->input('search_allergen');
 
         //Eager load dishes with the selected dishes table, and multi tenancy security
-        $dishes = SelectedDishes::with('dish')->where('admin_id', Auth::guard('admin')->id())->get();
+        $dishes = SelectedDishes::with('dish')->where('admin_id', $admin_id)->get();
 
         if ($admin->super_admin) {
             $dishes = SelectedDishes::with('dish')
@@ -110,7 +114,7 @@ class StatsPageController extends Controller
 
         //Another variable of eager laoded dishes with the selected dishes table
         $selectedDishes = SelectedDishes::with('dish')
-            ->where('admin_id', Auth::guard('admin')->id())
+            ->where('admin_id', $admin_id)
             ->get();
 
 
@@ -167,13 +171,14 @@ class StatsPageController extends Controller
                 'groupedCounts' => $groupedCounts,
                 'diet' => $dietaryRestrictions,
                 'uuid' => $uuid,
+                'child_admin_id' => $child_admin_id,
                 'superAdmin' => $admin->super_admin,
             ],
         );
     }
 
     //Get all the searches from the same admin (multi tenancy), and eager load with dishes
-    function baseSearchQuery($admin)
+    function baseSearchQuery($admin, $admin_id)
     {
         return $admin->super_admin
             ? Searches::with('admin.dishes')
@@ -181,7 +186,7 @@ class StatsPageController extends Controller
                     $query->select('id')->from('admins')->where('super_admin_id', $admin->id);
                 })
             : Searches::with('admin.dishes')
-                ->where('admin_id', Auth::guard('admin')->id());
+                ->where('admin_id',  $admin_id);
     }
 
     public function search(Request $request, SearchService $searchService)

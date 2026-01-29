@@ -108,7 +108,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('account', [DashboardController::class, 'account'])->name('account');
         Route::post('/update-card', [SubscriptionController::class, 'updateCard'])->name('payment-methods.update-card');
 
-        Route::get('stats', [StatsPageController::class, 'index'])->name('stats');
+        Route::get('stats/{child_admin_id?}', [StatsPageController::class, 'index'])->name('stats');
         Route::post('search', [StatsPageController::class, 'search'])->name('search');
         Route::post('individual/{id}/{state}', [StatsPageController::class, 'showIndividualDish'])->name('individual');
 
