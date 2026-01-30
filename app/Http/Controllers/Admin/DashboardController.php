@@ -54,12 +54,14 @@ class DashboardController extends Controller
 
             session()->forget('new_user');
         }
+        
+        $isChild = isset($admin->super_admin_id);
 
         //get the unique code
         $restaurantCode = $this->getRestaurantCode();
         return view(
             'admin.dashboard',
-            ['restaurant_code' => $restaurantCode]
+            ['restaurant_code' => $restaurantCode, 'isChild' => $isChild]
         );
     }
 

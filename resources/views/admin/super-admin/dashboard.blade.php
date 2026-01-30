@@ -29,7 +29,7 @@
                     </div>
                 @endif
             </div>
-          
+
 
             <form method="GET" action="{{ route('admin.super-admin.dashboard') }}" class="mb-3 search-dishes-div">
                 <input class="form-control text-box" type="text" name="search_admin" placeholder="search"
@@ -75,7 +75,11 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="empty-row">No Accounts Added.</td>
+                                @if ($searched)
+                                    <td colspan="5" class="empty-row">No Accounts Found.</td>
+                                @else
+                                    <td colspan="5" class="empty-row">No Accounts Added.</td>
+                                @endif
                             </tr>
                         @endforelse
 
@@ -85,47 +89,43 @@
 
         </div>
         <div class="setting-card setting-card--share-dishes">
-    <div class="setting-info">
-        <h4 class="setting-title">Share dishes with sub accounts</h4>
+            <div class="setting-info">
+                <h4 class="setting-title">Share dishes with sub accounts</h4>
 
-        @if (!$admin->share_dishes)
-            <p class="setting-desc">
-                When enabled, your sub accounts will use the same dish list. Recommended if your menu is the same across locations.
-            </p>
-        @else
-            <p class="setting-desc">
-                Sharing is currently <strong>ON</strong>. Turning this off may cause sub accounts to lose access to shared dishes.
-                <span class="setting-warn">Not recommended.</span>
-            </p>
-        @endif
-    </div>
+                @if (!$admin->share_dishes)
+                    <p class="setting-desc">
+                        When enabled, your sub accounts will use the same dish list. Recommended if your menu is the same across
+                        locations.
+                    </p>
+                @else
+                    <p class="setting-desc">
+                        Sharing is currently <strong>ON</strong>. Turning this off may cause sub accounts to lose access to
+                        shared dishes.
+                        <span class="setting-warn">Not recommended.</span>
+                    </p>
+                @endif
+            </div>
 
-    <form method="POST" action="{{ route('admin.super-admin.update-share-dish') }}" class="setting-form">
-        @csrf
-        <input type="hidden" name="share_dishes" value="0">
+            <form method="POST" action="{{ route('admin.super-admin.update-share-dish') }}" class="setting-form">
+                @csrf
+                <input type="hidden" name="share_dishes" value="0">
 
-        <div class="setting-actions">
-            <span class="status-pill {{ $admin->share_dishes ? 'is-on' : 'is-off' }}">
-                {{ $admin->share_dishes ? 'On' : 'Off' }}
-            </span>
+                <div class="setting-actions">
+                    <span class="status-pill {{ $admin->share_dishes ? 'is-on' : 'is-off' }}">
+                        {{ $admin->share_dishes ? 'On' : 'Off' }}
+                    </span>
 
-            <label class="switch">
-                <input
-                    type="checkbox"
-                    id="share_dishes"
-                    name="share_dishes"
-                    value="1"
-                    onchange="this.form.submit()"
-                    {{ old('share_dishes', $admin->share_dishes ?? false) ? 'checked' : '' }}
-                >
-                <span class="switch-ui" aria-hidden="true"></span>
-                <span class="switch-text">Share</span>
-            </label>
+                    <label class="switch">
+                        <input type="checkbox" id="share_dishes" name="share_dishes" value="1" onchange="this.form.submit()"
+                            {{ old('share_dishes', $admin->share_dishes ?? false) ? 'checked' : '' }}>
+                        <span class="switch-ui" aria-hidden="true"></span>
+                        <span class="switch-text">Share</span>
+                    </label>
 
+                </div>
+            </form>
         </div>
-    </form>
-</div>
     </div>
 
-    
+
 @endsection

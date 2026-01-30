@@ -90,23 +90,23 @@ Route::prefix('admin')->name('admin.')->group(function () {
     //Once the admin has logged in, they can acsess these pages
     Route::middleware(['auth:admin', 'auth.session'], 'subscribed')->group(function () {
         Route::get('/checkout', [SubscriptionController::class, 'checkout']);
-        Route::post('/admin/subscription/cancel', [SubscriptionController::class, 'cancelSubscription'])->name('subscription.cancel');
+        Route::post('/admin/subscription/cancel', [SubscriptionController::class, 'cancelSubscription'])->name('account.subscription.cancel');
 
-        Route::post('/admin/subscription/buy', [SubscriptionController::class, 'resubscribe'])->name('subscription.buy');
+        Route::post('/admin/subscription/buy', [SubscriptionController::class, 'resubscribe'])->name('account.subscription.buy');
 
-        Route::post('/admin/payment-methods/{paymentMethod}/default', [SubscriptionController::class, 'makeDefault'])->name('payment-methods.default');
-        Route::delete('/admin/payment-methods/{paymentMethod}', [SubscriptionController::class, 'deletePaymentMethod'])->name('payment-methods.delete');
+        Route::post('/admin/payment-methods/{paymentMethod}/default', [SubscriptionController::class, 'makeDefault'])->name('account.payment-methods.default');
+        Route::delete('/admin/payment-methods/{paymentMethod}', [SubscriptionController::class, 'deletePaymentMethod'])->name('account.payment-methods.delete');
 
         Route::get('share-dish', [DishShareController::class, 'index'])->name('dish-share.index');
         Route::post('share-dish-sharing', [DishShareController::class, 'initShare'])->name('dish-share.init');
-        Route::get('dish-share.accept/{uuid}', [DishShareController::class, 'accept'])->name('dish-share.accept')->middleware('signed');
-        Route::get('dish-share.decline/{uuid}', [DishShareController::class, 'decline'])->name('dish-share.decline')->middleware('signed');
+        Route::get('dish-share/accept/{uuid}', [DishShareController::class, 'accept'])->name('dish-share.accept')->middleware('signed');
+        Route::get('dish-share/decline/{uuid}', [DishShareController::class, 'decline'])->name('dish-share.decline')->middleware('signed');
         Route::delete('dish-share/{child_admin_id}', [DishShareController::class, 'delete'])->name('dish-share.delete');
         
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('qrcode', [DashboardController::class, 'qrCode'])->name('qrcode');
         Route::get('account', [DashboardController::class, 'account'])->name('account');
-        Route::post('/update-card', [SubscriptionController::class, 'updateCard'])->name('payment-methods.update-card');
+        Route::post('/update-card', [SubscriptionController::class, 'updateCard'])->name('account.payment-methods.update-card');
 
         Route::get('stats/{child_admin_id?}', [StatsPageController::class, 'index'])->name('stats');
         Route::post('search', [StatsPageController::class, 'search'])->name('search');

@@ -24,7 +24,7 @@ class UnpaidSubscriptionCheck
             return $next($request);
         }
         
-        if ($request->routeIs('admin.account') || $request->routeIs('admin.payment-methods.update-card') || $request->routeIs('admin.payment-methods.delete')) {
+        if ($request->routeIs('admin.account') || $request->routeIs('admin.account.payment-methods.update-card') || $request->routeIs('admin.account.payment-methods.delete')) {
             return $next($request); // Don't redirect loop into itself
         }
         

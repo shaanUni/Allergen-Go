@@ -21,11 +21,17 @@ class SuperAdminController extends Controller
         ]);
 
         $admin = Auth::guard('admin')->user()->fresh();
+        
+        //grab all the sub accounts from the user
         $childrenAccounts = $admin->childAccounts();
-                
+        
+        //let the front end know if the searchbox was used
+        $searched = false;
+
         //If admin used searchbar to search for admin by name or location
         if ($request->filled('search_admin')) {
             $search = $request->input('search_admin');
+            $searched = true;
             //query
             $childrenAccounts->where(function ($q) use ($search) {
                 //search by restaurant name
@@ -43,7 +49,7 @@ class SuperAdminController extends Controller
         $reachedLimit = $admin->reachedLimit();
         
         return view(
-            'admin.super-admin.dashboard', compact('admin', 'childrenAccounts', 'reachedLimit')
+            'admin.super-admin.dashboard', compact('admin', 'childrenAccounts', 'reachedLimit', 'searched')
         );
     }
 

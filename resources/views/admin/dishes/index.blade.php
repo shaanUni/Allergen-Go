@@ -20,11 +20,15 @@
 
         </div>
 
-        <form method="GET" action="{{ route('admin.dishes.index') }}" class="mb-3 search-dishes-div">
-            <input class="form-control text-box" type="text" name="search_dish" placeholder="search"
-                value="{{ request('search_dish') }}">
-            <button type="submit" class="btn btn-primary">Search</button>
-            <a type="submit" href="{{ route('admin.dishes.index') }}" class="btn btn-primary red-btn">Clear</a>
+        @php
+            //if the request initially came from a super admin accessing a sub account stats, make sure it remains that way on reload
+            $searchRoute = is_null($admin_id) ? route('admin.dishes.index') : route('admin.dishes.index', $admin_id);
+        @endphp
+        <form method="GET" action="{{ $searchRoute }}" class="mb-3 search-dishes-div">
+        <input class="form-control text-box" type="text" name="search_dish" placeholder="search"
+            value="{{ request('search_dish') }}">
+        <button type="submit" class="btn btn-primary">Search</button>
+        <a type="submit" href="{{$searchRoute}}" class="btn btn-primary red-btn">Clear</a>
         </form>
 
         <div class="dishes-table-wrapper">
