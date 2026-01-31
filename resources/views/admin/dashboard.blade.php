@@ -10,7 +10,9 @@
 
     <div class="dashboard-nav">
         <a href="{{ route('admin.dishes.index') }}" class="dashboard-link">Manage Dishes</a>
-        <a href="{{ route('admin.share-dish.index') }}" class="dashboard-link">Share Dishes</a>
+        @if (!$isChild)
+            <a href="{{ route('admin.dish-share.index') }}" class="dashboard-link">Share Dishes</a>
+        @endif
         <a href="{{ route('admin.qrcode') }}" class="dashboard-link">QR Code</a>
         <a href="{{ route('admin.stats') }}" class="dashboard-link">View Stats</a>
     </div>

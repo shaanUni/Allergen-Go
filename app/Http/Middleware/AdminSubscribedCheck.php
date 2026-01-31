@@ -20,12 +20,12 @@ class AdminSubscribedCheck
         $admin = Auth::guard('admin')->user();
 
         //allow these routes
-        if ($request->routeIs('admin.unsubscribed') || $request->routeIs('admin.subscription.buy')) {
+        if ($request->routeIs('admin.unsubscribed') || $request->routeIs('admin.account.subscription.buy')) {
             return $next($request); 
         }
 
         //Also allow access to account pages, so they can update card if needed
-        if ($request->routeIs('admin.account') || $request->routeIs('admin.payment-methods.update-card') || $request->routeIs('admin.payment-methods.delete')) {
+        if ($request->routeIs('admin.account') || $request->routeIs('admin.account.payment-methods.update-card') || $request->routeIs('admin.account.payment-methods.delete')) {
             return $next($request); 
         }
         

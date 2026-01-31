@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DishRequest;
 
+use App\Models\Admin;
 use App\Models\Dishes;
 use App\Models\DishShare;
 
@@ -33,8 +34,15 @@ class DishController extends Controller
         $this->admin_id = Auth::guard('admin')->id();
     }
 
-    public function index(Request $request, GetAllDishesService $getDishesService)
+    public function index(Request $request, GetAllDishesService $getDishesService, $admin_id = null)
     {
+
+        //if this is being accesed from the super admin page
+        if($admin_id){
+            //set the admin id to whichever sub account they want to access
+            $this->admin_id = $admin_id;
+        }
+
         $request->validate([
             'search_dish' => ['nullable', 'string', 'max:255']
         ]);
@@ -58,7 +66,7 @@ class DishController extends Controller
         //Does this admin share it's dishes with anyone
         $children = DishShare::where('parent_admin_id', $this->admin_id)->where('status', true)->get();
 
-        return view('admin.dishes.index', compact('dishes', 'dishShareStatus', 'children'));
+        return view('admin.dishes.index', compact('dishes', 'dishShareStatus', 'children', 'admin_id'));
     }
     public function create()
     {

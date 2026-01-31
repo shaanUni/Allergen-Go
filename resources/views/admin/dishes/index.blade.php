@@ -7,19 +7,28 @@
     @if ($dishShareStatus)
         <p>You are involved in a dish share! This means some dishes you see belong to the parent restaurant.</p>
     @endif
+
     <div class="dishes-page">
         <div class="dishes-header">
             <h1 class="page-title">Manage Dishes</h1>
-            <div class="dishes-actions">
-                <a href="{{ route('admin.dishes.create') }}" class="btn-primary">+ Add New Dish</a>
-            </div>
+
+            @if (!$admin_id)
+                <div class="dishes-actions">
+                    <a href="{{ route('admin.dishes.create') }}" class="btn-primary">+ Add New Dish</a>
+                </div>
+            @endif
+
         </div>
 
-        <form method="GET" action="{{ route('admin.dishes.index') }}" class="mb-3 search-dishes-div">
-            <input class="form-control text-box" type="text" name="search_dish" placeholder="search"
-                value="{{ request('search_dish') }}">
-            <button type="submit" class="btn btn-primary">Search</button>
-            <a type="submit" href="{{ route('admin.dishes.index') }}" class="btn btn-primary red-btn">Clear</a>
+        @php
+            //if the request initially came from a super admin accessing a sub account stats, make sure it remains that way on reload
+            $searchRoute = is_null($admin_id) ? route('admin.dishes.index') : route('admin.dishes.index', $admin_id);
+        @endphp
+        <form method="GET" action="{{ $searchRoute }}" class="mb-3 search-dishes-div">
+        <input class="form-control text-box" type="text" name="search_dish" placeholder="search"
+            value="{{ request('search_dish') }}">
+        <button type="submit" class="btn btn-primary">Search</button>
+        <a type="submit" href="{{$searchRoute}}" class="btn btn-primary red-btn">Clear</a>
         </form>
 
         <div class="dishes-table-wrapper">
@@ -69,44 +78,45 @@
         </div>
         <br>
         {{ $dishes->links('pagination::bootstrap-5') }}
-<br>
-<br>
-<br>
+        <br>
+        <br>
+        <br>
 
         @if (count($children))
-        <div class="dishes-table-wrapper">
-            <table class="dishes-table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Revoke Access</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    You are sharing your dishes with some other restaurants! Please see which ones below, and you can control
-                    access from here.
-                    <br>
-                    <br>
-
-
-                    @foreach ($children as $child)
+            <div class="dishes-table-wrapper">
+                <table class="dishes-table">
+                    <thead>
                         <tr>
-                            <td>{{ $child->childAdmin->name }}</td>
-                            <td style="white-space: nowrap;">
-                                <form action="{{ route('admin.dish-share.delete', $child->childAdmin->id) }}" method="POST" class="inline-form"
-                                    style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-small btn-danger"
-                                        onclick="return confirm('Delete this dish?')">Delete</button>
-                                </form>
-                            </td>
+                            <th>Name</th>
+                            <th>Revoke Access</th>
                         </tr>
+                    </thead>
+                    <tbody>
+                        You are sharing your dishes with some other restaurants! Please see which ones below, and you can
+                        control
+                        access from here.
+                        <br>
+                        <br>
 
-                    @endforeach
-                </tbody>
 
-            </table>
+                        @foreach ($children as $child)
+                            <tr>
+                                <td>{{ $child->childAdmin->name }}</td>
+                                <td style="white-space: nowrap;">
+                                    <form action="{{ route('admin.dish-share.delete', $child->childAdmin->id) }}" method="POST"
+                                        class="inline-form" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn-small btn-danger"
+                                            onclick="return confirm('Delete this dish?')">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+
+                        @endforeach
+                    </tbody>
+
+                </table>
             </div>
         @endif
     </div>

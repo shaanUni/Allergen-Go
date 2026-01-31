@@ -38,7 +38,7 @@
             Don’t worry—your data is safe. Simply click the button below to resubscribe and regain access.
           </p>
 
-          <form method="POST" action="{{ route('admin.subscription.buy') }}">
+          <form method="POST" action="{{ route('admin.account.subscription.buy') }}">
             @csrf
             <input type="hidden" name="payment_method" id="payment_method">
             <button type="submit" class="btn btn-resubscribe">

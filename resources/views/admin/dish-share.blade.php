@@ -38,7 +38,7 @@
                     @endif
 
                     <form method="POST"
-                          action="{{ route('admin.init-share') }}"
+                          action="{{ route('admin.dish-share.init') }}"
                           class="search-dishes-div">
                         @csrf
 

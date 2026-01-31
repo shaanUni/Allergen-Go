@@ -8,6 +8,16 @@
 
     <div class="stats-page">
         <h1 class="stats-title">AllergenGo Stats Overview</h1>
+        @if ($superAdmin && !$child_admin_id)
+            <h2 class="stats-title">You are looking at the stats of all your locations totalled.</h2>
+        @elseif(!is_null($child_admin_id))
+            @php
+                //if a super admin is looking at the stats of a certain restaurant, give the name
+                $restaurantName = \App\Models\Admin::find($child_admin_id);
+                $restaurantName = $restaurantName->name;
+            @endphp
+            <h2 class="stats-title">You are looking at the stats of specific location - {{ $restaurantName }}.</h2>
+        @endif
         <p class="stats-total">Total Number of Searches: <span>{{ $totalSearches }}</span></p>
         <p class="stats-total">Total Number of Searches by halal users: <span>{{ $totalHalalUsers }}</span></p>
 
@@ -26,8 +36,9 @@
                             $vegan = $failed->vegan == true ? 'vegan,' : '';
                             $vegetarian = $failed->vegetarian == true ? 'vegetarian,' : '';
                         @endphp
-                                               
-                            <p class="stat-item">  <strong>{{ $halal }} {{ $vegan }} {{ $vegetarian }}</strong> {{ implode(', ', $failedAllergens) }}</p>
+
+                        <p class="stat-item"> <strong>{{ $halal }} {{ $vegan }} {{ $vegetarian }}</strong>
+                            {{ implode(', ', $failedAllergens) }}</p>
                     @endforeach
                 </div>
             </div>
@@ -53,29 +64,29 @@
                 <p class="stat-info">
                     Number of times each dish was selected:
                 </p>
-                    <table class="dish-counts-table">
-                        <thead>
+                <table class="dish-counts-table">
+                    <thead>
+                        <tr>
+                            <th>Dish Name</th>
+                            <th>Revenue</th>
+                            <th>Times selected</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($groupedByDishId as $dishId => $group)
+                            @php
+                                $dish = \App\Models\Dishes::find($dishId);
+                                $revenue = $dish->price * count($group);
+                                $count = count($group);
+                            @endphp
                             <tr>
-                                <th>Dish Name</th>
-                                <th>Revenue</th>
-                                <th>Times selected</th>
+                                <td>{{ $dish->dish_name }}</td>
+                                <td>£{{ number_format($revenue, 2) }}</td>
+                                <td class="count">{{ $count }}</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($groupedByDishId as $dishId => $group)
-                                @php
-                                    $dish = \App\Models\Dishes::find($dishId);
-                                    $revenue = $dish->price * count($group);
-                                    $count = count($group);
-                                @endphp
-                                <tr>
-                                    <td>{{ $dish->dish_name }}</td>
-                                    <td>£{{ number_format($revenue, 2) }}</td>
-                                    <td class="count">{{ $count }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                        @endforeach
+                    </tbody>
+                </table>
 
 
             </div>
@@ -85,7 +96,11 @@
                 <p class="stat-info">
                     People with the allergy you entered, have selected the following dishes:
                 </p>
-                <form method="GET" action="{{ route('admin.stats') }}" class="mb-3 search-dishes-div">
+                @php
+                    //if the request initially came from a super admin accessing a sub account stats, make sure it remains that way on reload
+                    $searchRoute = is_null($child_admin_id) ? route('admin.stats') : route('admin.stats', $child_admin_id);
+                @endphp
+                <form method="GET" action="{{ $searchRoute }}" class="mb-3 search-dishes-div">
                     <input class="form-control text-box" type="text" name="search_allergen" placeholder="search"
                         value="{{ request('search_allergen') }}">
                     <button type="submit" class="btn btn-primary">Search</button>
@@ -108,8 +123,10 @@
 
         </div>
     </div>
- 
-        <p>Below is the same form that the user would use, when visiting your restaurant. Use the form to replicate their experience, and see 
+
+    @if (!$superAdmin && is_null($child_admin_id))
+        <p>Below is the same form that the user would use, when visiting your restaurant. Use the form to replicate their
+            experience, and see
             if any certain allergies are lacking dishes on your menu.
         </p>
         <div class="search-page">
@@ -117,5 +134,6 @@
                 @include('components.form')
             </form>
         </div>
+    @endif
 
 @endsection

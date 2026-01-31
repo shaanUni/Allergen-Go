@@ -21,7 +21,7 @@
                             You cancelled your subscription on <strong>{{ $date }}</strong>.
                         </p>
                     @else
-                        <form method="POST" action="{{ route('admin.subscription.cancel') }}" class="mb-3">
+                        <form method="POST" action="{{ route('admin.account.subscription.cancel') }}" class="mb-3">
                             @csrf
                             <button type="submit" class="btn btn-danger w-100">
                                 Cancel subscription
@@ -121,7 +121,7 @@
                                         @if($method->id === $admin->default_payment_method)
                                             <span class="text-green-600 font-semibold">Default</span>
                                         @else
-                                            <form action="{{ route('admin.payment-methods.default', $method->id) }}"
+                                            <form action="{{ route('admin.account.payment-methods.default', $method->id) }}"
                                                   method="POST"
                                                   class="d-inline me-2">
                                                 @csrf
@@ -132,7 +132,7 @@
                                             </form>
                                         @endif
 
-                                        <form action="{{ route('admin.payment-methods.delete', $method->id) }}"
+                                        <form action="{{ route('admin.account.payment-methods.delete', $method->id) }}"
                                               method="POST"
                                               class="d-inline">
                                             @csrf
@@ -158,7 +158,7 @@
                     </p>
 
                     <form id="update-card-form"
-                          action="{{ route('admin.payment-methods.update-card') }}"
+                          action="{{ route('admin.account.payment-methods.update-card') }}"
                           method="POST">
                         @csrf
 
