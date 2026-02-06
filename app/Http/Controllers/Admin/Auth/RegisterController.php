@@ -57,9 +57,12 @@ class RegisterController extends Controller
 
         session(['pending_admin_id' => $admin->id]);
         
+        //when it is set to 14 days, it only shows 13 days for the trial.
+        $trialPeriod = config('service-info.trial_period') + 1;
+
         // Redirect to Stripe Checkout
         return $admin->newSubscription('default', config('services.stripe.price_id')) // 2nd param is price ID
-            ->trialDays(config('service-info.trial_period'))
+            ->trialDays($trialPeriod)
             ->quantity($quantity)
             ->checkout([
                 'success_url' => route('admin.subscription.success'),
