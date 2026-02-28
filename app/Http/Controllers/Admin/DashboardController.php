@@ -50,7 +50,7 @@ class DashboardController extends Controller
             InitAccountPageInfo::dispatch($admin);
 
             //send welcome email
-            $admin->notify((new accountCreated())->delay(now()->addMinutes(1)));
+            $admin->notify((new accountCreated())->delay(now()->addMinutes(2)));
 
             session()->forget('new_user');
         }
